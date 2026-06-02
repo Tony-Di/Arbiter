@@ -1,0 +1,26 @@
+{
+  "toxic": {
+    "model": "deepseek-chat",
+    "threshold": 1
+  },
+  "severe_toxic": {
+    "model": "deepseek-chat",
+    "threshold": 3
+  },
+  "obscene": {
+    "model": "deepseek-chat",
+    "threshold": 1
+  },
+  "threat": {
+    "model": "deepseek-chat",
+    "threshold": 1
+  },
+  "insult": {
+    "model": "deepseek-chat",
+    "threshold": 1
+  },
+  "identity_hate": {
+    "model": "deepseek-chat",
+    "threshold": 1
+  }
+}
