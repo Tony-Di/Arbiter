@@ -1,0 +1,58 @@
+"""FastAPI app — wraps the LangGraph pipeline (spec §12).
+
+Graph + routing table are built ONCE at startup (lifespan). The graph and DB
+session are dependencies so tests override them (fakes + in-memory DB, no network).
+
+Fill the 🔨 handler body (spec: plan Task 3).
+Check:  python -m pytest tests/api/test_api.py -v   (goal: 4 passed)
+"""
+from contextlib import asynccontextmanager
+
+from fastapi import Depends, FastAPI
+
+from arbiter.product.graph import build_graph
+from arbiter.product.routing import load_routing_table
+from arbiter.product.state import initial_state
+from arbiter.api.db import SessionLocal, init_db, save_verdict
+from arbiter.api.schemas import ModerateRequest, ModerateResponse, to_response
+
+_graph = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global _graph
+    init_db()
+    _graph = build_graph(load_routing_table("routing_table.json"))
+    yield
+
+
+app = FastAPI(title="Arbiter", lifespan=lifespan)
+
+
+def get_graph():
+    return _graph
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@app.get("/api/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.post("/api/moderate", response_model=ModerateResponse)
+def moderate(req: ModerateRequest, graph=Depends(get_graph), db=Depends(get_db)):
+    # 🔨 TODO (3 lines):
+    #   state = graph.invoke(initial_state(req.comment))
+    #   save_verdict(db, req.comment, state)
+    #   return to_response(state)
+    state = graph.invoke(initial_state(req.comment))
+    save_verdict(db, req.comment, state)
+    return to_response(state)
