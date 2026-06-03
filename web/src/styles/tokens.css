@@ -1,0 +1,85 @@
+/* arbiter — dark console design tokens
+   Cool near-black surfaces, IBM Plex Sans (UI) + IBM Plex Mono (data/original text).
+   Semantic colors fixed by spec: action allow=green / human-review=amber / remove=red.
+   Severity ordinal scale 0..3: none=gray, low=yellow, medium=orange, high=red. */
+
+:root {
+  /* surfaces — cool, low-saturation */
+  --bg-0: oklch(0.165 0.012 256); /* page void */
+  --bg-1: oklch(0.205 0.014 256); /* panel */
+  --bg-2: oklch(0.245 0.015 256); /* raised */
+  --bg-3: oklch(0.29 0.016 256); /* chip / input */
+  --line: oklch(0.34 0.015 256); /* hairline */
+  --line-soft: oklch(0.3 0.014 256);
+
+  /* text */
+  --tx-0: oklch(0.95 0.005 256); /* primary */
+  --tx-1: oklch(0.78 0.01 256); /* secondary */
+  --tx-2: oklch(0.62 0.012 256); /* muted */
+  --tx-3: oklch(0.5 0.012 256); /* faint / labels */
+
+  /* action semantic */
+  --allow: oklch(0.78 0.15 158);
+  --review: oklch(0.82 0.14 82);
+  --remove: oklch(0.66 0.21 26);
+
+  /* severity scale */
+  --sev-0: oklch(0.6 0.012 256); /* none — gray */
+  --sev-1: oklch(0.84 0.13 96); /* low — yellow */
+  --sev-2: oklch(0.75 0.16 60); /* medium — orange */
+  --sev-3: oklch(0.65 0.21 26); /* high — red */
+
+  /* unified evidence highlight */
+  --hl-bg: oklch(0.82 0.14 82 / 0.2);
+  --hl-bg-hot: oklch(0.82 0.14 82 / 0.34);
+  --hl-line: oklch(0.82 0.14 82 / 0.75);
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --r-sm: 6px;
+  --r-md: 9px;
+  --r-lg: 13px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* helper: severity -> color, used inline via data-sev too */
+.sev-0 {
+  --sev: var(--sev-0);
+}
+.sev-1 {
+  --sev: var(--sev-1);
+}
+.sev-2 {
+  --sev: var(--sev-2);
+}
+.sev-3 {
+  --sev: var(--sev-3);
+}
+
+/* page setup (from the original standalone HTML shell) */
+html,
+body {
+  margin: 0;
+  background: var(--bg-0);
+  min-height: 100vh;
+}
+#root {
+  min-height: 100vh;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 10px;
+}
+
+@keyframes vaspin {
+  to {
+    transform: rotate(360deg);
+  }
+}

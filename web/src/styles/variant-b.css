@@ -1,0 +1,469 @@
+/* Variant B — Verdict / Document. Single centered column, editorial/judicial.
+   "arbiter" as adjudicator: the comment is a submission, the result reads as a ruling.
+   Ported from the mockup; standalone overrides (height/scroll) are baked in. */
+
+.vb {
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
+  background: var(--bg-0);
+  color: var(--tx-0);
+  font-family: var(--font-sans);
+  display: flex;
+  justify-content: center;
+}
+.vb * {
+  font-family: inherit;
+}
+.vb-scroll {
+  width: 100%;
+  max-width: 760px;
+  padding: 78px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.vb-mast {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.vb-mast .nm {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.vb-mast .nm i {
+  font-style: normal;
+  color: var(--review);
+}
+.vb-mast .sub {
+  font-size: 12px;
+  color: var(--tx-3);
+  letter-spacing: 0.04em;
+}
+.vb-mast .src {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--tx-2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vb-mast .src .d {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tx-3);
+}
+.vb-mast .src[data-src="live"] .d {
+  background: var(--allow);
+}
+.vb-mast .src[data-src="mock"] .d {
+  background: var(--review);
+}
+
+/* submission */
+.vb-sub {
+  margin-top: 22px;
+}
+.vb-cap {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  margin-bottom: 9px;
+}
+.vb-ta,
+.vb-ta.ant-input {
+  width: 100%;
+  min-height: 92px;
+  resize: none;
+  background: transparent;
+  border: none;
+  border-left: 2px solid var(--line);
+  border-radius: 0;
+  padding: 2px 0 2px 18px;
+  color: var(--tx-0);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.7;
+  outline: none;
+  box-shadow: none;
+}
+.vb-ta::placeholder {
+  color: var(--tx-3);
+}
+.vb-ta:focus,
+.vb-ta.ant-input:focus,
+.vb-ta.ant-input-focused,
+.vb-ta.ant-input:hover {
+  border: none;
+  border-left: 2px solid var(--review);
+  box-shadow: none;
+}
+.vb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.vb-chip {
+  font-size: 12px;
+  color: var(--tx-1);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.12s;
+  height: auto;
+  line-height: 1.4;
+}
+.vb-chip:hover {
+  border-color: var(--tx-2);
+  color: var(--tx-0);
+}
+.vb-run {
+  margin-left: auto;
+  height: auto;
+  padding: 9px 22px;
+  border: none;
+  border-radius: 100px;
+  background: var(--tx-0);
+  color: var(--bg-0);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.12s;
+  box-shadow: none;
+}
+.vb-run:hover,
+.vb-run:not(:disabled):hover {
+  opacity: 0.88;
+  background: var(--tx-0);
+  color: var(--bg-0);
+}
+.vb-run:disabled,
+.vb-run.ant-btn[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: var(--tx-0);
+  color: var(--bg-0);
+}
+.vb-spin {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  animation: vaspin 0.7s linear infinite;
+  display: inline-block;
+}
+
+.vb-rule-line {
+  height: 1px;
+  background: var(--line);
+  margin: 26px 0;
+}
+
+.vb-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tx-3);
+  font-size: 13px;
+}
+.vb-err {
+  background: oklch(0.66 0.21 26 / 0.1);
+  border: 1px solid oklch(0.66 0.21 26 / 0.5);
+  color: var(--remove);
+  border-radius: var(--r-md);
+  padding: 13px 15px;
+  font-size: 13px;
+  margin-top: 22px;
+}
+
+/* ruling */
+.vb-ruling {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.vb-headline {
+  font-size: 13px;
+}
+.vb-headline .lead {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  display: block;
+  margin-bottom: 10px;
+}
+.vb-statement {
+  font-size: 30px;
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--tx-1);
+}
+.vb-statement b {
+  color: var(--ac);
+  font-weight: 600;
+}
+.vb-meta {
+  display: flex;
+  gap: 26px;
+  margin-top: 16px;
+}
+.vb-meta .m .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+}
+.vb-meta .m .v {
+  font-size: 15px;
+  margin-top: 4px;
+  text-transform: capitalize;
+}
+
+.vb-evi-wrap .vb-cap {
+  margin-bottom: 11px;
+}
+.vb-evi {
+  font-size: 16px;
+  line-height: 1.85;
+  color: var(--tx-1);
+  border-left: 2px solid var(--line);
+  padding-left: 18px;
+}
+.hl {
+  background: var(--hl-bg);
+  color: var(--tx-0);
+  border-radius: 3px;
+  box-shadow: inset 0 -1.5px 0 var(--hl-line);
+  cursor: help;
+  transition: background 0.12s;
+}
+.hl:hover {
+  background: var(--hl-bg-hot);
+}
+.hl-tip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  color: var(--tx-0);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: nowrap;
+  padding: 5px 9px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 5;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* findings list */
+.vb-find {
+  display: flex;
+  flex-direction: column;
+}
+.vbf {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.vbf:last-child {
+  border-bottom: none;
+}
+.vbf-sev {
+  flex: 0 0 auto;
+  width: 72px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sev);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.vbf-sev .pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sev);
+}
+.vbf-body {
+  flex: 1;
+}
+.vbf-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--tx-0);
+}
+.vbf-reason {
+  font-size: 13px;
+  color: var(--tx-2);
+  line-height: 1.55;
+  margin-top: 3px;
+}
+.vbf-span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--tx-1);
+  background: var(--hl-bg);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-left: 4px;
+}
+.vb-clear {
+  font-size: 12.5px;
+  color: var(--tx-3);
+  cursor: pointer;
+  padding: 13px 0 2px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vb-clear:hover {
+  color: var(--tx-2);
+}
+.vb-clear .tw {
+  transition: transform 0.15s;
+}
+.vb-clear.open .tw {
+  transform: rotate(90deg);
+}
+
+/* notes / context */
+.vb-notes {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+}
+.vb-notes .nh {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--review);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vb-notes .nh::before {
+  content: "§";
+  font-size: 14px;
+}
+.vb-fl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 13px;
+}
+.vb-f {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--review);
+  background: oklch(0.82 0.14 82 / 0.1);
+  border: 1px solid oklch(0.82 0.14 82 / 0.35);
+  border-radius: 100px;
+  padding: 4px 11px;
+}
+.vb-f[data-hot="true"] {
+  color: var(--remove);
+  background: oklch(0.66 0.21 26 / 0.1);
+  border-color: oklch(0.66 0.21 26 / 0.4);
+}
+.vb-f-none {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--tx-3);
+}
+.vb-note-txt {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tx-1);
+}
+
+.vb-sign {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--tx-3);
+}
+.vb-sign .jb {
+  color: var(--tx-1);
+}
+.vb-sign .pend {
+  font-style: italic;
+}
+
+/* ---- split layout (standalone wide screens): submission pinned left,
+   ruling immediately beside it so paste -> verdict needs no scroll.
+   Narrow screens fall back to the original single-column document flow. ---- */
+.vb.split .vb-main {
+  display: contents;
+}
+@media (min-width: 940px) {
+  .vb.split {
+    justify-content: center;
+  }
+  .vb.split .vb-scroll {
+    max-width: 1240px;
+    display: grid;
+    grid-template-columns: minmax(330px, 0.66fr) 1fr;
+    grid-template-areas: "mast mast" "sub main";
+    column-gap: 52px;
+    row-gap: 28px;
+    align-items: start;
+    align-content: start;
+  }
+  .vb.split .vb-mast {
+    grid-area: mast;
+  }
+  .vb.split .vb-sub {
+    grid-area: sub;
+    position: sticky;
+    top: 48px;
+    margin-top: 0;
+  }
+  .vb.split .vb-main {
+    grid-area: main;
+    display: block;
+  }
+  .vb.split .vb-rule-line {
+    display: none;
+  }
+  .vb.split .vb-empty {
+    min-height: 320px;
+    justify-content: flex-start;
+    padding-top: 8px;
+  }
+}

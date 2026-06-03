@@ -7,7 +7,7 @@ Fill the 🔨 handler body (spec: plan Task 3).
 Check:  python -m pytest tests/api/test_api.py -v   (goal: 4 passed)
 """
 from contextlib import asynccontextmanager
-
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
 
 from arbiter.product.graph import build_graph
@@ -15,6 +15,10 @@ from arbiter.product.routing import load_routing_table
 from arbiter.product.state import initial_state
 from arbiter.api.db import SessionLocal, init_db, save_verdict
 from arbiter.api.schemas import ModerateRequest, ModerateResponse, to_response
+
+# Load .env so registry.py sees DEEPSEEK_API_KEY. The import above does NOTHING
+# without this call -- this is the line that was missing.
+load_dotenv()
 
 _graph = None
 
