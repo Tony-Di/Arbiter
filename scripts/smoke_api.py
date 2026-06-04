@@ -17,8 +17,6 @@ def main():
     with TestClient(app) as client:   # `with` triggers lifespan -> builds the real graph
         print("health:", client.get("/api/health").json())
         for c in COMMENTS:
-            # 🔨 TODO: r = client.post("/api/moderate", json={"comment": c})
-            #          print c and r.json()["action"] / ["overall_severity"] / ["categories"]
             r = client.post("/api/moderate", json={"comment": c})
             print(c)
             print(r.json()["action"])

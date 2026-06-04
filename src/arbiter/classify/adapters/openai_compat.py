@@ -1,7 +1,6 @@
 """OpenAI-compatible adapter — reused for any OpenAI-compatible provider
 (DeepSeek, OpenAI, Qwen, ...). One call -> a raw dict; validation lives in core.
 
-Fill in the two methods (spec: plan Task 4).
 Check:  python -m pytest tests/classify/test_adapter_openai_compat.py -v   (goal: 2 passed)
 """
 import json
@@ -19,17 +18,6 @@ class OpenAICompatAdapter:
         
 
     def complete(self, prompt: str, schema: type[BaseModel]) -> dict:
-        # 🔨 TODO (wrap the whole thing in try/except):
-        #   1. resp = self.client.chat.completions.create(
-        #          model=self.model,
-        #          messages=[{"role": "user", "content": prompt}],
-        #          response_format={"type": "json_object"},
-        #          temperature=0,
-        #      )
-        #   2. content = resp.choices[0].message.content      # a JSON string
-        #   3. return json.loads(content)                     # raw dict, UNvalidated
-        #   4. except Exception as e: raise AdapterError(str(e)) from e
-        # (don't validate against `schema` here — core does that.)
         try:
             resp = self.client.chat.completions.create(
                 model=self.model,

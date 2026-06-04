@@ -24,9 +24,6 @@ def main():
     table = load_routing_table("routing_table.json")
     graph = build_graph(table)  # real classify + detect_context
     for c in COMMENTS:
-        # 🔨 TODO: out = graph.invoke(initial_state(c))
-        #   print the comment, out["action"], out["overall_severity"],
-        #   out["context_flags"], and out["effective_verdicts"].
         out = graph.invoke(initial_state(c))
         print(f"\n[{c}]\n  action={out['action']}  severity={out['overall_severity']}")
         print(f"  flags={out['context_flags']}")

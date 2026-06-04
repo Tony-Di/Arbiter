@@ -1,6 +1,5 @@
 """Shared prompt for classify — identical across providers (fair comparison).
 
-Fill in build_prompt (spec: plan Task 2).
 Check:  python -m pytest tests/classify/test_prompt.py -v   (goal: 3 passed)
 """
 from .schema import ALL_6
@@ -18,17 +17,6 @@ Severity scale (per category):
 
 
 def build_prompt(comment: str, categories: list[str] = ALL_6) -> str:
-    # 🔨 TODO: return ONE string that contains all four of these:
-    #   1. instructions — you are a content-moderation rater; judge ONLY the listed
-    #      categories; for each return severity 0-3, a short reason, and span (the
-    #      verbatim offending substring, or null); detection only, no overall action;
-    #      output JSON like:
-    #        {"verdicts": {"<category>": {"severity": <0-3>, "reason": "...", "span": <string|null>}}}
-    #   2. the RUBRIC above
-    #   3. the requested category names (join `categories`)
-    #   4. the COMMENT text
-    # NOTE: the word "json" MUST appear in the prompt (DeepSeek json_object mode needs it).
-
     return f"""
     You are a content-moderation rater.
     You are given a comment and a list of categories.

@@ -4,7 +4,6 @@ Each node is `state -> partial state update`. LLM calls are INJECTED
 (classify_fn / detect_fn) so nodes + the whole graph test with fakes, no network
 (same DI idea as eval/collect.py).
 
-Fill the TODOs (spec: plan Task 5).
 Check:  python -m pytest tests/product/test_nodes.py -v   (goal: 4 passed)
 """
 from arbiter.classify import classify
@@ -14,12 +13,6 @@ from arbiter.product.routing import model_for
 
 
 def make_specialist_node(category: str, table: dict, classify_fn=classify):
-    # 🔨 TODO: return a function node(state) that:
-    #   model = model_for(table, category)
-    #   result = classify_fn(model, state["comment"], [category])   # a ClassifyResult
-    #   verdict = result.verdicts[category]
-    #   return {"raw_verdicts": {category: verdict.model_dump(mode="json")},
-    #           "routing_snapshot": {category: model}}
     def node(state):
         model = model_for(table, category)
         result = classify_fn(model, state["comment"], [category])
@@ -29,12 +22,10 @@ def make_specialist_node(category: str, table: dict, classify_fn=classify):
     return node
 
 def make_context_node(detect_fn=detect_context):
-    # 🔨 TODO: return node(state) -> {"context_flags": detect_fn(state["comment"]).model_dump()}
     def node(state):
         return {"context_flags": detect_fn(state["comment"]).model_dump()}
     return node
 
 
 def aggregator_node(state) -> dict:
-    # 🔨 TODO: return aggregate(state["raw_verdicts"], state["context_flags"])
     return aggregate(state["raw_verdicts"], state["context_flags"])

@@ -3,7 +3,6 @@
 Graph + routing table are built ONCE at startup (lifespan). The graph and DB
 session are dependencies so tests override them (fakes + in-memory DB, no network).
 
-Fill the 🔨 handler body (spec: plan Task 3).
 Check:  python -m pytest tests/api/test_api.py -v   (goal: 4 passed)
 """
 from contextlib import asynccontextmanager
@@ -53,10 +52,6 @@ def health():
 
 @app.post("/api/moderate", response_model=ModerateResponse)
 def moderate(req: ModerateRequest, graph=Depends(get_graph), db=Depends(get_db)):
-    # 🔨 TODO (3 lines):
-    #   state = graph.invoke(initial_state(req.comment))
-    #   save_verdict(db, req.comment, state)
-    #   return to_response(state)
     state = graph.invoke(initial_state(req.comment))
     save_verdict(db, req.comment, state)
     return to_response(state)

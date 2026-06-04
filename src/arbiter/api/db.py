@@ -3,7 +3,6 @@
 DATABASE_URL: default local SQLite (zero setup); prod sets postgresql+psycopg://...
 make_engine handles the SQLite threading + in-memory-sharing gotchas for you.
 
-Fill the TODOs (spec: plan Task 2).
 Check:  python -m pytest tests/api/test_db.py -v   (goal: 2 passed)
 """
 import os
@@ -36,10 +35,6 @@ class Base(DeclarativeBase):
 
 class Submission(Base):
     __tablename__ = "submissions"
-    # 🔨 TODO:
-    #   id: Mapped[int] = mapped_column(primary_key=True)
-    #   comment_text: Mapped[str]
-    #   created_at = mapped_column(server_default=func.now())
     id: Mapped[int] = mapped_column(primary_key=True)
     comment_text: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
@@ -47,16 +42,6 @@ class Submission(Base):
 
 class Verdict(Base):
     __tablename__ = "verdicts"
-    # 🔨 TODO:
-    #   id: Mapped[int] = mapped_column(primary_key=True)
-    #   submission_id: Mapped[int] = mapped_column(ForeignKey("submissions.id"))
-    #   overall_severity: Mapped[int]
-    #   action: Mapped[str]
-    #   raw_verdicts = mapped_column(JSON)
-    #   context_flags = mapped_column(JSON)
-    #   effective_verdicts = mapped_column(JSON)
-    #   routing_snapshot = mapped_column(JSON)
-    #   created_at = mapped_column(server_default=func.now())
     id: Mapped[int] = mapped_column(primary_key=True)
     submission_id: Mapped[int] = mapped_column(ForeignKey("submissions.id"))
     overall_severity: Mapped[int]
@@ -78,7 +63,6 @@ def init_db():
 
 
 def save_verdict(db, comment: str, state: dict) -> "Submission":
-    # 🔨 TODO: add Submission -> flush (get id) -> add Verdict -> commit -> refresh -> return sub
     sub = Submission(comment_text=comment)
     db.add(sub)
     db.flush()
