@@ -44,7 +44,8 @@ def sweeps_for(model: str, sample: list) -> dict:
         for row in sample:
             if row["id"] in preds:
                 gold.append(row["labels"][cat])
-                pred_sev.append(preds[row["id"]][cat]["severity"])
+                # a model may omit a category -> treat a missing one as none (0)
+                pred_sev.append(preds[row["id"]].get(cat, {"severity": 0})["severity"])
         sweeps[cat] = sweep_category(gold, pred_sev)
     return sweeps
 

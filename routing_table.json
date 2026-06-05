@@ -1,26 +1,26 @@
 {
   "toxic": {
-    "model": "deepseek-chat",
+    "model": "gpt-5.4-mini",
     "threshold": 1
   },
   "severe_toxic": {
-    "model": "deepseek-chat",
-    "threshold": 3
+    "model": "gpt-5.4-mini",
+    "threshold": 1
   },
   "obscene": {
     "model": "deepseek-chat",
     "threshold": 1
   },
   "threat": {
-    "model": "deepseek-chat",
+    "model": "gpt-5.4-mini",
     "threshold": 1
   },
   "insult": {
-    "model": "deepseek-chat",
-    "threshold": 1
+    "model": "gpt-5.4-mini",
+    "threshold": 2
   },
   "identity_hate": {
-    "model": "deepseek-chat",
+    "model": "gpt-5.4-mini",
     "threshold": 1
   }
 }
