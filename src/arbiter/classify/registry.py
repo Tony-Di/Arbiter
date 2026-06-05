@@ -16,11 +16,17 @@ REGISTRY = {
         "api_key_env": "DEEPSEEK_API_KEY",
         "model": "deepseek-ai/DeepSeek-V4-Pro",
     },
-    "gpt-4o-mini": {
+    "gpt-5.4-mini": {
         "adapter": OpenAICompatAdapter,
         "base_url": "https://api.openai.com/v1",
         "api_key_env": "OPENAI_API_KEY",
-        "model": "gpt-4o-mini",
+        "model": "gpt-5.4-mini",
+    },
+    "gemini-flash": {
+        "adapter": OpenAICompatAdapter,
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "api_key_env": "GEMINI_API_KEY",
+        "model": "gemini-3.5-flash",
     },
 }
 

@@ -25,16 +25,30 @@ class ContextFlags(BaseModel):
 
 def build_context_prompt(comment: str) -> str:
     return f"""
-    You are a content-moderation rater.
-    You are given a comment and a list of categories.
-    You need to judge the comment for each category.
-    The severity scale is:
-    - none (0): no policy-relevant harm for this category.
-    - low (1): mild or ambiguous - borderline, weak/uncertain, plausibly-but-not-clearly harmful.
-    - medium (2): clear harmful content; a likely human-review candidate.
-    - high (3): severe - a credible direct threat, an explicit identity attack, or severe abuse; a removal candidate.
+    You are a context analyst for a content-moderation system. You do NOT score
+    harm or severity — another component already does that. Your only job is to
+    read ONE comment and report CONTEXT FLAGS that tell the moderator how to
+    interpret it. Set a flag to true only when you are reasonably confident; judge
+    only what the text supports and do not invent context that isn't there.
 
-    The output should be a JSON object with the following structure:
+    Flags:
+    - sarcasm: the comment is sarcastic / ironic, so its literal words overstate
+      the real intent (e.g. "oh GREAT, another genius idea").
+    - quotation: the comment quotes, reports, or refers to someone else's words
+      (or a headline / example) rather than asserting them as the author's own.
+    - reclaimed_slur: a slur is used in a reclaimed, self-referential, or
+      condemning way (an in-group member using it, or someone quoting it to
+      criticize abuse) — NOT to attack anyone.
+    - direct_threat: a credible, direct threat of violence at a person or group —
+      literal intent, not a joke or hyperbole.
+    - ambiguity: you genuinely cannot tell whether this is harmful without more
+      context (mixed signals, missing referents, could go either way).
+    - note: one short phrase explaining your read, or null.
+
+    (sarcasm / quotation / reclaimed_slur soften an otherwise-harsh reading;
+    direct_threat hardens it; ambiguity means "a human should look.")
+
+    Return ONLY a JSON object with this structure:
     {{
         "sarcasm": <bool>,
         "quotation": <bool>,

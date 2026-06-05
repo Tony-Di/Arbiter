@@ -4,8 +4,12 @@ from arbiter.classify.adapters.openai_compat import OpenAICompatAdapter
 from arbiter.classify.registry import REGISTRY, get_adapter
 
 
-def test_deepseek_and_openai_are_registered():
-    assert "deepseek-chat" in REGISTRY and "gpt-4o-mini" in REGISTRY
+def test_contestants_are_registered():
+    assert (
+        "deepseek-chat" in REGISTRY
+        and "gpt-5.4-mini" in REGISTRY
+        and "gemini-flash" in REGISTRY
+    )
 
 
 def test_get_adapter_builds_openai_compat_for_deepseek(monkeypatch):
