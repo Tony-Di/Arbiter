@@ -21,8 +21,8 @@ from arbiter.eval.score import sweep_category
 
 load_dotenv()
 
-MODELS = ["deepseek-chat", "gpt-5.4-mini", "gemini-flash"]
-SAMPLE = "tests/eval/fixtures/tiny_sample.jsonl"  # TODO: swap for the frozen Jigsaw sample
+MODELS = ["deepseek-chat", "gpt-5.4-mini"]  # gemini dropped for now (free-tier 5 req/min); deepseek slow but works
+SAMPLE = "data/jigsaw/sample.jsonl"  # the frozen 600-comment stratified Jigsaw sample
 CACHE_DIR = "eval_cache"
 HIGH_RISK = {"threat", "identity_hate"}
 
