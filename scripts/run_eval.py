@@ -1,9 +1,11 @@
-"""Run the accuracy eval pipeline end-to-end on DeepSeek over the tiny fixture.
+"""Run the accuracy eval across ALL contestant models, end-to-end.
 
-Ties together the functions you wrote:  collect -> sweep_category -> build_routing_table.
-Produces routing_table.json + prints a per-category P/R/F1 table.
+Ties together the functions you wrote: collect -> sweep_category -> build_routing_table.
+Loops every model in MODELS, scores each against the gold sample, then routes each
+category to the best contestant. Produces routing_table.json + a per-model F1
+comparison table.
 
-Needs DEEPSEEK_API_KEY in .env.  Run:  python scripts/run_eval.py
+Needs each contestant's API key in .env.  Run:  python scripts/run_eval.py
 """
 import json
 import os
@@ -14,13 +16,13 @@ from arbiter.classify import ALL_6
 from arbiter.classify.prompt import PROMPT_VERSION
 from arbiter.classify.schema import SCHEMA_VERSION
 from arbiter.eval.collect import cache_path, collect
-from arbiter.eval.route import build_routing_table
+from arbiter.eval.route import build_routing_table, pick_operating_point
 from arbiter.eval.score import sweep_category
 
 load_dotenv()
 
-MODEL = "deepseek-chat"
-SAMPLE = "tests/eval/fixtures/tiny_sample.jsonl"
+MODELS = ["deepseek-chat", "gpt-5.4-mini", "gemini-flash"]
+SAMPLE = "tests/eval/fixtures/tiny_sample.jsonl"  # TODO: swap for the frozen Jigsaw sample
 CACHE_DIR = "eval_cache"
 HIGH_RISK = {"threat", "identity_hate"}
 
@@ -30,20 +32,12 @@ def _read_jsonl(path):
         return [json.loads(line) for line in f]
 
 
-def main():
-    # 1. COLLECT: call classify over every sample comment, cache raw outputs.
-    #    Resumable — rerun and it re-uses the cache (no new API spend).
-    os.makedirs(CACHE_DIR, exist_ok=True)
-    out = cache_path(CACHE_DIR, MODEL, PROMPT_VERSION, SCHEMA_VERSION)
-    n = collect(SAMPLE, out, MODEL)
-    print(f"collected {n} new predictions -> {out}")
-
-    # 2. Load gold labels (sample) and predictions (cache), keyed by id.
-    sample = _read_jsonl(SAMPLE)
+def sweeps_for(model: str, sample: list) -> dict:
+    """COLLECT (cached, resumable) + SCORE one model -> {category: sweep}."""
+    out = cache_path(CACHE_DIR, model, PROMPT_VERSION, SCHEMA_VERSION)
+    n = collect(SAMPLE, out, model)
+    print(f"  {model:14} collected {n} new predictions -> {out}")
     preds = {row["id"]: row["verdicts"] for row in _read_jsonl(out)}
-
-    # 3. SCORE: per category, line up gold (0/1) with predicted severity (0-3),
-    #    then sweep the 3 thresholds.
     sweeps = {}
     for cat in ALL_6:
         gold, pred_sev = [], []
@@ -52,20 +46,31 @@ def main():
                 gold.append(row["labels"][cat])
                 pred_sev.append(preds[row["id"]][cat]["severity"])
         sweeps[cat] = sweep_category(gold, pred_sev)
+    return sweeps
 
-    # 4. ROUTE: one model here, so it wins every category — but the machinery runs
-    #    and writes the artifact the product will read.
-    table = build_routing_table({MODEL: sweeps}, HIGH_RISK)
+
+def main():
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    sample = _read_jsonl(SAMPLE)
+
+    # 1. COLLECT + SCORE every contestant (cached -> re-runs cost no new API calls).
+    print("collect + score:")
+    model_metrics = {m: sweeps_for(m, sample) for m in MODELS}
+
+    # 2. ROUTE: per category, pick the best contestant (recall for high-risk, else F1).
+    table = build_routing_table(model_metrics, HIGH_RISK)
     with open("routing_table.json", "w", encoding="utf-8") as f:
         json.dump(table, f, indent=2)
-    print("wrote routing_table.json")
+    print("\nwrote routing_table.json")
 
-    # 5. Print the per-category P/R/F1 at each category's chosen threshold.
-    print(f"\n{'category':16}{'thr':>4}{'P':>7}{'R':>7}{'F1':>7}")
+    # 3. Comparison: each model's F1 at its own chosen operating point; winner = routed model.
+    print(f"\n{'category':15}" + "".join(f"{m:>15}" for m in MODELS) + f"{'-> routed':>15}")
     for cat in ALL_6:
-        thr = table[cat]["threshold"]
-        m = sweeps[cat][thr]
-        print(f"{cat:16}{thr:>4}{m['precision']:>7.2f}{m['recall']:>7.2f}{m['f1']:>7.2f}")
+        cells = "".join(
+            f"{pick_operating_point(model_metrics[m][cat], cat in HIGH_RISK)['f1']:>15.2f}"
+            for m in MODELS
+        )
+        print(f"{cat:15}{cells}{table[cat]['model']:>15}")
 
 
 if __name__ == "__main__":

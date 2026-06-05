@@ -13,7 +13,9 @@ from .base import AdapterError
 
 class OpenAICompatAdapter:
     def __init__(self, base_url: str, api_key: str, model: str):
-        self.client = OpenAI(base_url=base_url, api_key=api_key)
+        # timeout + max_retries: never let one slow call hang the eval OR an API
+        # request (the SDK default is a 600s timeout). Retries back off on 429/503.
+        self.client = OpenAI(base_url=base_url, api_key=api_key, timeout=30.0, max_retries=2)
         self.model = model
         
 
