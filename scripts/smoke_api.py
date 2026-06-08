@@ -10,18 +10,23 @@ from arbiter.api.main import app
 
 load_dotenv()
 
-COMMENTS = ["Have a great day, everyone!", "You are an absolute idiot and I hate you."]
+COMMENTS = [
+    "Have a great day, everyone!",
+    "You are an absolute idiot and I hate you.",
+    # a gray case -> should escalate to the adjudicator
+    "I'm reporting a comment — someone replied to my post quoting a slur back at me to mock me.",
+]
 
 
 def main():
-    with TestClient(app) as client:   # `with` triggers lifespan -> builds the real graph
+    with TestClient(app) as client:   # `with` triggers lifespan -> builds the graph
         print("health:", client.get("/api/health").json())
         for c in COMMENTS:
-            r = client.post("/api/moderate", json={"comment": c})
-            print(c)
-            print(r.json()["action"])
-            print(r.json()["overall_severity"])
-            print(r.json()["categories"])
+            r = client.post("/api/moderate", json={"comment": c}).json()
+            print("\n" + c)
+            print(f"  action={r['action']}  severity={r['overall_severity']}  escalated={r['escalated']}")
+            if r.get("adjudication"):
+                print(f"  adjudication={r['adjudication']}")
 
 
 if __name__ == "__main__":

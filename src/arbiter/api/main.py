@@ -5,10 +5,12 @@ session are dependencies so tests override them (fakes + in-memory DB, no networ
 
 Check:  python -m pytest tests/api/test_api.py -v   (goal: 4 passed)
 """
+import os
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
 
+from arbiter.product.adjudicator import default_adjudicate_fn
 from arbiter.product.graph import build_graph
 from arbiter.product.routing import load_routing_table
 from arbiter.product.state import initial_state
@@ -26,7 +28,11 @@ _graph = None
 async def lifespan(app: FastAPI):
     global _graph
     init_db()
-    _graph = build_graph(load_routing_table("routing_table.json"))
+    # ROUTING_TABLE lets local/dev point at a deepseek-only table (run on one key);
+    # default stays the real eval-derived table.
+    table_path = os.environ.get("ROUTING_TABLE", "routing_table.json")
+    _graph = build_graph(load_routing_table(table_path),
+                         adjudicate_fn=default_adjudicate_fn)
     yield
 
 

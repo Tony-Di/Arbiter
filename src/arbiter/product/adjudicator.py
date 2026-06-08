@@ -183,10 +183,17 @@ def policy_tool_node(state: dict) -> dict:
       - return the partial state update (adj_messages, and the consulted list)
     Confirm the exact tool_call shape against a real DeepSeek response first (spec §12).
     """
-    tc = state["adj_messages"][-1]["tool_calls"][0]    
-    category = json.loads(tc["function"]["arguments"])["category"]
-    msg = {"role": "tool", "tool_call_id": tc["id"], "content": get_policy(category)}
-    return {"adj_messages": state["adj_messages"] + [msg]}
+    # The model may batch several get_policy calls in one assistant message; EVERY
+    # tool_call must get its own tool reply (matching tool_call_id) or the next API
+    # call is malformed and the model never settles. (Confirmed live: DeepSeek batches.)
+    last = state["adj_messages"][-1]
+    tool_msgs = []
+    for tc in last.get("tool_calls") or []:
+        if tc["function"]["name"] != "get_policy":
+            continue
+        category = json.loads(tc["function"]["arguments"]).get("category")
+        tool_msgs.append({"role": "tool", "tool_call_id": tc["id"], "content": get_policy(category)})
+    return {"adj_messages": state["adj_messages"] + tool_msgs}
 
 
 def after_adjudicate(state: dict) -> str:
