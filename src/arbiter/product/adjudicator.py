@@ -133,6 +133,7 @@ def make_adjudicate_node(adjudicate_fn):
                 assistant = adjudicate_fn(messages, TOOLS)
             except Exception:
                 return {"escalated": True,
+                        "adj_messages": messages,
                         "adjudication": {"final_action": state["action"],
                                          "note": "adjudicator unavailable, kept rule-based verdict",
                                          "policies_consulted": []}}
