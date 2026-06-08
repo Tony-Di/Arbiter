@@ -1,16 +1,28 @@
+<div align="center">
+
 # Arbiter
 
-**A multi-agent content-moderation system that escalates its hard cases to a tool-using AI adjudicator — and picks the model for each harm category by measurement, not vibes.**
+**Multi-agent content moderation that escalates its hard cases to a tool-using AI adjudicator — and picks the model per harm category by evaluation.**
 
-> *It judges content. You judge the judges.*
+*It judges content. You judge the judges.*
+
+[**Live Demo**](#) · [Architecture](#architecture) · [Quick Start](#run-it-locally) · [Design Notes](./NOTES.md)
+
+![LangGraph](https://img.shields.io/badge/LangGraph-agents-1C3C3C?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![tests](https://img.shields.io/badge/tests-91%20passing-brightgreen?style=for-the-badge)
+
+</div>
 
 Paste a comment and Arbiter tells you whether it's harmful, in which ways, how
 severe, and what to do about it (remove / human-review / allow) — with the
 reasoning and the offending span highlighted. Easy cases are decided by a fast
 parallel panel; genuinely ambiguous cases are escalated to an **adjudicator
 agent** that consults written policy via a tool call before ruling.
-
-> **Live demo:** _coming soon — deploying to Vercel + Railway._
 
 ---
 
