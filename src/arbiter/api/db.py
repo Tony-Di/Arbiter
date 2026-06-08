@@ -50,6 +50,11 @@ class Verdict(Base):
     context_flags: Mapped[dict] = mapped_column(JSON)
     effective_verdicts: Mapped[dict] = mapped_column(JSON)
     routing_snapshot: Mapped[dict] = mapped_column(JSON)
+    # escalation (spec 2026-06-08 §7). NOTE: create_all does not ALTER an existing
+    # table -> delete the gitignored arbiter.db once so these columns are created
+    # (dev only; prod is a fresh DB / migration).
+    escalated: Mapped[bool] = mapped_column(default=False)
+    adjudication: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=None)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
 
@@ -66,7 +71,7 @@ def save_verdict(db, comment: str, state: dict) -> "Submission":
     sub = Submission(comment_text=comment)
     db.add(sub)
     db.flush()
-    v = Verdict(submission_id=sub.id, overall_severity=state["overall_severity"], action=state["action"], raw_verdicts=state["raw_verdicts"], context_flags=state["context_flags"], effective_verdicts=state["effective_verdicts"], routing_snapshot=state["routing_snapshot"])
+    v = Verdict(submission_id=sub.id, overall_severity=state["overall_severity"], action=state["action"], raw_verdicts=state["raw_verdicts"], context_flags=state["context_flags"], effective_verdicts=state["effective_verdicts"], routing_snapshot=state["routing_snapshot"], escalated=state.get("escalated", False), adjudication=state.get("adjudication"))
     db.add(v)
     db.commit()
     db.refresh(sub)

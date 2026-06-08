@@ -20,7 +20,15 @@ class ModerationState(TypedDict, total=False):
     effective_verdicts: dict
     overall_severity: int
     action: str
+    # --- escalation channels (spec 2026-06-08 §6) ---
+    # Written by the single-threaded adjudicate / policy_tool nodes (NOT the
+    # parallel fan-out), so no reducer is needed.
+    escalated: bool             # did the adjudicator run? (durable -> response/UI)
+    adj_messages: list          # the ReAct transcript -- the loop's working memory
+    adj_steps: int              # tool-iteration counter -> drives the recursion cap
+    adjudication: dict          # {final_action, note, policies_consulted: [...]} -> UI trace
 
 
 def initial_state(comment: str) -> dict:
-    return {"comment": comment, "raw_verdicts": {}, "routing_snapshot": {}}
+    return {"comment": comment, "raw_verdicts": {}, "routing_snapshot": {},
+            "escalated": False, "adj_messages": [], "adj_steps": 0}

@@ -14,3 +14,9 @@ class Adapter(Protocol):
     """
 
     def complete(self, prompt: str, schema: type[BaseModel]) -> dict: ...
+
+    def complete_with_tools(self, messages: list, tools: list) -> dict:
+        """Multi-turn tool-calling call (used by the adjudicator agent). Sends the full
+        message list + tool defs and returns the raw assistant message (API-shaped:
+        {role, content, tool_calls}), appendable straight back onto `messages`."""
+        ...

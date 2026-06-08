@@ -166,15 +166,23 @@ export const SAMPLES: Sample[] = [
       cats = setCat(cats, "identity_hate", 1, "References a slur but in a report/quotation frame, not used as an attack.", "quoting a slur");
       return {
         overall_severity: 1,
-        action: "human-review",
+        // Rules tentatively held this for human review (ambiguity); the adjudicator
+        // agent escalated, consulted the identity_hate policy, and resolved it.
+        action: "allow",
         categories: cats,
         context_flags: flags({
           quotation: true,
           reclaimed: true,
           ambiguity: true,
-          note: "Term appears inside a report about abuse, not directed at anyone. Quotation downgrades severity; ambiguity routes to human review rather than auto-allow.",
+          note: "Term appears inside a report about abuse, not directed at anyone. Quotation downgrades severity; ambiguity escalated this to the adjudicator.",
         }),
         model: "deepseek-chat",
+        escalated: true,
+        adjudication: {
+          final_action: "allow",
+          policies_consulted: ["identity_hate"],
+          note: "Slur appears in a report/quotation condemning abuse — policy says this is not a violation.",
+        },
       };
     },
   },

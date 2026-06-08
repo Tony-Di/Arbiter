@@ -20,6 +20,13 @@ export interface ContextFlags {
   [k: string]: boolean | string | null | undefined;
 }
 
+/** The adjudicator's trace when a gray case was escalated (spec 2026-06-08 §8). */
+export interface Adjudication {
+  final_action?: ActionKey;
+  note?: string | null;
+  policies_consulted?: string[];
+}
+
 /** Shape returned by POST /api/moderate (model is optional — backend may omit it). */
 export interface Verdict {
   overall_severity: number;
@@ -27,6 +34,8 @@ export interface Verdict {
   categories: Category[];
   context_flags: ContextFlags;
   model?: string | null;
+  escalated?: boolean;
+  adjudication?: Adjudication | null;
 }
 
 export interface Segment {

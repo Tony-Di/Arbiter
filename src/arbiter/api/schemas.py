@@ -27,6 +27,10 @@ class ModerateResponse(BaseModel):
     action: str
     categories: list[CategoryOut]
     context_flags: dict
+    # escalation (spec 2026-06-08 §7): default-safe so the non-escalated path
+    # serializes exactly as before, plus escalated:false.
+    escalated: bool = False
+    adjudication: dict | None = None
 
 
 def to_response(state: dict) -> ModerateResponse:
@@ -37,4 +41,6 @@ def to_response(state: dict) -> ModerateResponse:
     return ModerateResponse(overall_severity=state["overall_severity"],
                             action=state["action"],
                             categories=categories,
-                            context_flags=state["context_flags"])
+                            context_flags=state["context_flags"],
+                            escalated=state.get("escalated", False),
+                            adjudication=state.get("adjudication"))

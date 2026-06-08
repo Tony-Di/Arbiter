@@ -65,7 +65,28 @@ export function Ruling() {
   return (
     <div className="vb-ruling">
       <div className="vb-headline">
-        <span className="lead">Ruling</span>
+        <span className="lead">
+          Ruling
+          {r.escalated && (
+            <span
+              className="vb-escalated"
+              title="A gray case the rules couldn't auto-decide — resolved by the adjudicator agent."
+              style={{
+                marginLeft: 8,
+                fontSize: "0.7em",
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                padding: "2px 6px",
+                borderRadius: 4,
+                border: "1px solid currentColor",
+                opacity: 0.85,
+              }}
+            >
+              Escalated
+            </span>
+          )}
+        </span>
         <Statement action={r.action} />
         <div className="vb-meta">
           <div className="m">
@@ -123,6 +144,15 @@ export function Ruling() {
           )}
         </div>
         {cf.note && <div className="vb-note-txt">{cf.note}</div>}
+        {r.escalated && r.adjudication && (
+          <div className="vb-adj" style={{ marginTop: 8, fontSize: "0.9em", opacity: 0.85 }}>
+            <b>Adjudicator</b>
+            {r.adjudication.policies_consulted?.length
+              ? ` · consulted policy: ${r.adjudication.policies_consulted.join(", ")}`
+              : ""}
+            {r.adjudication.note ? ` · ${r.adjudication.note}` : ""}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -43,10 +43,13 @@ def test_state_has_expected_keys():
     assert set(ModerationState.__annotations__) == {
         "comment", "raw_verdicts", "routing_snapshot",
         "context_flags", "effective_verdicts", "overall_severity", "action",
+        # escalation channels (spec 2026-06-08 §6)
+        "escalated", "adj_messages", "adj_steps", "adjudication",
     }
 
 
 def test_initial_state_seeds_reducer_channels():
     from arbiter.product.state import initial_state
     s = initial_state("hello")
-    assert s == {"comment": "hello", "raw_verdicts": {}, "routing_snapshot": {}}
+    assert s == {"comment": "hello", "raw_verdicts": {}, "routing_snapshot": {},
+                 "escalated": False, "adj_messages": [], "adj_steps": 0}

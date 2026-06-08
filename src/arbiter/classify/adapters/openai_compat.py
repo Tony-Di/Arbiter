@@ -31,3 +31,23 @@ class OpenAICompatAdapter:
             return json.loads(content)
         except Exception as e:
             raise AdapterError(str(e)) from e
+
+    def complete_with_tools(self, messages: list, tools: list) -> dict:
+        """Tool-calling turn for the adjudicator agent. Returns the assistant message
+        as an API-shaped dict (model_dump), so the caller can append it straight back
+        onto `messages` and resend after a tool result. tool_calls[i].function.arguments
+        is a JSON *string* (OpenAI convention) -- the caller json.loads it.
+
+        NOTE: shape is the OpenAI SDK's normalized message; verify once against a real
+        DeepSeek response (spec §12) before relying on field names in the node.
+        """
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                tools=tools,
+                temperature=0,
+            )
+            return resp.choices[0].message.model_dump()
+        except Exception as e:
+            raise AdapterError(str(e)) from e
