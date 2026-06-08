@@ -1,10 +1,5 @@
 """The tool-using adjudicator agent + its graph glue (escalation spec 2026-06-08).
 
-This is the CORE feature module. The skeleton below gives you: the two tool schemas,
-the consts, the trigger (`should_escalate`, implemented), and the function contracts
-for everything else as detailed docstrings + TODOs. You write the bodies marked
-`TODO(you)`.
-
 Shape recap (spec §4/§5):
     aggregator --should_escalate--> adjudicate <-> policy_tool --> END
     - adjudicate: calls adjudicate_fn(messages, TOOLS); the model either asks for
@@ -76,7 +71,7 @@ def should_escalate(state: dict) -> str:
     return "done"
 
 
-# --- the adjudicator loop (CORE -- you write these bodies) -------------------------
+# --- the adjudicator loop ---------------------------------------------------------
 def build_adjudicator_messages(state: dict) -> list:
     """Build the initial ReAct transcript: a system message (you are the adjudicator;
     you MAY call get_policy; you MUST end with submit_decision) + a user message with
@@ -110,22 +105,8 @@ def make_adjudicate_node(adjudicate_fn):
     default_adjudicate_fn.
     """
     def node(state: dict) -> dict:
-        # TODO(you): the loop step (spec §4/§5/§9):
-        #   1. messages = state["adj_messages"] or build_adjudicator_messages(state)
-        #   2. call adjudicate_fn(messages, TOOLS); retry once; on repeated failure ->
-        #      degrade: keep tentative verdict, escalated=True,
-        #      adjudication={"note": "adjudicator unavailable", ...}, and finish.
-        #   3. append the assistant message; bump adj_steps.
-        #   4. if it called submit_decision -> write final action / overall_severity /
-        #      adjudication + escalated=True.
-        #      if it called get_policy -> just persist messages (after_adjudicate sends
-        #      it to policy_tool).
-        #      if adj_steps >= MAX_TOOL_STEPS or no tool call -> force-finalize on the
-        #      tentative verdict (escalated=True).
-        #   Return the partial state update (escalated, adj_messages, adj_steps, and
-        #   action/overall_severity/adjudication when finalizing).
         messages = state["adj_messages"] or build_adjudicator_messages(state)
-         # 2. 调模型(带工具)。失败重试一次；两次都挂 -> 降级，保留 tentative 判决
+        # 2. 调模型(带工具)。失败重试一次；两次都挂 -> 降级，保留 tentative 判决
         try:
             assistant = adjudicate_fn(messages, TOOLS)
         except Exception:
@@ -173,17 +154,8 @@ def make_adjudicate_node(adjudicate_fn):
 
 
 def policy_tool_node(state: dict) -> dict:
-    """Execute the get_policy call the adjudicator just requested, append the result to
-    the transcript, and loop back.
-
-    TODO(you):
-      - read the last assistant message's get_policy tool_call(s) from adj_messages
-      - category = the tool-call argument; text = get_policy(category)
-      - append a tool-result message (role "tool", matching tool_call_id) to adj_messages
-      - track which policies were consulted (for adjudication.policies_consulted)
-      - return the partial state update (adj_messages, and the consulted list)
-    Confirm the exact tool_call shape against a real DeepSeek response first (spec §12).
-    """
+    """Execute the get_policy call(s) the adjudicator just requested, append the
+    result(s) to the transcript, and loop back."""
     # The model may batch several get_policy calls in one assistant message; EVERY
     # tool_call must get its own tool reply (matching tool_call_id) or the next API
     # call is malformed and the model never settles. (Confirmed live: DeepSeek batches.)
@@ -210,10 +182,9 @@ def after_adjudicate(state: dict) -> str:
 
 
 
-# --- the real model-backed adjudicate_fn the app injects (CORE -- you write it) ----
+# --- the real model-backed adjudicate_fn the app injects --------------------------
 def default_adjudicate_fn(messages: list, tools: list) -> dict:
     """Production adjudicator call: get_adapter(ADJUDICATOR_MODEL).complete_with_tools(
     messages, tools) -> assistant message dict. Kept here (not in the node) so the node
-    stays offline-testable. TODO(you): one line once complete_with_tools is verified.
-    """
+    stays offline-testable."""
     return get_adapter(ADJUDICATOR_MODEL).complete_with_tools(messages, tools)

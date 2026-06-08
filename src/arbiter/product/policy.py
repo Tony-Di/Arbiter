@@ -9,11 +9,8 @@ Check:  python -m pytest tests/product/test_policy.py -v
 """
 from arbiter.classify import ALL_6
 
-# category -> written policy + decision guidance.
-#
-# Keep each entry short and decision-oriented: what IS a violation, what is NOT,
-# and the gray-case rule. The identity_hate entry below is the TEMPLATE (filled
-# from the spec example) -- match its shape for the other five.
+# category -> written policy + decision guidance: what IS a violation, what is NOT,
+# and the gray-case rule.
 POLICIES: dict[str, str] = {
     "identity_hate": (
         "Attacks or dehumanization targeting a protected group (race, religion, "
@@ -22,7 +19,6 @@ POLICIES: dict[str, str] = {
         "merely mentioning an identity. Remove only when the text itself attacks a "
         "protected identity; when it is a report/quotation, do not remove."
     ),
-    # TODO(you): write the remaining five, same shape (violation / not-a-violation / gray rule).
     "toxic": ( "Rude, disrespectful, or hostile language aimed at a person or group, likely "
         "to make them leave the conversation. NOT a violation: blunt criticism of an "
         "idea or someone's work, strong disagreement, or profanity not aimed at anyone. "

@@ -4,6 +4,7 @@
 Check:  python -m pytest tests/classify/test_adapter_openai_compat.py -v   (goal: 2 passed)
 """
 import json
+import os
 
 from openai import OpenAI  # keep this import here — the test patches this name
 from pydantic import BaseModel
@@ -15,7 +16,11 @@ class OpenAICompatAdapter:
     def __init__(self, base_url: str, api_key: str, model: str):
         # timeout + max_retries: never let one slow call hang the eval OR an API
         # request (the SDK default is a 600s timeout). Retries back off on 429/503.
-        self.client = OpenAI(base_url=base_url, api_key=api_key, timeout=30.0, max_retries=2)
+        # Timeout is env-tunable (default 30s) -- China-hosted models (DeepSeek via
+        # SiliconFlow, in thinking mode) can exceed 30s from abroad; bump
+        # ARBITER_LLM_TIMEOUT for the eval re-run without changing prod defaults.
+        timeout = float(os.environ.get("ARBITER_LLM_TIMEOUT", "30"))
+        self.client = OpenAI(base_url=base_url, api_key=api_key, timeout=timeout, max_retries=2)
         self.model = model
         
 
