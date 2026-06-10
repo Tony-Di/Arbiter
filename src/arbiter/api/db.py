@@ -72,6 +72,18 @@ class Precedent(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
 
+class ReviewCase(Base):
+    """A paused (interrupted) moderation case awaiting a human ruling (HITL §7)."""
+    __tablename__ = "review_cases"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    case_id: Mapped[str] = mapped_column(unique=True, index=True)   # graph thread_id
+    comment_text: Mapped[str]
+    recommendation: Mapped[dict] = mapped_column(JSON)              # interrupt payload
+    status: Mapped[str] = mapped_column(default="pending")          # pending | resolved
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    resolved_at: Mapped[datetime | None] = mapped_column(nullable=True, default=None)
+
+
 # Module-level engine/session for the running app (tests build their own).
 engine = make_engine()
 SessionLocal = make_session_factory(engine)
