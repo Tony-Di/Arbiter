@@ -15,9 +15,10 @@ from langgraph.graph import START, END, StateGraph
 
 from arbiter.classify import ALL_6, classify
 from arbiter.product.adjudicator import (
-    after_adjudicate,
+    human_review_node,
     make_adjudicate_node,
     make_tools_node,
+    route_after_adjudicate,
     should_escalate,
 )
 from arbiter.product.context import detect_context
@@ -26,7 +27,7 @@ from arbiter.product.state import ModerationState
 
 
 def build_graph(table: dict, classify_fn=classify, detect_fn=detect_context,
-                adjudicate_fn=None, store=None):
+                adjudicate_fn=None, store=None, checkpointer=None):
     g = StateGraph(ModerationState)
     for cat in ALL_6:
         g.add_node(f"specialist_{cat}", make_specialist_node(cat, table, classify_fn))
@@ -42,16 +43,27 @@ def build_graph(table: dict, classify_fn=classify, detect_fn=detect_context,
         # No adjudicator wired -> the aggregator's verdict is final (pre-escalation
         # behavior). Keeps existing call sites + tests unchanged.
         g.add_edge("aggregator", END)
-        return g.compile()
+        return g.compile(checkpointer=checkpointer)
 
     # --- escalation branch (Approach A: the ReAct loop is a cycle in the graph) ---
     g.add_node("adjudicate", make_adjudicate_node(adjudicate_fn))
     g.add_node("policy_tool", make_tools_node(store))
+    # HITL only activates WITH a checkpointer -- interrupt() requires one. Without
+    # it, "human" falls through to END (pre-HITL behavior: human-review stays a
+    # label). Same opt-in pattern as "escalation only wired when adjudicate_fn is
+    # injected" -- this is what keeps the existing escalation tests green (they
+    # build graphs with no checkpointer and expect no pause).
+    human_target = END
+    if checkpointer is not None:
+        g.add_node("human_review", human_review_node)
+        g.add_edge("human_review", END)
+        human_target = "human_review"
     # aggregator's verdict is now TENTATIVE: gray cases route to the adjudicator.
     g.add_conditional_edges("aggregator", should_escalate,
                             {"escalate": "adjudicate", "done": END})
-    # the adjudicator drives its own loop: ask for policy, or submit & finish.
-    g.add_conditional_edges("adjudicate", after_adjudicate,
-                            {"tool": "policy_tool", "done": END})
+    # one router, three exits: keep looping, queue for a human, or finalize.
+    g.add_conditional_edges("adjudicate", route_after_adjudicate,
+                            {"tool": "policy_tool", "human": human_target,
+                             "done": END})
     g.add_edge("policy_tool", "adjudicate")  # <-- the visible cycle
-    return g.compile()
+    return g.compile(checkpointer=checkpointer)
