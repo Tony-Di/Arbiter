@@ -29,7 +29,10 @@ ADJUDICATOR_MODEL = "deepseek-chat"
 MAX_TOOL_STEPS = 4
 
 # Below this self-reported confidence, the ruling goes to a human (HITL spec §4).
-CONFIDENCE_THRESHOLD = 0.7
+# 0.95, not the spec's 0.7: live DeepSeek self-reports cluster high (0.85-0.9
+# observed even on genuine gray cases) -- a known LLM overconfidence pattern.
+# Production would calibrate properly (logprobs / sampling agreement) instead.
+CONFIDENCE_THRESHOLD = 0.95
 
 # --- tool schemas (OpenAI-style function calling) ---------------------------------
 GET_POLICY_TOOL = {
@@ -74,9 +77,13 @@ SUBMIT_DECISION_TOOL = {
                 "action": {"type": "string", "enum": ["allow", "human-review", "remove"]},
                 "overall_severity": {"type": "integer", "minimum": 0, "maximum": 3},
                 "note": {"type": "string", "description": "One short sentence of reasoning."},
+                # No threshold hint here on purpose: telling the model the cutoff
+                # anchors it into always reporting a "safe" score above the line.
                 "confidence": {"type": "number", "minimum": 0, "maximum": 1,
-                               "description": "Your calibrated confidence this ruling is "
-                                              "correct. Below 0.7 a human will review it."},
+                               "description": "Your honest, calibrated confidence that "
+                                              "this ruling is correct. Use the low end "
+                                              "when policy and precedent leave real "
+                                              "doubt; do not inflate."},
             },
             "required": ["action", "overall_severity", "note", "confidence"],
         },
@@ -282,7 +289,7 @@ def human_review_node(state: dict) -> dict:
         "confirm" keeps recommended_action; otherwise decision["action"] wins.
         Return {"action": final, "adjudication": {**state["adjudication"],
                 "human": {"action": final, "note": decision.get("note")}}}
-
+ 
     TODO(author): implement (import `interrupt` from langgraph.types).
     """
     payload = {"recommended_action": state["action"],

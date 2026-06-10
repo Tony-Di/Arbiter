@@ -286,8 +286,11 @@ def test_high_confidence_finalizes():
 
 
 def test_exactly_threshold_finalizes():
+    # exactly AT the threshold finalizes (gate is strict <) -- pin via the
+    # constant, not a literal, so tuning the threshold doesn't break this test
+    from arbiter.product.adjudicator import CONFIDENCE_THRESHOLD
     assert needs_human({"action": "allow",
-                        "adjudication": {"confidence": 0.7}}) == "finalize"
+                        "adjudication": {"confidence": CONFIDENCE_THRESHOLD}}) == "finalize"
 
 
 def test_human_review_action_always_queues():
@@ -314,6 +317,7 @@ def test_route_after_adjudicate_composes_tool_and_gate():
                  "adj_steps": 1, "action": "allow",
                  "adjudication": {"confidence": 0.2}}
     assert route_after_adjudicate(submitted) == "human"
-    # submitted, confident -> "done"
-    submitted["adjudication"] = {"confidence": 0.9}
+    # submitted, confident -> "done" (at-threshold = confident; gate is strict <)
+    from arbiter.product.adjudicator import CONFIDENCE_THRESHOLD
+    submitted["adjudication"] = {"confidence": CONFIDENCE_THRESHOLD}
     assert route_after_adjudicate(submitted) == "done"
