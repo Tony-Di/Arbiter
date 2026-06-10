@@ -3,7 +3,7 @@ name = "arbiter"
 version = "0.1.0"
 description = "Multi-agent content moderation + cross-model LLM evaluation"
 requires-python = ">=3.14"
-dependencies = ["pydantic>=2.7", "openai>=1.40", "python-dotenv>=1.0", "langgraph>=0.2", "fastapi>=0.115", "uvicorn>=0.30", "sqlalchemy>=2.0"]
+dependencies = ["pydantic>=2.7", "openai>=1.40", "python-dotenv>=1.0", "langgraph>=0.2", "langgraph-checkpoint-sqlite>=2.0", "fastapi>=0.115", "uvicorn>=0.30", "sqlalchemy>=2.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
