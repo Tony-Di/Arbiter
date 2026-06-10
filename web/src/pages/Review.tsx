@@ -86,14 +86,19 @@ function RQRow({
           </span>
         ) : (
           <span className="rq-act" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="rq-btn primary"
-              disabled={busy}
-              style={{ "--ac": `var(${act.token})` } as CSSProperties}
-              onClick={() => onRule(item.case_id, "confirm", "confirmed")}
-            >
-              Confirm
-            </button>
+            {/* "Confirm AI" is circular when the AI's recommendation IS
+                human-review (the reviewer is the human) -- degraded/step-limit
+                cases only offer the two real rulings. */}
+            {rec.recommended_action !== "human-review" && (
+              <button
+                className="rq-btn primary"
+                disabled={busy}
+                style={{ "--ac": `var(${act.token})` } as CSSProperties}
+                onClick={() => onRule(item.case_id, "confirm", "confirmed")}
+              >
+                Confirm
+              </button>
+            )}
             <button className="rq-btn" disabled={busy} onClick={() => onRule(item.case_id, "allow", "allowed")}>
               Allow
             </button>
