@@ -1,6 +1,6 @@
 {
   "toxic": {
-    "model": "gpt-5.4-mini",
+    "model": "deepseek-chat",
     "threshold": 1
   },
   "severe_toxic": {
