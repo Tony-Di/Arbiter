@@ -11,7 +11,7 @@ from arbiter.product.adjudicator import (
     MAX_TOOL_STEPS,
     after_adjudicate,
     make_adjudicate_node,
-    policy_tool_node,
+    make_tools_node,
     should_escalate,
 )
 from arbiter.product.context import ContextFlags
@@ -26,11 +26,18 @@ def _getpolicy_msg(category, call_id="c1"):
          "function": {"name": "get_policy", "arguments": json.dumps({"category": category})}}]}
 
 
-def _submit_msg(action, sev, note, call_id="c2"):
+def _submit_msg(action, sev, note, call_id="c2", confidence=0.9):
     return {"role": "assistant", "content": "", "tool_calls": [
         {"id": call_id, "type": "function",
          "function": {"name": "submit_decision",
-                      "arguments": json.dumps({"action": action, "overall_severity": sev, "note": note})}}]}
+                      "arguments": json.dumps({"action": action, "overall_severity": sev,
+                                               "note": note, "confidence": confidence})}}]}
+
+
+def _searchprec_msg(query, call_id="c3"):
+    return {"role": "assistant", "content": "", "tool_calls": [
+        {"id": call_id, "type": "function",
+         "function": {"name": "search_precedents", "arguments": json.dumps({"query": query})}}]}
 
 
 def _gray_state(comment="People like you don't belong here."):
@@ -73,18 +80,28 @@ def test_after_routes_done_at_step_cap():
     assert after_adjudicate({"adj_messages": [_getpolicy_msg("toxic")], "adj_steps": MAX_TOOL_STEPS}) == "done"
 
 
-# --- policy_tool_node -------------------------------------------------------------
-def test_policy_tool_appends_tool_message_with_matching_id():
+# --- the tools node (get_policy + search_precedents; HITL spec 2026-06-09 §6) ------
+class FakeStore:
+    def __init__(self, hits=None, fail=False):
+        self.hits, self.fail = hits or [], fail
+
+    def search(self, query, k=3):
+        if self.fail:
+            raise RuntimeError("embed down")
+        return self.hits
+
+
+def test_tools_node_appends_tool_message_with_matching_id():
     state = _gray_state()
     state["adj_messages"] = [_getpolicy_msg("identity_hate", call_id="abc")]
-    upd = policy_tool_node(state)
+    upd = make_tools_node(None)(state)
     last = upd["adj_messages"][-1]
     assert last["role"] == "tool"
     assert last["tool_call_id"] == "abc"
     assert "protected" in last["content"].lower()
 
 
-def test_policy_tool_answers_every_batched_call():
+def test_tools_node_answers_every_batched_call():
     # DeepSeek batches multiple get_policy in one assistant message -> all must be answered
     state = _gray_state()
     state["adj_messages"] = [{"role": "assistant", "content": "", "tool_calls": [
@@ -93,10 +110,41 @@ def test_policy_tool_answers_every_batched_call():
         {"id": "b", "type": "function",
          "function": {"name": "get_policy", "arguments": json.dumps({"category": "insult"})}},
     ]}]
-    upd = policy_tool_node(state)
+    upd = make_tools_node(None)(state)
     tool_msgs = upd["adj_messages"][-2:]
     assert [m["tool_call_id"] for m in tool_msgs] == ["a", "b"]
     assert all(m["role"] == "tool" for m in tool_msgs)
+
+
+def test_tools_node_answers_mixed_batch_one_reply_per_call_id():
+    state = _gray_state()
+    state["adj_messages"] = [{"role": "assistant", "content": "", "tool_calls": [
+        {"id": "a", "type": "function",
+         "function": {"name": "get_policy", "arguments": json.dumps({"category": "insult"})}},
+        {"id": "b", "type": "function",
+         "function": {"name": "search_precedents", "arguments": json.dumps({"query": "you idiot"})}},
+    ]}]
+    hits = [{"comment_text": "u r dumb", "action": "remove",
+             "overall_severity": 2, "note": "direct insult", "source": "human"}]
+    upd = make_tools_node(FakeStore(hits))(state)
+    tool_msgs = upd["adj_messages"][-2:]
+    assert [m["tool_call_id"] for m in tool_msgs] == ["a", "b"]
+    assert all(m["role"] == "tool" for m in tool_msgs)
+    assert "<precedent>" in tool_msgs[1]["content"]
+
+
+def test_tools_node_search_failure_is_a_string_not_an_exception():
+    state = _gray_state()
+    state["adj_messages"] = [_searchprec_msg("x")]
+    upd = make_tools_node(FakeStore(fail=True))(state)
+    assert upd["adj_messages"][-1]["content"] == "precedent search unavailable"
+
+
+def test_tools_node_without_store_degrades_the_same_way():
+    state = _gray_state()
+    state["adj_messages"] = [_searchprec_msg("x")]
+    upd = make_tools_node(None)(state)
+    assert upd["adj_messages"][-1]["content"] == "precedent search unavailable"
 
 
 # --- the adjudicate node ----------------------------------------------------------
@@ -185,3 +233,87 @@ def test_graph_first_turn_degrade_does_not_crash():
     out = graph.invoke(initial_state("you idiot"))
     assert out["escalated"] is True
     assert out["action"] == "human-review"     # tentative rule-based verdict kept
+
+
+# --- search_precedents drives the loop too (HITL spec 2026-06-09 §6) ---------------
+def test_after_routes_tool_for_search_precedents_under_cap():
+    assert after_adjudicate({"adj_messages": [_searchprec_msg("x")], "adj_steps": 1}) == "tool"
+
+
+def test_node_continues_on_search_precedents():
+    upd = make_adjudicate_node(lambda m, t: _searchprec_msg("you idiot"))(_gray_state())
+    assert "action" not in upd                 # did NOT finalize
+    assert upd["adj_steps"] == 1
+
+
+def test_submit_decision_confidence_lands_in_adjudication():
+    upd = make_adjudicate_node(
+        lambda m, t: _submit_msg("allow", 0, "ok", confidence=0.92))(_gray_state())
+    assert upd["adjudication"]["confidence"] == 0.92
+
+
+def test_graph_collects_precedents_consulted():
+    # search_precedents then submit -> the queries land in the adjudication trace
+    table = {c: {"model": "x", "threshold": 1} for c in ALL_6}
+    n = {"i": 0}
+
+    def fn(messages, tools):
+        n["i"] += 1
+        return _searchprec_msg("you idiot") if n["i"] == 1 else _submit_msg("allow", 1, "precedent says fine")
+
+    hits = [{"comment_text": "u r dumb", "action": "allow",
+             "overall_severity": 1, "note": "trash talk", "source": "human"}]
+    graph = build_graph(table, classify_fn=_fake_classify,
+                        detect_fn=lambda c: ContextFlags(ambiguity=True),
+                        adjudicate_fn=fn, store=FakeStore(hits))
+    out = graph.invoke(initial_state("you idiot"))
+    assert out["action"] == "allow"
+    assert out["adjudication"]["precedents_consulted"] == ["you idiot"]
+
+
+# --- HITL spec 2026-06-09: confidence gate ----------------------------------------
+from arbiter.product.adjudicator import needs_human, route_after_adjudicate
+
+
+def test_low_confidence_goes_human():
+    assert needs_human({"action": "allow",
+                        "adjudication": {"confidence": 0.3}}) == "human"
+
+
+def test_high_confidence_finalizes():
+    assert needs_human({"action": "remove",
+                        "adjudication": {"confidence": 0.95}}) == "finalize"
+
+
+def test_exactly_threshold_finalizes():
+    assert needs_human({"action": "allow",
+                        "adjudication": {"confidence": 0.7}}) == "finalize"
+
+
+def test_human_review_action_always_queues():
+    assert needs_human({"action": "human-review",
+                        "adjudication": {"confidence": 0.99}}) == "human"
+
+
+def test_degrade_without_confidence_only_queues_on_action():
+    # degrade path writes no confidence key -> default 1.0; only the action decides
+    deg = {"note": "adjudicator unavailable, kept rule-based verdict",
+           "policies_consulted": []}
+    assert needs_human({"action": "allow", "adjudication": deg}) == "finalize"
+    assert needs_human({"action": "human-review", "adjudication": deg}) == "human"
+
+
+def test_route_after_adjudicate_composes_tool_and_gate():
+    # mid-loop (asking for a tool) -> "tool"
+    assert route_after_adjudicate(
+        {"adj_messages": [_getpolicy_msg("toxic")], "adj_steps": 1}) == "tool"
+    # submitted, low confidence -> "human"
+    submitted = {"adj_messages": [{"role": "assistant", "content": None,
+                                   "tool_calls": [{"id": "1", "function": {
+                                       "name": "submit_decision", "arguments": "{}"}}]}],
+                 "adj_steps": 1, "action": "allow",
+                 "adjudication": {"confidence": 0.2}}
+    assert route_after_adjudicate(submitted) == "human"
+    # submitted, confident -> "done"
+    submitted["adjudication"] = {"confidence": 0.9}
+    assert route_after_adjudicate(submitted) == "done"

@@ -18,12 +18,17 @@ from arbiter.classify import ALL_6
 from arbiter.classify.registry import get_adapter  # for default_adjudicate_fn
 from arbiter.product.policy import get_policy
 import json
+from arbiter.precedents import format_precedents
 # Single-model MVP -> DeepSeek (the only paid model). Swap to a stronger reasoning
 # model here in one line later; the tool-loop is the signal, not the model tier.
 ADJUDICATOR_MODEL = "deepseek-chat"
 
-# Hard cap on get_policy iterations -> bounds cost and forbids an infinite loop.
-MAX_TOOL_STEPS = 3
+# Hard cap on query-tool iterations (get_policy + search_precedents share it)
+# -> bounds cost and forbids an infinite loop. 4 since the HITL spec added a 2nd tool.
+MAX_TOOL_STEPS = 4
+
+# Below this self-reported confidence, the ruling goes to a human (HITL spec §4).
+CONFIDENCE_THRESHOLD = 0.7
 
 # --- tool schemas (OpenAI-style function calling) ---------------------------------
 GET_POLICY_TOOL = {
@@ -41,6 +46,21 @@ GET_POLICY_TOOL = {
     },
 }
 
+SEARCH_PRECEDENTS_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "search_precedents",
+        "description": "Find how similar past comments were ruled by HUMAN moderators. "
+                       "Call this when written policy alone does not settle the case.",
+        "parameters": {
+            "type": "object",
+            "properties": {"query": {"type": "string",
+                                     "description": "The comment or phrase to match."}},
+            "required": ["query"],
+        },
+    },
+}
+
 SUBMIT_DECISION_TOOL = {
     "type": "function",
     "function": {
@@ -53,13 +73,19 @@ SUBMIT_DECISION_TOOL = {
                 "action": {"type": "string", "enum": ["allow", "human-review", "remove"]},
                 "overall_severity": {"type": "integer", "minimum": 0, "maximum": 3},
                 "note": {"type": "string", "description": "One short sentence of reasoning."},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1,
+                               "description": "Your calibrated confidence this ruling is "
+                                              "correct. Below 0.7 a human will review it."},
             },
-            "required": ["action", "overall_severity", "note"],
+            "required": ["action", "overall_severity", "note", "confidence"],
         },
     },
 }
 
-TOOLS = [GET_POLICY_TOOL, SUBMIT_DECISION_TOOL]
+TOOLS = [GET_POLICY_TOOL, SEARCH_PRECEDENTS_TOOL, SUBMIT_DECISION_TOOL]
+
+# The tools that keep the ReAct loop going (submit_decision ends it instead).
+QUERY_TOOLS = {"get_policy", "search_precedents"}
 
 
 # --- trigger (implemented: it's the locked spec §4 rule, pure glue) ----------------
@@ -90,7 +116,7 @@ def build_adjudicator_messages(state: dict) -> list:
     return [
         {
             "role": "system",
-            "content": "You are the adjudicator. Resolve gray cases the rules could not auto-decide. You MAY call get_policy to consult the written policy. You MUST end by calling submit_decision.",
+            "content": "You are the adjudicator. Resolve gray cases the rules could not auto-decide. You MAY call get_policy to consult the written policy and search_precedents to see how human moderators ruled similar comments. You MUST end by calling submit_decision.",
         },
         {
             "role": "user",
@@ -125,60 +151,134 @@ def make_adjudicate_node(adjudicate_fn):
         calls = assistant.get("tool_calls") or []
         name = calls[0]["function"]["name"] if calls else None
 
-        # 4a. 还在查政策、且没到上限 -> 不收尾，交给 after_adjudicate 走 policy_tool 再绕回来
-        if name == "get_policy" and steps < MAX_TOOL_STEPS:
+        # 4a. 还在查询(政策/判例)、且没到上限 -> 不收尾，交给 after_adjudicate 绕回来
+        if name in QUERY_TOOLS and steps < MAX_TOOL_STEPS:
             return {"adj_messages": new_messages, "adj_steps": steps}
 
         # 4b. 模型定案 -> 用它给的参数当最终判决
+        confidence = None
         if name == "submit_decision":
             args = json.loads(calls[0]["function"]["arguments"])
             final_action, severity, note = args["action"], args["overall_severity"], args.get("note")
+            confidence = args.get("confidence", 1.0)
         # 4c. 到上限 / 没调工具 -> 降级，保留规则判出来的 tentative
+        # （注意：降级时 adjudication 不写 confidence 键 -> needs_human 缺键默认 1.0，
+        #   只有 action==human-review 才进人工队列，HITL spec §4）
         else:
             final_action, severity = state["action"], state["overall_severity"]
             note = "reached step limit, kept rule-based verdict"
 
-        # 收集这轮里查过的政策类别(给 UI 的 trace 用)
+        # 收集这轮里查过的政策类别 + 判例 query(给 UI 的 trace 用)
         consulted = [json.loads(c["function"]["arguments"]).get("category")
                      for m in new_messages
                      for c in (m.get("tool_calls") or [])
                      if c["function"]["name"] == "get_policy"]
+        precedents = [json.loads(c["function"]["arguments"]).get("query")
+                      for m in new_messages
+                      for c in (m.get("tool_calls") or [])
+                      if c["function"]["name"] == "search_precedents"]
 
         # 写回最终结果，并标记 escalated=True
+        adjudication = {"final_action": final_action, "note": note,
+                        "policies_consulted": consulted,
+                        "precedents_consulted": precedents}
+        if confidence is not None:
+            adjudication["confidence"] = confidence
         return {"adj_messages": new_messages, "adj_steps": steps, "escalated": True,
                 "action": final_action, "overall_severity": severity,
-                "adjudication": {"final_action": final_action, "note": note,
-                                 "policies_consulted": consulted}}
+                "adjudication": adjudication}
     return node
         
 
 
-def policy_tool_node(state: dict) -> dict:
-    """Execute the get_policy call(s) the adjudicator just requested, append the
-    result(s) to the transcript, and loop back."""
-    # The model may batch several get_policy calls in one assistant message; EVERY
-    # tool_call must get its own tool reply (matching tool_call_id) or the next API
-    # call is malformed and the model never settles. (Confirmed live: DeepSeek batches.)
-    last = state["adj_messages"][-1]
-    tool_msgs = []
-    for tc in last.get("tool_calls") or []:
-        if tc["function"]["name"] != "get_policy":
-            continue
-        category = json.loads(tc["function"]["arguments"]).get("category")
-        tool_msgs.append({"role": "tool", "tool_call_id": tc["id"], "content": get_policy(category)})
-    return {"adj_messages": state["adj_messages"] + tool_msgs}
+def make_tools_node(store):
+    """Factory -> the tools node (supersedes policy_tool_node; HITL spec §4/§6).
+
+    Executes EVERY batched tool call by name (one tool reply per tool_call_id --
+    the DeepSeek-batches lesson carries over), appends the results to the
+    transcript, loops back.
+
+        get_policy        -> get_policy(category)                       (as before)
+        search_precedents -> format_precedents(store.search(query, k=3))
+                             store is None OR store.search raises
+                             -> "precedent search unavailable"
+
+    store is injected (same DI pattern as classify_fn / adjudicate_fn); the app
+    passes a PrecedentStore, tests pass a FakeStore or None.
+
+    The model may batch several calls in one assistant message; EVERY tool_call
+    must get its own tool reply (matching tool_call_id) or the next API call is
+    malformed and the model never settles. (Confirmed live: DeepSeek batches.)
+    """
+    def node(state: dict) -> dict:
+        last = state["adj_messages"][-1]
+        calls = last.get("tool_calls") or []
+        tool_msgs = []
+        for tc in calls:
+            if tc["function"]["name"] == "get_policy":
+                category = json.loads(tc["function"]["arguments"]).get("category")
+                tool_msgs.append({"role": "tool", "tool_call_id": tc["id"], "content": get_policy(category)})
+            elif tc["function"]["name"] == "search_precedents":
+                query = json.loads(tc["function"]["arguments"]).get("query")
+                try:
+                    content = format_precedents(store.search(query, k=3))
+                except Exception:
+                    content = "precedent search unavailable"
+                tool_msgs.append({"role": "tool", "tool_call_id": tc["id"], "content": content})
+        return {"adj_messages": state["adj_messages"] + tool_msgs}
+    return node
 
 
 def after_adjudicate(state: dict) -> str:
     """Route after `adjudicate`. Read the last assistant message in adj_messages:
-      - it requested get_policy AND adj_steps < MAX_TOOL_STEPS -> "tool"
+      - it requested a QUERY tool (get_policy / search_precedents) AND
+        adj_steps < MAX_TOOL_STEPS -> "tool"
       - it called submit_decision, hit the cap, or returned no tool call -> "done"
     """
     last = state["adj_messages"][-1]
     calls = last.get("tool_calls") or []
-    if calls and calls[0]["function"]["name"] == "get_policy" and state.get("adj_steps", 0) < MAX_TOOL_STEPS:
+    if calls and calls[0]["function"]["name"] in QUERY_TOOLS and state.get("adj_steps", 0) < MAX_TOOL_STEPS:
         return "tool"
     return "done"
+
+
+# --- the confidence gate + human-review interrupt (HITL spec 2026-06-09 §4) --------
+def needs_human(state: dict) -> str:
+    """Gate after submit_decision: "human" if the final action is human-review OR
+    adjudication confidence < CONFIDENCE_THRESHOLD; else "finalize". Degrade
+    rulings carry no confidence key -> default 1.0 (only the action queues them).
+
+    TODO(author): implement (2 lines).
+    """
+    raise NotImplementedError
+
+
+def route_after_adjudicate(state: dict) -> str:
+    """The single router LangGraph needs on the adjudicate node:
+    after_adjudicate says "tool" -> "tool"; otherwise map needs_human:
+    "human" -> "human", "finalize" -> "done".
+
+    TODO(author): implement by composing after_adjudicate + needs_human.
+    """
+    raise NotImplementedError
+
+
+def human_review_node(state: dict) -> dict:
+    """The interrupt site (HITL spec §4). Pauses the graph with the AI's
+    recommendation; on resume applies the human decision.
+
+        payload  = {"recommended_action": state["action"],
+                    "overall_severity":  state["overall_severity"],
+                    "note" / "confidence" / "policies_consulted": from state["adjudication"]}
+        decision = interrupt(payload)        # {"action": "allow"|"remove"|"confirm",
+                                             #  "note": str | None}
+        "confirm" keeps recommended_action; otherwise decision["action"] wins.
+        Return {"action": final, "adjudication": {**state["adjudication"],
+                "human": {"action": final, "note": decision.get("note")}}}
+
+    TODO(author): implement (import `interrupt` from langgraph.types).
+    """
+    raise NotImplementedError
 
 
 

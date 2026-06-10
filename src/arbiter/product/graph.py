@@ -17,7 +17,7 @@ from arbiter.classify import ALL_6, classify
 from arbiter.product.adjudicator import (
     after_adjudicate,
     make_adjudicate_node,
-    policy_tool_node,
+    make_tools_node,
     should_escalate,
 )
 from arbiter.product.context import detect_context
@@ -26,7 +26,7 @@ from arbiter.product.state import ModerationState
 
 
 def build_graph(table: dict, classify_fn=classify, detect_fn=detect_context,
-                adjudicate_fn=None):
+                adjudicate_fn=None, store=None):
     g = StateGraph(ModerationState)
     for cat in ALL_6:
         g.add_node(f"specialist_{cat}", make_specialist_node(cat, table, classify_fn))
@@ -46,7 +46,7 @@ def build_graph(table: dict, classify_fn=classify, detect_fn=detect_context,
 
     # --- escalation branch (Approach A: the ReAct loop is a cycle in the graph) ---
     g.add_node("adjudicate", make_adjudicate_node(adjudicate_fn))
-    g.add_node("policy_tool", policy_tool_node)
+    g.add_node("policy_tool", make_tools_node(store))
     # aggregator's verdict is now TENTATIVE: gray cases route to the adjudicator.
     g.add_conditional_edges("aggregator", should_escalate,
                             {"escalate": "adjudicate", "done": END})
