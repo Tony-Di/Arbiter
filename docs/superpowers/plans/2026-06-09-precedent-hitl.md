@@ -752,7 +752,7 @@ feat(graph): checkpointer param + human_review interrupt wired into the cycle
 - Modify: `src/arbiter/api/main.py`
 - Create: `tests/api/test_review_api.py`
 
-- [ ] **Step 5.1 (Claude): `ReviewCase` model in `db.py`**:
+- [x] **Step 5.1 (Claude): `ReviewCase` model in `db.py`**:
 
 ```python
 class ReviewCase(Base):
@@ -767,7 +767,7 @@ class ReviewCase(Base):
     resolved_at: Mapped[datetime | None] = mapped_column(nullable=True, default=None)
 ```
 
-- [ ] **Step 5.2 (Claude): schema additions in `schemas.py`**:
+- [x] **Step 5.2 (Claude): schema additions in `schemas.py`**:
 
 ```python
 from datetime import datetime
@@ -801,7 +801,7 @@ and `ModerateResponse` gains (default-safe, old clients unaffected):
     case_id: str | None = None
 ```
 
-- [ ] **Step 5.3 (Claude): write the failing API tests** —
+- [x] **Step 5.3 (Claude): write the failing API tests** —
   `tests/api/test_review_api.py`:
 
 ```python
@@ -946,7 +946,7 @@ def test_double_resolve_is_409():
                        json={"action": "allow"}).status_code == 409
 ```
 
-- [ ] **Step 5.4 (Claude): `main.py` skeleton changes**:
+- [x] **Step 5.4 (Claude): `main.py` skeleton changes**:
 
 ```python
 import sqlite3
@@ -1022,8 +1022,8 @@ def resolve_review(case_id: str, decision: ReviewDecision,
 (`to_response` gains an optional `case_id=None` passthrough — one-line change in
 `schemas.py`.)
 
-- [ ] **Step 5.5 (Author): run tests (fail) → implement the three endpoint bodies →
-  full suite green:**
+- [x] **Step 5.5 (Author): run tests (fail) → implement the three endpoint bodies →
+  full suite green:** *(122 passed)*
 
 ```powershell
 .venv\Scripts\python -m pytest tests/api/test_review_api.py -v
@@ -1048,7 +1048,7 @@ feat(api): review queue — pending moderate, resolve endpoint, precedent write-
 
 No frontend test infra exists — verification is the manual walkthrough in 6.4.
 
-- [ ] **Step 6.1 (Claude): types** — add to `web/src/lib/types.ts`:
+- [x] **Step 6.1 (Claude): types** — add to `web/src/lib/types.ts`:
 
 ```ts
 /** /api/moderate now returns a verdict (status "final") OR a pending case. */
@@ -1077,7 +1077,9 @@ export type ReviewAction = "allow" | "remove" | "confirm";
 
 (and `Verdict` gains optional `status?: "final"` / `case_id?: string`.)
 
-- [ ] **Step 6.2 (Claude): skeletons** —
+- [x] **Step 6.2 (Claude): skeletons** — *(compile-green: tsc + vite build pass; the
+  Segmented toggle + table shell are wired, fetch bodies / expanded row / pending
+  flow are the TODO(author)s)*
 
 `web/src/pages/Review.tsx` (TODO(author) bodies): antd `Table` of cases from
 `GET /api/review-queue`; expanded row shows comment + AI recommendation
@@ -1092,7 +1094,8 @@ content; "Review" renders `<Review/>` — plain `useState`, no router.
 `Verdict | PendingCase`; the offline mock marks ONE gray sample as pending so
 the demo shows the queue with no backend (TODO(author)).
 
-- [ ] **Step 6.3 (Author): implement the TODOs.**
+- [x] **Step 6.3 (Author): implement the TODOs.** *(delegated to Claude by the
+  author — frontend is glue, not the learning-focus core; tsc + vite build green)*
 
 - [ ] **Step 6.4 (Author): manual verification** — backend + `npm run dev`:
   1. Paste a clearly toxic comment → instant final verdict (unchanged).
@@ -1115,7 +1118,7 @@ feat(web): review queue view — pending cases, confirm/allow/remove
 - Create: `scripts/seed_precedents.py`
 - Create: `scripts/smoke_hitl.py`
 
-- [ ] **Step 7.1 (Claude): `scripts/seed_precedents.py`** — full script with the 12
+- [x] **Step 7.1 (Claude): `scripts/seed_precedents.py`** — full script with the 12
   draft seed rulings as data (author = the moderator of record: **review/edit the
   labels before running**, that's what makes them human precedents):
 
@@ -1167,7 +1170,7 @@ if __name__ == "__main__":
     print(f"\n{len(SEEDS)} precedents seeded.")
 ```
 
-- [ ] **Step 7.2 (Claude): `scripts/smoke_hitl.py`** — skeleton: POST a gray comment
+- [x] **Step 7.2 (Claude): `scripts/smoke_hitl.py`** — skeleton: POST a gray comment
   to a running server, print the pending payload, GET the queue, POST a resolve,
   print the final verdict; exits nonzero if any step's shape is wrong.
   (TODO(author) body; run with `PYTHONIOENCODING=utf-8` — CN-Windows GBK console.)

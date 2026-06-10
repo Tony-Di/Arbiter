@@ -6,3 +6,5 @@ data/
 .venv/
 eval_cache/
 *.db
+*.db-shm
+*.db-wal
