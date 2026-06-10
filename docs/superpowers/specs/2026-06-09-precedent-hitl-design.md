@@ -136,10 +136,10 @@ policies_consulted, precedents_consulted}`). On resume it receives the human dec
 `adjudication.human = {action, note}`, and the graph runs to END.
 
 **Degrade path interaction:** if the adjudicator is unavailable (existing
-twice-failed degrade), the kept rule-based verdict has no confidence → treat as
-`confidence = 0.0`; a human-review tentative verdict therefore queues (correct: the
-agent couldn't help, a human should). A degraded *allow/remove* still finalizes
-directly, as today.
+twice-failed degrade), the kept rule-based verdict carries **no `confidence` key**;
+`needs_human` reads `adjudication.get("confidence", 1.0)`, so only the *action*
+decides: a degraded human-review verdict queues (correct: the agent couldn't help, a
+human should), while a degraded allow/remove still finalizes directly, as today.
 
 **No-pause guarantee:** `interrupt()` is only reachable on the escalated branch.
 Clean cases never pause and never need a checkpoint round-trip.
