@@ -25,8 +25,11 @@ from langgraph.types import interrupt
 ADJUDICATOR_MODEL = "deepseek-chat"
 
 # Hard cap on query-tool iterations (get_policy + search_precedents share it)
-# -> bounds cost and forbids an infinite loop. 4 since the HITL spec added a 2nd tool.
-MAX_TOOL_STEPS = 4
+# -> bounds cost and forbids an infinite loop. 6 = up to ~3 policy lookups +
+# 2 precedent searches with the submit turn still reachable; at the old cap of
+# 4, 3 of 8 live probes (2026-06-10) burned every step on queries and degraded
+# to the queue with no real recommendation.
+MAX_TOOL_STEPS = 6
 
 # Below this self-reported confidence, the ruling goes to a human (HITL spec §4).
 # 0.95, not the spec's 0.7: live DeepSeek self-reports cluster high (0.85-0.9
