@@ -32,6 +32,13 @@
   padding-bottom: 18px;
   border-bottom: 1px solid var(--line);
 }
+.vb-mast .vb-mark {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  align-self: center;
+  margin-right: -2px; /* optically tighter to the wordmark */
+}
 .vb-mast .nm {
   font-size: 19px;
   font-weight: 600;
@@ -374,10 +381,6 @@
   align-items: center;
   gap: 8px;
 }
-.vb-notes .nh::before {
-  content: "§";
-  font-size: 14px;
-}
 .vb-fl {
   display: flex;
   flex-wrap: wrap;
@@ -467,3 +470,118 @@
     padding-top: 8px;
   }
 }
+
+/* ==== HITL review queue — the arbiter "docket" (spec 2026-06-09 §8) ==========
+   Hairline-separated rows, no boxed table. Shares the VB masthead + tokens. */
+
+/* tab toggle (pill segmented control in the masthead) */
+.vb-tabs { margin-left: 24px; display: inline-flex; gap: 2px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+.vb-tab {
+  appearance: none; border: none; background: transparent; cursor: pointer;
+  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em;
+  color: var(--tx-2); padding: 6px 16px; border-radius: 100px; transition: all .14s;
+}
+.vb-tab:hover { color: var(--tx-0); }
+.vb-tab[aria-selected="true"] { background: var(--bg-3); color: var(--tx-0); box-shadow: inset 0 0 0 1px var(--line); }
+.vb-tab .ct { margin-left: 7px; font-size: 10px; color: var(--review); }
+
+/* review view gets the full width (the split layout is Moderate-only) */
+.vb.review .vb-scroll { max-width: 1180px; }
+
+/* queue shell */
+.rq { margin-top: 26px; }
+.rq-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-bottom: 16px; border-bottom: 1px solid var(--line);
+}
+.rq-head .t { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.rq-head .t .n { color: var(--review); margin-left: 8px; font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+.rq-head .sub { font-size: 12.5px; color: var(--tx-3); }
+
+/* column header + row grid */
+.rq-cols, .rq-row-main {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 124px 126px 76px 196px;
+  align-items: center; gap: 18px;
+}
+.rq-cols {
+  padding: 14px 14px 10px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--tx-3);
+}
+
+.rq-list { display: flex; flex-direction: column; }
+.rq-item { border-bottom: 1px solid var(--line-soft); }
+.rq-item:last-child { border-bottom: none; }
+.rq-item[data-resolved="true"] { opacity: 0.5; }
+
+.rq-row-main { padding: 15px 14px; cursor: pointer; border-radius: var(--r-md); transition: background .12s; }
+.rq-row-main:hover { background: var(--bg-1); }
+
+/* comment cell */
+.rq-c { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.rq-tw { flex: 0 0 auto; color: var(--tx-3); font-size: 11px; transition: transform .15s; }
+.rq-item[data-open="true"] .rq-tw { transform: rotate(90deg); color: var(--tx-1); }
+.rq-ct {
+  font-family: var(--font-mono); font-size: 13px; color: var(--tx-0);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+
+/* AI recommends chip */
+.rq-rec {
+  display: inline-flex; align-items: center; gap: 7px; justify-self: start;
+  font-family: var(--font-mono); font-size: 11.5px; font-weight: 500;
+  color: var(--ac); border: 1px solid color-mix(in oklch, var(--ac) 45%, transparent);
+  background: color-mix(in oklch, var(--ac) 13%, transparent);
+  border-radius: 100px; padding: 4px 12px; white-space: nowrap;
+}
+.rq-rec .g { font-size: 12px; }
+
+/* confidence meter */
+.rq-conf { display: flex; flex-direction: column; gap: 5px; }
+.rq-conf .track { height: 5px; border-radius: 3px; background: var(--bg-3); overflow: hidden; }
+.rq-conf .fill { height: 100%; border-radius: 3px; background: var(--cc); }
+.rq-conf .num { font-family: var(--font-mono); font-size: 11px; color: var(--tx-2); }
+
+/* received */
+.rq-when { font-family: var(--font-mono); font-size: 12px; color: var(--tx-2); cursor: help; }
+
+/* ruling buttons */
+.rq-act { display: inline-flex; gap: 6px; justify-self: end; }
+.rq-btn {
+  appearance: none; cursor: pointer; font-family: var(--font-sans);
+  font-size: 11.5px; font-weight: 600; padding: 7px 12px; border-radius: 7px;
+  border: 1px solid var(--line); background: var(--bg-2); color: var(--tx-1);
+  transition: all .12s; white-space: nowrap;
+}
+.rq-btn:hover { color: var(--tx-0); border-color: var(--tx-2); background: var(--bg-3); }
+.rq-btn.primary {
+  border-color: color-mix(in oklch, var(--ac) 55%, transparent);
+  background: color-mix(in oklch, var(--ac) 16%, transparent); color: var(--ac);
+}
+.rq-btn.primary:hover { background: color-mix(in oklch, var(--ac) 26%, transparent); }
+.rq-btn.danger:hover { color: var(--remove); border-color: color-mix(in oklch, var(--remove) 55%, transparent); background: oklch(0.66 0.21 26 / 0.12); }
+.rq-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* resolved pill (replaces the buttons after a ruling; backend has no undo) */
+.rq-done {
+  justify-self: end; display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11.5px; color: var(--rc);
+}
+.rq-done .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--rc); }
+
+/* expanded drawer — reuses the VB ruling pieces inside */
+.rq-drawer { padding: 6px 14px 24px; }
+.rq-drawer-inner { border-left: 2px solid var(--line); padding-left: 22px; display: flex; flex-direction: column; gap: 22px; }
+
+/* footer / pagination */
+.rq-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 22px; }
+.rq-count { font-family: var(--font-mono); font-size: 11.5px; color: var(--tx-3); }
+.rq-page { display: inline-flex; align-items: center; gap: 6px; }
+.rq-pg { appearance: none; cursor: pointer; width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg-2); color: var(--tx-2); font-size: 13px; display: inline-flex; align-items: center; justify-content: center; transition: all .12s; }
+.rq-pg:hover:not(:disabled) { color: var(--tx-0); border-color: var(--tx-2); }
+.rq-pg[aria-current="true"] { color: var(--tx-0); border-color: var(--review); background: color-mix(in oklch, var(--review) 12%, transparent); }
+.rq-pg:disabled { opacity: 0.35; cursor: default; }
+
+.rq-empty { padding: 60px 0; text-align: center; color: var(--tx-3); font-size: 13px; }
+.rq-empty .big { font-size: 15px; color: var(--tx-2); margin-bottom: 6px; }

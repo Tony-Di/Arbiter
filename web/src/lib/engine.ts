@@ -7,6 +7,9 @@ import type {
   Category,
   ContextFlags,
   ModerateOutcome,
+  PendingCase,
+  ReviewAction,
+  ReviewCase,
   Segment,
   Verdict,
 } from "./types";
@@ -257,6 +260,33 @@ class ValidationError extends Error {
   kind = "validation" as const;
 }
 
+// ---- HITL (spec 2026-06-09 §8): pending cases + the offline review queue ----
+// ONE gray sample demos the human-review flow with no backend: submitting it
+// "pends" instead of ruling, and the case lands in mockQueue so the Review view
+// has something to show offline. (Live mode never touches these.)
+const PENDING_SAMPLE_TEXT = norm(
+  SAMPLES.find((s) => s.tag === "Insult + obscene")!.text,
+);
+
+/** Offline stand-in for GET /api/review-queue (Review.tsx falls back to it). */
+export const mockQueue: ReviewCase[] = [];
+
+function mockPending(comment: string): PendingCase {
+  return {
+    status: "pending",
+    case_id: "mock-" + Math.random().toString(36).slice(2, 8),
+    comment,
+    recommendation: {
+      recommended_action: "remove",
+      overall_severity: 2,
+      note: "Direct personal insult, but no protected identity or threat — borderline removal.",
+      confidence: 0.55,
+      policies_consulted: ["insult"],
+      precedents_consulted: ["you're an idiot"],
+    },
+  };
+}
+
 // ---- fetch wrapper: real backend first, mock fallback ----
 export async function moderate(comment: string): Promise<ModerateOutcome> {
   const text = (comment || "").trim();
@@ -269,15 +299,57 @@ export async function moderate(comment: string): Promise<ModerateOutcome> {
     });
     if (res.status === 422) throw new ValidationError("Comment failed server validation (empty).");
     if (!res.ok) throw new Error("Server returned " + res.status);
-    const data = (await res.json()) as Verdict;
+    const data = (await res.json()) as Verdict | PendingCase;
+    if (data.status === "pending") return { result: data, source: "live", model: null };
     return { result: data, source: "live", model: data.model ?? null };
   } catch (e) {
     if (e instanceof ValidationError) throw e; // surface real validation errors
     // network / parse / offline -> deterministic mock
+    if (norm(text) === PENDING_SAMPLE_TEXT) {
+      const pending = mockPending(text);
+      mockQueue.push({
+        case_id: pending.case_id,
+        comment: text,
+        recommendation: pending.recommendation,
+        created_at: new Date().toISOString(),
+      });
+      return { result: pending, source: "mock", model: null };
+    }
     const mk = MOCK_BY_TEXT[norm(text)];
     const result = mk ? mk() : generate(text);
     return { result, source: "mock", model: result.model ?? null };
   }
+}
+
+/** GET /api/review-queue; offline -> the mock queue (same live->mock pattern
+ *  as moderate(), so the demo works with no backend). */
+export async function fetchQueue(): Promise<ReviewCase[]> {
+  let res: Response;
+  try {
+    res = await fetch("/api/review-queue");
+  } catch {
+    return [...mockQueue]; // network down -> offline demo
+  }
+  if (!res.ok) throw new Error("Server returned " + res.status);
+  return (await res.json()) as ReviewCase[];
+}
+
+/** POST /api/review/{caseId}. HTTP errors surface (409 = already resolved);
+ *  only a NETWORK failure falls back to resolving the mock case locally. */
+export async function resolveCase(caseId: string, action: ReviewAction): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch(`/api/review/${caseId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, note: null }),
+    });
+  } catch {
+    const i = mockQueue.findIndex((c) => c.case_id === caseId);
+    if (i >= 0) mockQueue.splice(i, 1);
+    return;
+  }
+  if (!res.ok) throw new Error("Server returned " + res.status);
 }
 
 // ---- span -> highlight segmentation ----

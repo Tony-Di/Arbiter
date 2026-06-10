@@ -24,7 +24,10 @@ export interface ContextFlags {
 export interface Adjudication {
   final_action?: ActionKey;
   note?: string | null;
+  confidence?: number;
   policies_consulted?: string[];
+  precedents_consulted?: string[];
+  human?: { action: ActionKey; note?: string | null } | null;
 }
 
 /** Shape returned by POST /api/moderate (model is optional — backend may omit it). */
@@ -36,7 +39,36 @@ export interface Verdict {
   model?: string | null;
   escalated?: boolean;
   adjudication?: Adjudication | null;
+  // HITL (spec 2026-06-09 §7): present on live responses; old mocks omit them.
+  status?: "final";
+  case_id?: string | null;
 }
+
+/** /api/moderate now returns a verdict (status "final") OR a pending case. */
+export interface PendingCase {
+  status: "pending";
+  case_id: string;
+  comment: string;
+  recommendation: {
+    recommended_action: string;
+    overall_severity: number;
+    note?: string | null;
+    confidence?: number;
+    policies_consulted?: string[];
+    precedents_consulted?: string[];
+  };
+}
+
+/** One row of GET /api/review-queue. */
+export interface ReviewCase {
+  case_id: string;
+  comment: string;
+  recommendation: PendingCase["recommendation"];
+  created_at: string;
+}
+
+/** Body of POST /api/review/{case_id} ("confirm" keeps the AI's recommendation). */
+export type ReviewAction = "allow" | "remove" | "confirm";
 
 export interface Segment {
   text: string;
@@ -45,7 +77,7 @@ export interface Segment {
 }
 
 export interface ModerateOutcome {
-  result: Verdict;
+  result: Verdict | PendingCase;
   source: "live" | "mock";
   model: string | null;
 }

@@ -1,0 +1,12 @@
+<!-- arbiter — "Panel of Six" mark: 6 classifiers around a center adjudicator;
+     the amber dot carries the verdict. -->
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arbiter">
+  <circle cx="100" cy="100" r="72" fill="none" stroke="#ECEFF2" stroke-opacity="0.10" stroke-width="2.4" />
+  <circle cx="100"    cy="28"  r="14.4" fill="#9AA5B1" />
+  <circle cx="162.35" cy="64"  r="16.6" fill="#E7A33C" />
+  <circle cx="162.35" cy="136" r="14.4" fill="#9AA5B1" />
+  <circle cx="100"    cy="172" r="14.4" fill="#9AA5B1" />
+  <circle cx="37.65"  cy="136" r="14.4" fill="#9AA5B1" />
+  <circle cx="37.65"  cy="64"  r="14.4" fill="#9AA5B1" />
+  <circle cx="100" cy="100" r="9" fill="#ECEFF2" />
+</svg>
