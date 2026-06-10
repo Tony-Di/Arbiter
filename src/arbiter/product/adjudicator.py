@@ -19,6 +19,7 @@ from arbiter.classify.registry import get_adapter  # for default_adjudicate_fn
 from arbiter.product.policy import get_policy
 import json
 from arbiter.precedents import format_precedents
+from langgraph.types import interrupt
 # Single-model MVP -> DeepSeek (the only paid model). Swap to a stronger reasoning
 # model here in one line later; the tool-loop is the signal, not the model tier.
 ADJUDICATOR_MODEL = "deepseek-chat"
@@ -248,9 +249,10 @@ def needs_human(state: dict) -> str:
     adjudication confidence < CONFIDENCE_THRESHOLD; else "finalize". Degrade
     rulings carry no confidence key -> default 1.0 (only the action queues them).
 
-    TODO(author): implement (2 lines).
     """
-    raise NotImplementedError
+    if state["action"] == "human-review" or (state["adjudication"].get("confidence", 1.0) < CONFIDENCE_THRESHOLD):
+        return "human"
+    return "finalize"   
 
 
 def route_after_adjudicate(state: dict) -> str:
@@ -260,7 +262,12 @@ def route_after_adjudicate(state: dict) -> str:
 
     TODO(author): implement by composing after_adjudicate + needs_human.
     """
-    raise NotImplementedError
+    if after_adjudicate(state) == "tool":
+        return "tool"
+    elif needs_human(state) == "human":
+        return "human"
+    elif needs_human(state) == "finalize":
+        return "done"
 
 
 def human_review_node(state: dict) -> dict:
@@ -278,7 +285,17 @@ def human_review_node(state: dict) -> dict:
 
     TODO(author): implement (import `interrupt` from langgraph.types).
     """
-    raise NotImplementedError
+    payload = {"recommended_action": state["action"],
+               "overall_severity": state["overall_severity"],
+               "note": state["adjudication"].get("note"),
+               "confidence": state["adjudication"].get("confidence"),
+               "policies_consulted": state["adjudication"].get("policies_consulted"),
+               "precedents_consulted": state["adjudication"].get("precedents_consulted")}
+    decision = interrupt(payload)
+    final = state["action"] if decision["action"] == "confirm" else decision["action"]
+    return {"action": final,
+            "adjudication": {**state["adjudication"],
+                             "human": {"action": final, "note": decision.get("note")}}}
 
 
 
