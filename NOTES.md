@@ -5,11 +5,13 @@
 > has the full picture. The original discussion happened in a DocSense session;
 > Claude memory does not auto-carry across repos, so this file is the anchor.
 
-**Status (2026-06-01):** name + domain + tech stack locked. Brainstorm continued —
-all 5 MVP decisions + architecture approach + the full `classify` interface + the
-**eval harness** now locked (see the sections below). Walking through the design
-section by section before writing the formal spec; classify + eval harness done,
-**next design section = the product pipeline (LangGraph)**. No code yet.
+**Status (2026-06-10):** built. Classify primitive + eval harness (real 2-model
+run → `routing_table.json`), LangGraph pipeline with the tool-using adjudicator
+(escalation, 2026-06-08), **precedent memory + human-in-the-loop review**
+(2026-06-10, live-verified — see the design record at the bottom), FastAPI + React
+with the review docket. 122 zero-network tests green. Sections below are in
+chronological order: the 2026-06-01 design-phase notes first (kept as the record
+of *why*), build-phase design records appended at the end.
 
 ---
 
@@ -406,3 +408,63 @@ runs in production (only `routing_table.json` crosses into the product).
 
 When approved → quick demo-layer sketch (FastAPI + Next.js, thin/standard) → write the
 formal spec to `docs/superpowers/specs/2026-06-01-arbiter-design.md`.
+
+---
+
+## Precedent memory + human-in-the-loop — design record (built 2026-06-10)
+
+Spec: `docs/superpowers/specs/2026-06-09-precedent-hitl-design.md`. The adjudicator
+gained a second tool (`search_precedents` over past human rulings), a calibrated
+`confidence` field in `submit_decision`, and a confidence gate that `interrupt()`s
+the checkpointed graph into a human review queue; resolving a case writes the human
+decision back as a precedent. Decisions worth remembering:
+
+1. **Precedents are human-only** (`source="human"`, enforced at the two write
+   sites: review resolution + the seed script). AI rulings never enter the store —
+   otherwise the agent would retrieve its own past guesses as "case law" and
+   self-reinforce. The contamination guard is the whole point of the design.
+
+2. **Similarity = OpenAI embeddings + cosine in pure Python**, all rows scanned per
+   query. The store is seeded with 12 rulings and grows by one per human decision —
+   hundreds of rows at most. A vector DB here would be resume-driven engineering;
+   the honest version is 10 lines of math. (Also keeps Arbiter differentiated from
+   DocSense's RAG — deliberate.)
+
+3. **Confidence gating, and what live calibration taught us.** The gate is
+   `confidence < CONFIDENCE_THRESHOLD → human` (strict less-than; at-threshold
+   finalizes). Three live findings (n=8 probe, 2026-06-10), each a small lesson in
+   LLM-agent ops:
+   - **Self-reports cluster high.** DeepSeek reported 0.8–0.95 even on genuine gray
+     cases; the spec's threshold of 0.7 would never have queued anything. Raised to
+     0.95 — which the data shows is *discriminating*, not flooding: the one
+     policy-clear case (quoted abuse, explicitly exempt) came back at exactly 0.95
+     and auto-finalized; the genuinely contested ones (0.8–0.9) queued.
+   - **Don't tell the model the cutoff.** The tool schema originally said "below
+     0.7 a human will review it" — an anchor that invites reporting a safe score
+     just above the line. The hint was removed; the field now asks for honest,
+     calibrated confidence with no number.
+   - **The step cap interacts with the gate.** At `MAX_TOOL_STEPS = 4` (sized for
+     the single-tool era), 3 of 8 probes burned every step on policy/precedent
+     queries and degraded into the queue with *no* recommendation. Raised to 6 (≈3
+     policy lookups + 2 precedent searches + the submit turn) so queued cases carry
+     a real AI recommendation for the reviewer.
+   - Production note: self-reported confidence is a demo-grade signal; the real
+     version is logprob- or sampling-agreement-based calibration. Recorded here so
+     the interview answer is "I measured, found the overconfidence pattern, and
+     know what the production fix is."
+
+4. **Degrade path subtlety: `adjudication.get("confidence", 1.0)`.** When the
+   adjudicator API fails twice (or hits the step cap without submitting), the kept
+   rule-based verdict carries **no confidence key**. Defaulting the missing key to
+   1.0 means only the *action* decides for degraded rulings: a degraded
+   human-review still queues (correct — the agent couldn't help, a human should
+   look), while a degraded allow/remove finalizes as it did pre-HITL. Defaulting to
+   0.0 instead would have silently routed every API hiccup into the human queue.
+
+5. **HITL is opt-in by construction.** `interrupt()` requires a checkpointer, so
+   `build_graph(..., checkpointer=None)` (the default, and what every pre-HITL test
+   builds) routes the gate's "human" exit to END — pre-existing behavior, zero test
+   churn. Same pattern as "escalation only wires when adjudicate_fn is injected".
+   The app passes `SqliteSaver` (`checkpoints.db`), so paused cases survive server
+   restarts; `POST /api/review/{case_id}` resumes the thread by `thread_id` with
+   `Command(resume=...)`.

@@ -21,7 +21,10 @@ Paste a comment and Arbiter tells you whether it's harmful, in which ways, how
 severe, and what to do about it (remove / human-review / allow) — with the
 reasoning and the offending span highlighted. Easy cases are decided by a fast
 parallel panel; genuinely ambiguous cases are escalated to an **adjudicator
-agent** that consults written policy via a tool call before ruling.
+agent** that consults written policy and **past human rulings** via tool calls
+before ruling — and when even the agent isn't confident, the case pauses into a
+**human review queue**, and the human's decision is written back as a precedent
+the agent can cite next time.
 
 ---
 
@@ -33,9 +36,14 @@ real **agentic system** with a measurement layer underneath it:
 - **Dynamic control flow, not a static pipeline.** The graph decides its own path
   per comment — clear cases finish fast; gray cases trigger a deeper, tool-using
   agent loop.
-- **A tool-using adjudicator agent.** On hard cases it calls a `get_policy(category)`
-  tool in a ReAct loop (a real cycle in the LangGraph graph), then commits a final
-  ruling — and can override the rule-based verdict.
+- **A tool-using adjudicator agent.** On hard cases it calls `get_policy(category)`
+  and `search_precedents(query)` tools in a ReAct loop (a real cycle in the LangGraph
+  graph), then commits a final ruling — and can override the rule-based verdict.
+- **Human-in-the-loop with case-law memory.** The agent reports a calibrated
+  confidence with every ruling; low-confidence cases `interrupt()` the checkpointed
+  graph into a review queue, and each human decision is embedded and stored as a
+  **precedent** — searchable by the agent on future cases. Humans only see what the
+  AI admits it can't decide, and the system gets better with every ruling.
 - **Model routing by evaluation.** Each harm category is judged by whichever model
   scored best on a public benchmark; the routing table is produced by a self-built
   eval harness, not hand-picked.
@@ -62,13 +70,23 @@ real **agentic system** with a measurement layer underneath it:
                                               │                              ▼
                                               │                   ┌─►  adjudicator agent
                                               │                   │     (LLM + tools)
-                                              │            get_policy?  │
-                                              │              ┌──────────┴─────────┐
-                                              │            tool                 done
-                                              │              ▼                    │
-                                              │         policy_tool ──────────────┘   ◄─ the cycle
-                                              ▼                                    │
-                                            final verdict ◄────────── submit_decision
+                                              │                   │          │
+                                              │              ┌────┴──────────┼──────────────┐
+                                              │            tool        submit_decision      │
+                                              │              ▼               │              │
+                                              │         tools node ──────────┤              │
+                                              │      (get_policy ·           │              │
+                                              │       search_precedents)     ▼              │
+                                              │          ▲             confident?           │
+                                              │          │           ┌───────┴────────┐     │
+                                              │     precedent      yes               no     │
+                                              │       store          │                ▼     │
+                                              ▼     (case law)       │       human review queue
+                                            final verdict ◄──────────┘       (graph interrupt()s,
+                                                  ▲                           checkpointed)
+                                                  │                                  │
+                                                  └──── human rules; decision ◄──────┘
+                                                        written back as precedent ──► store
 ```
 
 - **Specialists + context** fan out in parallel from `START` (LangGraph runs the
@@ -77,11 +95,21 @@ real **agentic system** with a measurement layer underneath it:
   severity and an action using auditable rules in code — deliberately *not* an LLM,
   so the policy never silently drifts.
 - **Escalation** only fires for cases the rules can't confidently auto-decide. The
-  adjudicator may call `get_policy` several times (bounded by a step cap), then ends
-  by calling `submit_decision`; on model failure or the cap it safely degrades to the
-  rule-based verdict.
+  adjudicator may call `get_policy` / `search_precedents` several times (bounded by a
+  step cap), then ends by calling `submit_decision`; on model failure or the cap it
+  safely degrades to the rule-based verdict.
+- **Human-in-the-loop** uses LangGraph's `interrupt()` + a SQLite checkpointer: a
+  low-confidence ruling pauses the graph mid-flight, the case lands in a review
+  queue (`GET /api/review-queue`), and `POST /api/review/{case_id}` resumes the
+  checkpointed graph with the human's decision. Confidence gating is calibrated
+  against live model behavior, not the spec's guess (see NOTES).
+- **Precedents are human-only.** The case-law store only ever ingests human rulings
+  (seeded + review write-backs) — AI verdicts never feed back into it, so the agent
+  can't launder its own mistakes into "precedent". Similarity = embeddings + cosine
+  in pure Python: the store is hundreds of rows, a vector DB would be cosplay.
 - **Injection-hardened:** the untrusted comment is always wrapped in
-  `<comment></comment>` and treated as data, never instructions.
+  `<comment></comment>` (and precedents in `<precedent></precedent>`) and treated
+  as data, never instructions.
 
 ## The evaluation layer
 
@@ -144,7 +172,7 @@ npm run dev                        # http://localhost:5173
 The UI calls `POST /api/moderate`, and falls back to a deterministic mock when the
 backend is offline — so the demo works even with no keys.
 
-**Tests** (91, zero-network — every LLM call is injected, fakes only):
+**Tests** (122, zero-network — every LLM call is injected, fakes only):
 
 ```bash
 .venv\Scripts\python -m pytest -q
@@ -153,8 +181,10 @@ backend is offline — so the demo works even with no keys.
 ## Status
 
 Core complete: classify primitive, eval harness + a real 2-model run, the LangGraph
-product pipeline with the escalation agent, FastAPI backend with persistence, and the
-React UI. **91 tests green.** Next: live deployment, then a model-comparison view.
+product pipeline with the escalation agent + precedent memory + human-in-the-loop
+review (live-verified end to end), FastAPI backend with persistence, and the React
+UI with the review docket. **122 tests green.** Next: live deployment, then a
+model-comparison view.
 
 See [`NOTES.md`](./NOTES.md) for the full design record and
 [`docs/superpowers/specs/`](./docs/superpowers/specs/) for the specifications.

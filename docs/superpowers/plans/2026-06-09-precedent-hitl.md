@@ -1197,10 +1197,10 @@ feat(scripts): precedent seeds + HITL live smoke
 
 ### Task 8: Docs
 
-- [ ] **Step 8.1 (Claude): README** — architecture diagram gains the
+- [x] **Step 8.1 (Claude): README** — architecture diagram gains the
   `needs_human → review queue` branch + `search_precedents`; "Why it's interesting"
   gains the case-law/HITL bullet; test badge count updated.
-- [ ] **Step 8.2 (Claude): NOTES.md** — design-record entry: why human-only
+- [x] **Step 8.2 (Claude): NOTES.md** — design-record entry: why human-only
   precedents, why cosine-in-Python, why confidence gating, the
   `get("confidence", 1.0)` degrade subtlety.
 - [ ] **Step 8.3 (Author): review docs, commit**
