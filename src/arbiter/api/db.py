@@ -58,6 +58,20 @@ class Verdict(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
 
+class Precedent(Base):
+    """A past HUMAN ruling, retrievable by the adjudicator (HITL spec 2026-06-09 §5).
+    source is always "human" -- AI rulings never enter (contamination guard)."""
+    __tablename__ = "precedents"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    comment_text: Mapped[str]
+    embedding: Mapped[list] = mapped_column(JSON)
+    action: Mapped[str]
+    overall_severity: Mapped[int]
+    note: Mapped[str]
+    source: Mapped[str] = mapped_column(default="human")
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
 # Module-level engine/session for the running app (tests build their own).
 engine = make_engine()
 SessionLocal = make_session_factory(engine)
