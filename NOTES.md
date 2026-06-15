@@ -468,3 +468,73 @@ decision back as a precedent. Decisions worth remembering:
    The app passes `SqliteSaver` (`checkpoints.db`), so paused cases survive server
    restarts; `POST /api/review/{case_id}` resumes the thread by `thread_id` with
    `Command(resume=...)`.
+
+---
+
+## Eval metrics + the clean 600/600 run — design record (built 2026-06-15)
+
+The first committed routing table came from an *unclean* run: DeepSeek timed out on
+122/600 from the US, so it wasn't an identical-comments comparison and no F1 was
+citeable. Now fixed, and the numbers are a committed artifact. This record is the
+"what the numbers mean + how they feed the design" cheat-sheet so it's interview-ready
+cold — and so the résumé framing doesn't overclaim.
+
+### The clean run
+- **Root cause of the timeouts.** `deepseek-chat` routes through SiliconFlow
+  (`api.siliconflow.cn`, China-hosted); DeepSeek-V4-Pro in thinking mode exceeds the
+  default 30s HTTP timeout from the US (I'm US-based — slowness to a service ⇒ it's
+  China-hosted, not a proxy problem). The adapter already exposes `ARBITER_LLM_TIMEOUT`
+  (env, default 30) for exactly this — bumped to 120 and re-ran. `collect()` is
+  resumable (`load_done_ids`), so only the 37 missing DeepSeek predictions re-fetched;
+  GPT (600/600, US endpoint) cost $0. Both now 600/600.
+- **Why it's clean, not mixed.** All 600 DeepSeek predictions come from the *same*
+  SiliconFlow config at `temperature=0`; a larger timeout only means "waited long
+  enough to receive the answer," it doesn't change the model's output. No
+  mixed-endpoint contamination — so the head-to-head is honest.
+- **Artifact.** `report.dump_run` (`eval/report.py`) writes
+  `eval/results/<date>/metrics.json` + a flat `metrics.csv` (README-pasteable). It
+  records `n_scored` per model and an `identical_comments` flag (True iff every
+  contestant was scored on the same count) — so "identical comments" is *auditable,
+  not asserted*. `eval/results/` is committed (not gitignored); `eval_cache/` stays
+  ignored. Re-running `run_eval` is $0/instant (all cached → re-score only).
+
+### What the numbers mean (glossary, grounded in this run)
+Per category, each model's verdict is compared to the Jigsaw gold label → tp/fp/fn:
+- **tp** = flagged harmful, really is (correct catch); **fp** = flagged, actually fine
+  (over-flag / false alarm); **fn** = passed, actually harmful (miss).
+- **precision = tp/(tp+fp)** — "of what it flagged, how much was real" (low ⇒ it
+  over-censors). **recall = tp/(tp+fn)** — "of the real harm, how much it caught"
+  (low ⇒ it lets harm through). **F1 = 2·tp/(2·tp+fp+fn)** — harmonic mean; only high
+  when *both* are decent, so one lopsided number tanks it.
+- **cutoff / threshold** — `classify` returns an ordinal severity (0/1/2/3 =
+  none/low/med/high); binarizing at cutoff=1 (≥low) is aggressive (recall↑, precision↓),
+  cutoff=2 (≥med) is stricter (precision↑, recall↓). `score.py` sweeps 1/2/3 and picks
+  the operating point; `routing_table`'s `threshold` is the chosen cut (e.g. GPT/insult
+  landed on cutoff=2).
+
+### The findings (the actual story to tell)
+- **GPT vs DeepSeek run neck-and-neck:** avg F1 ≈ **0.807 (GPT) vs 0.793 (DeepSeek)** —
+  a ~0.015 gap. At full precision GPT edges 5/6 categories, **but four of those by
+  <0.01 F1** (toxic +0.004, threat +0.008, insult +0.005, obscene −0.008 → DeepSeek
+  wins it) — i.e. noise at n=600. The only *meaningful* per-category gaps are
+  **identity_hate (+0.042)** and **severe_toxic (+0.033)**, both to GPT. Takeaway: no
+  model dominates ⇒ **per-category routing is empirically justified** (the whole point
+  of the eval layer); a cheap open model matching GPT on English moderation is itself
+  the finding. (Don't call toxic/threat/insult "wins" — they're ties within noise.)
+- **severe_toxic is systematically over-flagged by both:** recall ~0.88–0.94 but
+  precision only ~0.36–0.38 (GPT fp=273 vs tp=167) → its F1 ≈ 0.5 is a *precision*
+  problem, not a recall one. Lesson: a rare, fuzzy category needs a precision-oriented
+  operating point / higher threshold before it's shippable.
+- **High-risk categories route by recall, not F1:** for `threat` + `identity_hate`,
+  missing harm (fn) is the costly error, so `build_routing_table` prefers the
+  higher-recall model there. This is what makes the asymmetric-cost framing actually
+  *feed* routing instead of decorating the report.
+
+### Résumé framing (do NOT overclaim)
+- ❌ "GPT beat DeepSeek by X%" — the gap is ~1.5% avg with most categories tied within
+  noise; it reads as spin the moment an interviewer sees the table.
+- ✅ "Benchmarked GPT vs DeepSeek on an identical 600-comment Jigsaw sample across 6
+  categories; within ~0.015 avg F1, no model won every category, so the system routes
+  each to its measured-best model." The defensible claims are the **per-category
+  routing justification** and the **severe_toxic over-flagging diagnosis** (high recall
+  / low precision) — both show you actually read the numbers.

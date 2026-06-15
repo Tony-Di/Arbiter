@@ -1,0 +1,13 @@
+category,model,precision,recall,f1,cutoff,routed
+toxic,deepseek-chat,0.9564,0.9804,0.9683,1,
+toxic,gpt-5.4-mini,0.9475,0.9982,0.9722,1,yes
+severe_toxic,deepseek-chat,0.357,0.8764,0.5073,1,
+severe_toxic,gpt-5.4-mini,0.3795,0.9382,0.5405,1,yes
+obscene,deepseek-chat,0.9316,0.872,0.9008,1,yes
+obscene,gpt-5.4-mini,0.9204,0.8675,0.8932,1,
+threat,deepseek-chat,0.6568,0.9174,0.7655,1,
+threat,gpt-5.4-mini,0.6413,0.9752,0.7738,1,yes
+insult,deepseek-chat,0.8136,0.9752,0.8871,1,
+insult,gpt-5.4-mini,0.8201,0.9774,0.8919,2,yes
+identity_hate,deepseek-chat,0.6325,0.8555,0.7273,1,
+identity_hate,gpt-5.4-mini,0.6912,0.8671,0.7692,1,yes

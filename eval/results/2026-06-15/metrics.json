@@ -1,0 +1,180 @@
+{
+  "date": "2026-06-15",
+  "n_scored": {
+    "deepseek-chat": 600,
+    "gpt-5.4-mini": 600
+  },
+  "identical_comments": true,
+  "categories": {
+    "toxic": {
+      "routed_to": "gpt-5.4-mini",
+      "threshold": 1,
+      "models": {
+        "deepseek-chat": {
+          "precision": 0.9564,
+          "recall": 0.9804,
+          "f1": 0.9683,
+          "cutoff": 1,
+          "tp": 549,
+          "fp": 25,
+          "fn": 11
+        },
+        "gpt-5.4-mini": {
+          "precision": 0.9475,
+          "recall": 0.9982,
+          "f1": 0.9722,
+          "cutoff": 1,
+          "tp": 559,
+          "fp": 31,
+          "fn": 1
+        }
+      }
+    },
+    "severe_toxic": {
+      "routed_to": "gpt-5.4-mini",
+      "threshold": 1,
+      "models": {
+        "deepseek-chat": {
+          "precision": 0.357,
+          "recall": 0.8764,
+          "f1": 0.5073,
+          "cutoff": 1,
+          "tp": 156,
+          "fp": 281,
+          "fn": 22
+        },
+        "gpt-5.4-mini": {
+          "precision": 0.3795,
+          "recall": 0.9382,
+          "f1": 0.5405,
+          "cutoff": 1,
+          "tp": 167,
+          "fp": 273,
+          "fn": 11
+        }
+      }
+    },
+    "obscene": {
+      "routed_to": "deepseek-chat",
+      "threshold": 1,
+      "models": {
+        "deepseek-chat": {
+          "precision": 0.9316,
+          "recall": 0.872,
+          "f1": 0.9008,
+          "cutoff": 1,
+          "tp": 395,
+          "fp": 29,
+          "fn": 58
+        },
+        "gpt-5.4-mini": {
+          "precision": 0.9204,
+          "recall": 0.8675,
+          "f1": 0.8932,
+          "cutoff": 1,
+          "tp": 393,
+          "fp": 34,
+          "fn": 60
+        }
+      }
+    },
+    "threat": {
+      "routed_to": "gpt-5.4-mini",
+      "threshold": 1,
+      "models": {
+        "deepseek-chat": {
+          "precision": 0.6568,
+          "recall": 0.9174,
+          "f1": 0.7655,
+          "cutoff": 1,
+          "tp": 111,
+          "fp": 58,
+          "fn": 10
+        },
+        "gpt-5.4-mini": {
+          "precision": 0.6413,
+          "recall": 0.9752,
+          "f1": 0.7738,
+          "cutoff": 1,
+          "tp": 118,
+          "fp": 66,
+          "fn": 3
+        }
+      }
+    },
+    "insult": {
+      "routed_to": "gpt-5.4-mini",
+      "threshold": 2,
+      "models": {
+        "deepseek-chat": {
+          "precision": 0.8136,
+          "recall": 0.9752,
+          "f1": 0.8871,
+          "cutoff": 1,
+          "tp": 432,
+          "fp": 99,
+          "fn": 11
+        },
+        "gpt-5.4-mini": {
+          "precision": 0.8201,
+          "recall": 0.9774,
+          "f1": 0.8919,
+          "cutoff": 2,
+          "tp": 433,
+          "fp": 95,
+          "fn": 10
+        }
+      }
+    },
+    "identity_hate": {
+      "routed_to": "gpt-5.4-mini",
+      "threshold": 1,
+      "models": {
+        "deepseek-chat": {
+          "precision": 0.6325,
+          "recall": 0.8555,
+          "f1": 0.7273,
+          "cutoff": 1,
+          "tp": 148,
+          "fp": 86,
+          "fn": 25
+        },
+        "gpt-5.4-mini": {
+          "precision": 0.6912,
+          "recall": 0.8671,
+          "f1": 0.7692,
+          "cutoff": 1,
+          "tp": 150,
+          "fp": 67,
+          "fn": 23
+        }
+      }
+    }
+  },
+  "routing": {
+    "toxic": {
+      "model": "gpt-5.4-mini",
+      "threshold": 1
+    },
+    "severe_toxic": {
+      "model": "gpt-5.4-mini",
+      "threshold": 1
+    },
+    "obscene": {
+      "model": "deepseek-chat",
+      "threshold": 1
+    },
+    "threat": {
+      "model": "gpt-5.4-mini",
+      "threshold": 1
+    },
+    "insult": {
+      "model": "gpt-5.4-mini",
+      "threshold": 2
+    },
+    "identity_hate": {
+      "model": "gpt-5.4-mini",
+      "threshold": 1
+    }
+  }
+}

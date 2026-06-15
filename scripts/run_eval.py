@@ -16,6 +16,7 @@ from arbiter.classify import ALL_6
 from arbiter.classify.prompt import PROMPT_VERSION
 from arbiter.classify.schema import SCHEMA_VERSION
 from arbiter.eval.collect import cache_path, collect
+from arbiter.eval.report import dump_run
 from arbiter.eval.route import build_routing_table, pick_operating_point
 from arbiter.eval.score import sweep_category
 
@@ -32,8 +33,8 @@ def _read_jsonl(path):
         return [json.loads(line) for line in f]
 
 
-def sweeps_for(model: str, sample: list) -> dict:
-    """COLLECT (cached, resumable) + SCORE one model -> {category: sweep}."""
+def sweeps_for(model: str, sample: list) -> tuple:
+    """COLLECT (cached, resumable) + SCORE one model -> ({category: sweep}, n_scored)."""
     out = cache_path(CACHE_DIR, model, PROMPT_VERSION, SCHEMA_VERSION)
     n = collect(SAMPLE, out, model)
     print(f"  {model:14} collected {n} new predictions -> {out}")
@@ -47,7 +48,8 @@ def sweeps_for(model: str, sample: list) -> dict:
                 # a model may omit a category -> treat a missing one as none (0)
                 pred_sev.append(preds[row["id"]].get(cat, {"severity": 0})["severity"])
         sweeps[cat] = sweep_category(gold, pred_sev)
-    return sweeps
+    n_scored = sum(1 for row in sample if row["id"] in preds)
+    return sweeps, n_scored
 
 
 def main():
@@ -56,13 +58,16 @@ def main():
 
     # 1. COLLECT + SCORE every contestant (cached -> re-runs cost no new API calls).
     print("collect + score:")
-    model_metrics = {m: sweeps_for(m, sample) for m in MODELS}
+    collected = {m: sweeps_for(m, sample) for m in MODELS}
+    model_metrics = {m: sw for m, (sw, _) in collected.items()}
+    n_scored = {m: n for m, (_, n) in collected.items()}
 
     # 2. ROUTE: per category, pick the best contestant (recall for high-risk, else F1).
     table = build_routing_table(model_metrics, HIGH_RISK)
     with open("routing_table.json", "w", encoding="utf-8") as f:
         json.dump(table, f, indent=2)
     print("\nwrote routing_table.json")
+    print(f"wrote {dump_run(model_metrics, table, HIGH_RISK, n_scored)}")
 
     # 3. Comparison: each model's F1 at its own chosen operating point; winner = routed model.
     print(f"\n{'category':15}" + "".join(f"{m:>15}" for m in MODELS) + f"{'-> routed':>15}")
