@@ -538,3 +538,28 @@ Per category, each model's verdict is compared to the Jigsaw gold label → tp/f
   each to its measured-best model." The defensible claims are the **per-category
   routing justification** and the **severe_toxic over-flagging diagnosis** (high recall
   / low precision) — both show you actually read the numbers.
+
+---
+
+## Latency: parallel fan-out vs sequential — measured 2026-06-15
+
+`scripts/bench_latency.py`. Substantiates the "parallel specialist fan-out" claim
+with a real number instead of a structural hand-wave.
+
+- **Result (n=20, gpt-5.4-mini):** median per-comment latency **9.3s sequential →
+  2.2s parallel ≈ 4.3× faster** for the 6 specialist `classify()` calls.
+- **Method (so it survives an interview).** Same model + US endpoint for both arms
+  (concurrency is the only variable); one warm-up comment discarded (cold TLS/DNS);
+  seq/par *interleaved* per comment so network drift hits both equally; report the
+  **median** — the sequential arm is long-tailed (one comment hit 28s), so the mean
+  would lie. The parallel arm uses a `ThreadPoolExecutor(6)`, which mirrors what
+  LangGraph does in `graph.py` (it runs the 6 sync specialist nodes on a thread pool,
+  so the blocking HTTP calls overlap) — a faithful proxy for the real graph.
+- **Why 4.3×, not 6×.** The parallel arm is bounded by the *slowest of the 6
+  concurrent* calls (the categories aren't equal-latency), plus thread-pool +
+  provider-side concurrency overhead. The honest claim is "~4.3× on this run," not
+  "6× because there are 6 calls."
+- **Scope honesty.** This times the specialist fan-out only (the dominant cost: 6 LLM
+  calls), not full end-to-end request latency (aggregator/context/FastAPI overhead is
+  small but not measured here). The bench prints; it isn't a committed artifact (the
+  reproducible script is — re-run anytime).
