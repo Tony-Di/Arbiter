@@ -1,0 +1,131 @@
+{
+  "policy_version": "2026-09-22.2",
+  "purpose": "新的 calibration 候选：尚无人工标签，不显示模型预测。",
+  "provenance": {
+    "source_revision": "f2970eb3a55777454c94069077cc8d9b5866312d",
+    "human_review_status": "pending"
+  },
+  "cases": [
+    {
+      "id": "civil-comments-e7cbdbf53264767d0c9d",
+      "text": "That is great thinking.  He is not going to win the nomination anyway...but just in case pick a real loser so you have absolutely nooo chance in the general election.",
+      "split": "calibration",
+      "text_sha256": "e7cbdbf53264767d0c9daf79bbf7d02d993437f361fd68da0e7d5fba27a37955"
+    },
+    {
+      "id": "civil-comments-2290686a8dcfa9343518",
+      "text": "Oh, goody! The circus is back in town, and here comes the head clown!!! Speak, clown! Speak!! We all need a good laugh!",
+      "split": "calibration",
+      "text_sha256": "2290686a8dcfa9343518f2039ddc8d62638a2cda4a5ef82092bf98adf70e945d"
+    },
+    {
+      "id": "civil-comments-751736dd4ed78edc3916",
+      "text": "Excuse me Mr. Moore , but given the guys track record----what the heck was your daughter doing dating a punk like this ?",
+      "split": "calibration",
+      "text_sha256": "751736dd4ed78edc3916c0e604e26510bc3c129406ad96c1ab4d8be3d61c271a"
+    },
+    {
+      "id": "civil-comments-edc7254be1822fd2ad4d",
+      "text": "This is exactly why cats should have a license and leash requirement, just as dogs do. I'm not advocating going onto another person's property to retrieve an offending animal, but if you catch it on your property, you should be able to deal with it as needed. Cat owners are either ignorant or inconsiderate regarding the damag or displeasure their pets cause to their neighbors properties.",
+      "split": "calibration",
+      "text_sha256": "edc7254be1822fd2ad4da7a3406bba27f4808c5ec0f102d77c95a012bb7f981d"
+    },
+    {
+      "id": "civil-comments-f3b391148e79ee053883",
+      "text": "Sounds like stupid lunch time talk got taken way too seriously but who knows.",
+      "split": "calibration",
+      "text_sha256": "f3b391148e79ee053883561daae1979f68ac305636a6bd2098a5ddaa14b97c89"
+    },
+    {
+      "id": "civil-comments-e99beb7377c7143dae61",
+      "text": "Post whatever you want. You have no clue. Funny how the tribe lied about the land use of this casino. First it was a sacred area, now it's a family destroying casino.  You have to laugh, 99% of the tribe is white. Only have to prove 10% to be registered. Another scam by a made up group of thieves.",
+      "split": "calibration",
+      "text_sha256": "e99beb7377c7143dae616eaac93b473d3fb58bc99e3b567673592a7fffd81393"
+    },
+    {
+      "id": "civil-comments-2fe2e61d18ad3b72309a",
+      "text": "Liars and manipulators are not fit for public office. Big egos are not fit for public office. Thinking you are able to get your way by manipulating City Attorneys are the type of city councilors we don't need. Hiring controversial state personnel who are known liars and criminals are the type of city councilors we don't need. Fish, even more so than Novick are the type of CC's we don't need.",
+      "split": "calibration",
+      "text_sha256": "2fe2e61d18ad3b72309ace2181720e43333558b9a270bc069b3a6984b0e16078"
+    },
+    {
+      "id": "civil-comments-0d8686d3e10ef24abda7",
+      "text": "They are just trying to get to Trump Fact level.",
+      "split": "calibration",
+      "text_sha256": "0d8686d3e10ef24abda7c8e880d0d6d1b055c3273d1dcb1b95a38acccb514c9f"
+    },
+    {
+      "id": "civil-comments-71e6cb0e57a71ca6689d",
+      "text": "Hi Domestikgoddez.  I agree w/you on your analyasis on this rag.  We don't get quality here that's for sure.",
+      "split": "calibration",
+      "text_sha256": "71e6cb0e57a71ca6689d81ef53eca83cc843f7ed665afd49f3155aa72a9d0f2b"
+    },
+    {
+      "id": "civil-comments-89f43dfa347da6e38d6b",
+      "text": "President Obama got his just for not being George W. Bush.  He hadn't even fired a shot in Libya or Syria in 2009.  But he promised to get out of Afghanistan so that was enough.  Still there, of course.  And back in Iraq, too.  I know \"Advisors' don't count.  That's what JFK and LBJ said in Vietnam, too.",
+      "split": "calibration",
+      "text_sha256": "89f43dfa347da6e38d6b32b334ff66f1230ed12986455424520ce34d98b9fd55"
+    },
+    {
+      "id": "civil-comments-ea7e1050de155780cae8",
+      "text": "I would, even more so, put Bill Clinton in the category of embarrassing our country and emboldening our enemies.",
+      "split": "calibration",
+      "text_sha256": "ea7e1050de155780cae860e45d0b5ee65a85476482904be20c8578f9d4b107af"
+    },
+    {
+      "id": "civil-comments-a739c78d38c1d26e8592",
+      "text": "this rocket launch stuff is a horrible pork barrel project sort of thing the people and the state of alaska don't need to throw money at. the science is biased and the money people are the only fans of this boonedoggle.",
+      "split": "calibration",
+      "text_sha256": "a739c78d38c1d26e85921d32710c7d8ce82eb0f0ba438c05b1b8653cf5f8c65f"
+    },
+    {
+      "id": "civil-comments-fd00544fead1a872fc35",
+      "text": "She'd be receiving a disability check for acute mental disorders,if she wasn't a politician",
+      "split": "calibration",
+      "text_sha256": "fd00544fead1a872fc3508743a041bc596e86996b0b321f6b9c3a6e64a137f73"
+    },
+    {
+      "id": "civil-comments-c4bfa59c65218dd65782",
+      "text": "Governor Walker, keep the Just Say No majority at the capitol.  Veto any bill that suggests they meet outside of Juneau.  There's too many distractions for the clowns if they're permitted to meet in Anchorage.",
+      "split": "calibration",
+      "text_sha256": "c4bfa59c65218dd657823ea56c94dbd9119671db08c48b632965505c187ca818"
+    },
+    {
+      "id": "civil-comments-eba392d1f21fcd19268d",
+      "text": "it's called LIBERAL DEMENTIA, a social disease void of intelligence, logic, and common sense. Facts will only confuse the dickens out of this person.",
+      "split": "calibration",
+      "text_sha256": "eba392d1f21fcd19268d31bc5efc4dad08cf04bf07335e69d7ede72f6a5cd359"
+    },
+    {
+      "id": "civil-comments-64488f324cb535406358",
+      "text": "To manage to hit a moving target in a fluid situation actually does require someone to be calm under pressure. So, your insulation that his shooting a dog rushing at him means he is not calm and rational is completely backwards.",
+      "split": "calibration",
+      "text_sha256": "64488f324cb535406358c528a743c28e2ebe27af00e3477e912df23d773538bb"
+    },
+    {
+      "id": "civil-comments-5fad33541056faf931e8",
+      "text": "Hopefully the city goes after them for violating the anti-smoking law. \n\nPeople have a right to be in a smoke free environment, and the type of smoke doesn't matter",
+      "split": "calibration",
+      "text_sha256": "5fad33541056faf931e8789d0575b3b3120b16d1801d66c9f6f51af3fc1b3408"
+    },
+    {
+      "id": "civil-comments-1e3c48e4b540a6c993d8",
+      "text": "What a stupid comment from someone :Named \"CatNamedJava\"!",
+      "split": "calibration",
+      "text_sha256": "1e3c48e4b540a6c993d8904fb90c37c58da7b3ea0804348db9e65aae72b47ed2"
+    },
+    {
+      "id": "civil-comments-39a210429a574b769945",
+      "text": "And the line up of the idiots begins........",
+      "split": "calibration",
+      "text_sha256": "39a210429a574b769945bb18e0a467a1498d639a97c623afa4cb5913e33edce7"
+    },
+    {
+      "id": "civil-comments-fc9380a6e84e1475bad5",
+      "text": "You are obviously a fool.",
+      "split": "calibration",
+      "text_sha256": "fc9380a6e84e1475bad5c7efa77cc8e1a5812bd4f970cb1e0b8e1e4303d00e88"
+    }
+  ],
+  "packet_id": "e65b639604aa767e693dd256cad713632a6214f7f423bc07f8e45a97e944a12d"
+}

@@ -1,0 +1,251 @@
+{
+  "policy_version": "2026-09-22.2",
+  "purpose": "新的 holdout 候选：尚无人工标签，不显示模型预测。",
+  "provenance": {
+    "source_revision": "f2970eb3a55777454c94069077cc8d9b5866312d",
+    "human_review_status": "pending"
+  },
+  "cases": [
+    {
+      "id": "civil-comments-4774b60fc03dc12b4ccd",
+      "text": "all you do is trash talk Junior. You never back your statements with actual facts, and never address the facts posted. All you do is post juvenile remarks incapable of posting anything remotely intelligent. You seem to think it is ok to be an internet tr0ll.",
+      "split": "holdout",
+      "text_sha256": "4774b60fc03dc12b4ccdc371f78e0d62e23fb48d145f441b4ebef484cb602fae"
+    },
+    {
+      "id": "civil-comments-29ba46af21840c9f097b",
+      "text": "Pardon me. Process a little confusing. I rated Cede's comment as \"uncivil\" because it appears to support incivility. However, the comment is civil. How to rate a paradox?",
+      "split": "holdout",
+      "text_sha256": "29ba46af21840c9f097b49d1a8cd54d2341c08d61c3000f3bd0f454b6d938d8f"
+    },
+    {
+      "id": "civil-comments-802162945f8f00714040",
+      "text": "I think the Tate is attractive. Maybe we need to offer more tax incentives???",
+      "split": "holdout",
+      "text_sha256": "802162945f8f007140400fa24d9b867127c0909c89ab528031053287c9b1eedf"
+    },
+    {
+      "id": "civil-comments-6879a42726d0d5a40431",
+      "text": "Why? It would just be a lie. Oilies lie. It's what they do.",
+      "split": "holdout",
+      "text_sha256": "6879a42726d0d5a40431460eb241364b94b279fb4f3ceeac09c575ca68812e5e"
+    },
+    {
+      "id": "civil-comments-88860ea72421ca7673a4",
+      "text": "Support for even rudimentary LGBT rights is not what his base will support. This, in my opinion is a con-job. Cruz is a dominionist.",
+      "split": "holdout",
+      "text_sha256": "88860ea72421ca7673a48de2d4c3476f2f92e0a80edea99318c5b99b9a99fb0a"
+    },
+    {
+      "id": "civil-comments-d905964ad41f5ddf83a5",
+      "text": "Hmmm,  you giveaway tax money to the oil companies in SB 21 then you strip education and the old peoples money from them then you want to buy a 35 million Dollar building downtown and now you want to tax the PFD?!?! How about you go get the money back from the oil companies that you gave away, you don't buy that building that you don't need, then you cut your own salary is 50% before you start trying to tax other people.\nGOP= OLD WHITE UNEDUCATED MEN!!!!!!",
+      "split": "holdout",
+      "text_sha256": "d905964ad41f5ddf83a52d9a8fc8e96486aa8be21ff6dbec07070cf9737277eb"
+    },
+    {
+      "id": "civil-comments-a857e1953c9679115d05",
+      "text": "Great job pulling the plug on these poor helpless druggies. They are so misunderstood. Hang them out to dry.",
+      "split": "holdout",
+      "text_sha256": "a857e1953c9679115d058a85e67db7faf6a2f271afe302978046ab766d04c7ea"
+    },
+    {
+      "id": "civil-comments-add4cdd683429df4f5bf",
+      "text": "your comment is ignorant on so many levels it's actually amazing",
+      "split": "holdout",
+      "text_sha256": "add4cdd683429df4f5bff3b6071d275cadb557c11ca0ef8119d05db21a77f2b9"
+    },
+    {
+      "id": "civil-comments-002a95c2ee8321057ba7",
+      "text": "I hope you get ticketed for harrassment",
+      "split": "holdout",
+      "text_sha256": "002a95c2ee8321057ba7f551a32f1e450d77bc9e6c6b4e00b8ae56b06c685c8b"
+    },
+    {
+      "id": "civil-comments-8c819df41558ffc75402",
+      "text": "The one frequented by the juveniles, of course.  Pedophiles are not necessarily gender-specific.",
+      "split": "holdout",
+      "text_sha256": "8c819df41558ffc75402e3d7db00d6b49709f86ef4a6654bb1ab4e5c9bf70886"
+    },
+    {
+      "id": "civil-comments-9b4446ed8402be3b5e2e",
+      "text": "And thank goodness I've been upgraded to profoundly stupid, because that's what it took for you to finally give something close to a specific example. However, I know the owners of Lone Pine, and I ain't buying what you're selling.\n\nBoozer, here's a tip as to how far off the rails your arguments have been: People who never agree with me are agreeing with me. That alone should have you mumbling into your Maypo.",
+      "split": "holdout",
+      "text_sha256": "9b4446ed8402be3b5e2e4217923f85261e0a2c402a381468cb6796d32ee40449"
+    },
+    {
+      "id": "civil-comments-9f5f653b1ec6cf593d72",
+      "text": "What do you mean Sam Combs that the Corrupt Bastards Club is back?  You haven't been paying attention, THEY NEVER LEFT!!!!!!",
+      "split": "holdout",
+      "text_sha256": "9f5f653b1ec6cf593d7251e61d0cd899f5eb7346f9bdb7bb9baa7b6b044854c1"
+    },
+    {
+      "id": "civil-comments-0c2700db2e41af9fbb9d",
+      "text": "ADN generally doesn't post photos of white suspects.  Non-white, they'll post the perp and his whole family...",
+      "split": "holdout",
+      "text_sha256": "0c2700db2e41af9fbb9de00fdad1ed7584ba27f78a9e35fcc9bcf15667ef7273"
+    },
+    {
+      "id": "civil-comments-891fd91033ba8da638aa",
+      "text": "Well, that's disgusting.",
+      "split": "holdout",
+      "text_sha256": "891fd91033ba8da638aab32fa2e42bb6fb97ce2a1e8f6332ae509edfec7ae825"
+    },
+    {
+      "id": "civil-comments-f916cc81dfc0e650190e",
+      "text": "SATs and ACTS are actually racist and biased.  They are predictors of whiteness.",
+      "split": "holdout",
+      "text_sha256": "f916cc81dfc0e650190e8d6abb6651916a32a02255b466bd3fcd379df0f96f1c"
+    },
+    {
+      "id": "civil-comments-4ffb8741ff67f04bce6e",
+      "text": "In making his case for Boucher Austin stopped just short of calling the NCAA administrators a group of dunderheads...he should have just went ahead and said it as no one would ever hold it against him...",
+      "split": "holdout",
+      "text_sha256": "4ffb8741ff67f04bce6ea29c7368b81d33bc003b887084be69d81fa6f64f8eda"
+    },
+    {
+      "id": "civil-comments-b967e8a26ee93ee839c3",
+      "text": "YES !! Governor--YOU are on the right track !!  BUT remember--THE PEOPLE keep saying !! NO touch the PF--THE legislative branch MUST follow suit--YES BUDGET cuts and broad based TAX-is the ONLY WAY to GO--NOT -NEW TAX--the fools dropped the state income TAX-during flush oil times--RE-INSTITUTE the STATE INCOME TAX---the BEST SOLUTION",
+      "split": "holdout",
+      "text_sha256": "b967e8a26ee93ee839c3ee4c671f05f888bc5470877b176292b85a46ac4c0242"
+    },
+    {
+      "id": "civil-comments-5adc0d854829b8cfc407",
+      "text": "Your both fatalistic and realistic.    I wish I could disagree but .....    Money equates to a lot of power in every nation in the world, it's not unique to the United States.",
+      "split": "holdout",
+      "text_sha256": "5adc0d854829b8cfc407a89e1d3e0af7e685153459b202bbdcc0c991db1885cd"
+    },
+    {
+      "id": "civil-comments-af324f640946aed334c7",
+      "text": "When ideology meets reality, the light shines harshly on the idiots-ology. It's high time to do what's right and quit wasting time and money with this futile posturing. The Governor has laid out a reasonable plan. Try working with him for a change instead of working for Koch brothers, Grover Norquist, and the Club for Growth.",
+      "split": "holdout",
+      "text_sha256": "af324f640946aed334c7530514895df2488bafe6a9124bb6abae90d03067fd0c"
+    },
+    {
+      "id": "civil-comments-88f2a2d10c6123f3d4f3",
+      "text": "Well, just fracking crazy, an earthquake right on a known fault line. Who woulda thought! Lets pump some more fracking juice right into that crack and get it really lubricated!",
+      "split": "holdout",
+      "text_sha256": "88f2a2d10c6123f3d4f3d844b5a02c32fc8af57cb9c9af4c4d6d94e8fb56e3bb"
+    },
+    {
+      "id": "civil-comments-b811e47526e736c93bcb",
+      "text": "I agree. Everyone has skin the game too.",
+      "split": "holdout",
+      "text_sha256": "b811e47526e736c93bcb078343f6a8576096be514162d67adbb8a0a2683a8974"
+    },
+    {
+      "id": "civil-comments-88b94a8e8c1e7af1b9fc",
+      "text": "She is such an IDIOT",
+      "split": "holdout",
+      "text_sha256": "88b94a8e8c1e7af1b9fcec8ca4e77ecbc9a0b9b07a9a6338248fcd331d7495e9"
+    },
+    {
+      "id": "civil-comments-af5053ccab679c672a83",
+      "text": "Along with 'fat, dumb and happy'.  Or maybe 'stupid is as stupid does'?",
+      "split": "holdout",
+      "text_sha256": "af5053ccab679c672a839789ec1e1282cd4fca8f8ccaa18990a2f2b8dd36d9ca"
+    },
+    {
+      "id": "civil-comments-ab9a993418d232527226",
+      "text": "The Liars Anonymous meeting today will be at 4:00. Speaker: Mick Jagger.",
+      "split": "holdout",
+      "text_sha256": "ab9a993418d232527226871319a468a6518378d84849138de4bbf3cfd74c89b8"
+    },
+    {
+      "id": "civil-comments-1effe7eef0fe3502509f",
+      "text": "Quit blaming and do the jobs you have neglected for decades, and the people you have neglected as well.  Stop the waste on the Knik Bridge, the damn and other wasteful spending going into the pockets of your freinds.",
+      "split": "holdout",
+      "text_sha256": "1effe7eef0fe3502509f4b34d49329a41d8de2b6a38a87790981075c96051b1e"
+    },
+    {
+      "id": "civil-comments-d55b76d87cd5af9d90e8",
+      "text": "all cats running lose need to be exterminated. what a puke like you fails to grasp is if the owner of that cat wasn't so grossly irresponsible letting the cat run lose to destroy other peoples yards and kill our song birds, it wouldn't have been killed by the neighbor fed up with this gross irresponsible jerk of a neighbor. But I will never expect a POS like you to understand that.",
+      "split": "holdout",
+      "text_sha256": "d55b76d87cd5af9d90e8466510f8de397435cfbbe1b1e133dc223102b04bf9ac"
+    },
+    {
+      "id": "civil-comments-772ded010186d3ba0e06",
+      "text": "Yes because of course there is no middle class that tends to actually make up the majority of ACTUAL taxpayers!! \n\nIgnorance is running strong today",
+      "split": "holdout",
+      "text_sha256": "772ded010186d3ba0e063f7ad3d9b296e316372679bd51a779d3006e1edb333c"
+    },
+    {
+      "id": "civil-comments-80138331b9279ff8bb74",
+      "text": "I explained to Junior the father of conservatism was a pot head who advocated legalization, and why ripping on Jay as a tea party conservative was profoundly stupid. I then pointed out just how stupid it is to be boasting of the pitiful tax revenue collected to justify legalization. Legalization is about basic human rights, not pathetic tax revenue collected.",
+      "split": "holdout",
+      "text_sha256": "80138331b9279ff8bb741d41940c9da2709d3dd29c25001f941b94a57a798cad"
+    },
+    {
+      "id": "civil-comments-1ab9b5b3f17624281ddc",
+      "text": "Damn, someone dropped the mic.",
+      "split": "holdout",
+      "text_sha256": "1ab9b5b3f17624281ddc08637380d9572e9579f510ab090deb91fa1a6b880d39"
+    },
+    {
+      "id": "civil-comments-b2ef9d392c341bf13610",
+      "text": "The Black one isn't a scientist, unlike her White counterparts.  #Hollywoodsowhite",
+      "split": "holdout",
+      "text_sha256": "b2ef9d392c341bf13610bcb4968725b3341f7dc6ef1ae0b061a519676160c832"
+    },
+    {
+      "id": "civil-comments-234e81124e55491035fd",
+      "text": "Pedophile scum need to be gunned down in public or burned alive.",
+      "split": "holdout",
+      "text_sha256": "234e81124e55491035fd116fd72eb1d5b98c993d9ed5c09bc01623a65d238360"
+    },
+    {
+      "id": "civil-comments-5cad128ece21c91f41d4",
+      "text": "That she took the seat is more disgusting than Frank offering it to her. Folks if you really want to see change in Washington we need to focus on taking back the Senate and filling the SCOTUS vacancy. We do that starting with the ousting of Lisa Murkowski and replacing her with a true independent, Margaret Stock.",
+      "split": "holdout",
+      "text_sha256": "5cad128ece21c91f41d40389dcb67fa806540f9e58f169839074217c8495bc09"
+    },
+    {
+      "id": "civil-comments-aaee921b9162abbcb0cb",
+      "text": "Alaska Policy Forum just published the whole State payroll.   Class Specification, Pay Range assignments, and salary/wage rates are all on the State's website.",
+      "split": "holdout",
+      "text_sha256": "aaee921b9162abbcb0cbaa6deb1ee0bedd455d17d1013a26d655c147f5536c86"
+    },
+    {
+      "id": "civil-comments-db1c55567e5459a8aef1",
+      "text": "\"Alleged\" criminals.  Like Hillary.",
+      "split": "holdout",
+      "text_sha256": "db1c55567e5459a8aef1ffe594ddf6b893ebc9b0f95a9e0db9232b7fc7953e0f"
+    },
+    {
+      "id": "civil-comments-3be67b6077a27a1d21b6",
+      "text": "Comparing the Reedsport Braves image to an exaggerated cartoon caricature like Yosemite Sam is absolutely ridiculous.   The Reedsport Braves image is in no way at all a cartoon.\n\nThis is most disingenuous of you to try to make people think otherwise.\n\nHere is the Reedsport Braves logo at the link below.  It looks quite respectful to me.   Most definitely not a cartoon, nor a caricature.\n\nhttps://pbs.twimg.com/profile_images/595350371217747968/CPpxuchv.jpg",
+      "split": "holdout",
+      "text_sha256": "3be67b6077a27a1d21b6bd02dd1792d6ec871808a18d237923819cf79d464633"
+    },
+    {
+      "id": "civil-comments-f1ad43b3a6798db1aa11",
+      "text": "\"“The state of Alaska is on the brink of going broke. We have a $4 billion deficit and it seems every time we turn around, it increases,” Sen. Lyman Hoffman\"\n\nBut there is $850,000,000 in tax credits for the oil corps and refineries.\n\nHoffman may as well put an R after his name.\n\nKeep voting for Hoffman out there in Bethel! But, ask him to formally switch to a R. After all, if you are going to get screwed so the oil companies can laugh, you should at least know who is doing the screwing.",
+      "split": "holdout",
+      "text_sha256": "f1ad43b3a6798db1aa11a59b4a44b9f62735c5d5cb19eebf8700ece447158e21"
+    },
+    {
+      "id": "civil-comments-640eb0d01a7d2d548b19",
+      "text": "hallelujah,  no I didn't see it but if it's true you made my day since I just have an antenna.",
+      "split": "holdout",
+      "text_sha256": "640eb0d01a7d2d548b19b6710584c2fbbd01154b48e9b5b25f720c9e594144a0"
+    },
+    {
+      "id": "civil-comments-e73cb78e97e4d67e15ec",
+      "text": "But they're not too scared to throw a fist in the air as they shoot a cop, huh?! \n\nYou're darn right racism is alive and well. It's just a completely different form of it nowadays.",
+      "split": "holdout",
+      "text_sha256": "e73cb78e97e4d67e15eca6e856838dffa9924c2ef044a7140eb9c563518873ef"
+    },
+    {
+      "id": "civil-comments-b968f46fb3dd7943217c",
+      "text": "Schidt, What you call toxic waste is there already in the ground. Pebble will not manufacture new toxic waste. The world's active volcanos in one day pump more toxic chemicals into the atmosphere than Pebble will ever touch.",
+      "split": "holdout",
+      "text_sha256": "b968f46fb3dd7943217c8f5dc527c5f4ba9b72cd61e4937d4839cdaced22bb1c"
+    },
+    {
+      "id": "civil-comments-2af07e359cb62039dc79",
+      "text": "Larry - Keep flailing, wailing and baling.  The HMS Donkey is sinking fast",
+      "split": "holdout",
+      "text_sha256": "2af07e359cb62039dc79fb9e6adb822e52e4f5a90d9119bf6a5efae1b3c986c6"
+    }
+  ],
+  "packet_id": "357de45d7bf18c28ed67c26319a89cdbef2a6e732b14b3a3680df1d20b284051"
+}

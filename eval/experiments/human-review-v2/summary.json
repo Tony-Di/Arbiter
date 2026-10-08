@@ -1,0 +1,8 @@
+{
+  "n_cases": 160,
+  "n_variant_disagreements": 57,
+  "n_reference_disagreements": 83,
+  "human_labels_completed": 0,
+  "packet_id": "2b9b5815c444d3da21051964f7ab942180e7f9a3a3f6e6fc32c6c410a0a1b085",
+  "annotation_status": "user_confirmed_not_individually_human_reviewed"
+}

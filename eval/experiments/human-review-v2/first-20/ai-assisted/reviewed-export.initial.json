@@ -1,0 +1,171 @@
+{
+  "packet_id": "7490239f5b9bec43f428311371e56fc2c529aabd5d849529edb0913ff7f64df8",
+  "policy_version": "2026-09-22.2",
+  "source": "human_review",
+  "attested_human_review": true,
+  "annotation_method": "ai_assisted",
+  "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93",
+  "reviewer": "project-owner",
+  "labels": [
+    {
+      "id": "civil-comments-2f9096a93b9f104833cf",
+      "text_sha256": "2f9096a93b9f104833cfd4733ca09865f1ddd14d98163d3a7034043e8455d672",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "把一组军人描述为福利寄生者，并用 sexually confused 和 Section 8 贬低他们，足以构成普通定向辱骂。文本没有明确说明具体性别认同、性倾向或诊断，不能自行补出群体身份并据此自动升级删除；先按已明确的辱骂交人工。",
+      "reviewed_at": "2026-09-22T17:03:35.368Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-306860d0b8ed1ff26f79",
+      "text_sha256": "306860d0b8ed1ff26f798d5d13351a63252dfa7bf58613e1b4b54e79c6a6e164",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "knucklehead 针对使用某些政治词汇的人，属于普通定向称骂，不只是说帖子质量差。静音他人不是暴力威胁，政治立场也不自动构成受保护身份攻击。按严重程度 2 交人工。",
+      "reviewed_at": "2026-09-22T17:03:36.748Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-34e91fcf0b2df68092b6",
+      "text_sha256": "34e91fcf0b2df68092b6446fa1a2a54c25bb529260205ea89c965cc1f773c2ad",
+      "gold_action": "allow", "gold_severity": 0, "gold_categories": [],
+      "rationale": "原文没有给出所想内容，也没有贬损、身份攻击或暴力意图。不能仅凭感叹号和缺少上文就猜测存在辱骂；按当前提供的文本允许。",
+      "reviewed_at": "2026-09-22T17:03:37.566Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-397bd3cb68de98b2bca8",
+      "text_sha256": "397bd3cb68de98b2bca8219146b196ef57c983099da2981a0c147609ab85097a",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "直接以 patholigical 贬低一个人，已经超出单纯批评具体政策或报道，属于普通定向辱骂。后文批评的是媒体机构的党派立场；出现 Catholic 不足以证明攻击全体宗教信徒，也不能把贬损词当作真实医学诊断。",
+      "reviewed_at": "2026-09-22T17:03:39.216Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-3de0fa2c6075b0428fd1",
+      "text_sha256": "3de0fa2c6075b0428fd191c15f31b128d4cf3e5f0230c962d7a88da2f912931e",
+      "gold_action": "human-review", "gold_severity": 1, "gold_categories": ["toxic", "identity_hate"],
+      "rationale": "评论把种族、性别与愤怒持枪者联系起来，含有轻度身份刻板描述；但也可以理解为害怕特定持枪人群，而不是认定所有白人男性都有劣等属性。此处预标为低程度身份相关风险，因攻击用途存在歧义交人工，不据此自动删除。没有作者实施暴力的意图。",
+      "reviewed_at": "2026-09-22T17:03:41.211Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-3fab7c3996ebd0dc544b",
+      "text_sha256": "3fab7c3996ebd0dc544bf13b1d4db79eb34aae35d23e2b174efe2daca782a1d4",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "scum bag、dim witted blow hard 明确贬低某个人，并嘲讽对话者。dig a hole and stick your head in it 在这段话中指逃避事实，没有直接身体伤害意图；不能按字面编造暴力威胁。普通辱骂记 2，交人工。",
+      "reviewed_at": "2026-09-22T17:03:42.156Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-405f38e61e0c7f7eafaf",
+      "text_sha256": "405f38e61e0c7f7eafafaeb2183f2fb3b49357b88f8a70be03db42c28a763b0c",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "把对方称作 idiot，即使放在二选一反问中，仍是普通定向辱骂。没有可支持自动删除的严重攻击或威胁，按政策记 2 并交人工。",
+      "reviewed_at": "2026-09-22T17:03:43.011Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-42dcb34439d14fe04900",
+      "text_sha256": "42dcb34439d14fe0490087f102ba5c392f1129673965d22979b22f3419961f0f",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "反问用 that ignorant 贬低某个人，而不是指出某个论据有误，按普通定向辱骂处理。问句形式不消除攻击性；未达到现行政策自动删除的严重程度。",
+      "reviewed_at": "2026-09-22T17:03:43.296Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-4454ad6d7fdb71498a73",
+      "text_sha256": "4454ad6d7fdb71498a73dd63b294b960df9f3fbc3b21881e179a1445374a20fe",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "直接把 stupidity 归于对方，并用 boast 讽刺对方，是明确普通人身辱骂。讽刺不减轻为无伤害，也没有足够证据升级到严重攻击。",
+      "reviewed_at": "2026-09-22T17:03:43.731Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-49a8264f34e1f733c106",
+      "text_sha256": "49a8264f34e1f733c106abc9b05e99fe913774f915261d5475700b537df3e376",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "前文在争论政治人物的双重标准，但结尾把特定政治阵营及对话中的人统称为伪君子，构成普通定向辱骂。政治阵营不属于本政策列出的受保护身份；按 2 交人工，不自动删除。",
+      "reviewed_at": "2026-09-22T17:03:44.616Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-49b164ed5e71dca39524",
+      "text_sha256": "49b164ed5e71dca39524b581da95334731059daacf1642a5618c31a34f0783d1",
+      "gold_action": "human-review", "gold_severity": 1, "gold_categories": ["identity_hate"],
+      "rationale": "将女孩对男性的理解和同性性倾向归因为缺少男性榜样，带有性别、性倾向的刻板归因；但文本没有直接称该群体低劣、要求排斥或表达暴力。先记轻度身份相关风险，交人工确认是否已构成贬低性攻击，而不是仅因讨论性倾向就删除。",
+      "reviewed_at": "2026-09-22T17:03:45.418Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-4c15cc0eb6664f99d246",
+      "text_sha256": "4c15cc0eb6664f99d246966e1c16a79d7357b48621df1c75749234f431fdcb39",
+      "gold_action": "allow", "gold_severity": 0, "gold_categories": [],
+      "rationale": "按现有文本是一句不要受伤的提醒，没有明确贬低对象、威胁实施者或伤害承诺。可能在其他上下文里带讽刺意味，但不能仅凭这种可能性判为辱骂或威胁，因此当前允许。",
+      "reviewed_at": "2026-09-22T17:03:46.476Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-53b1efe314120ca19bf4",
+      "text_sha256": "53b1efe314120ca19bf404e866ee27f127cd6fa0f5fefbe49a6284d29274b6ee",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "把文中对比的总统称为 teenaged chimp，属于动物比拟式人身贬损。文中没有把此称呼与种族或其他受保护身份相连，也没有暴力或极端虐待内容；本次按普通辱骂记 2 交人工，不把动物词自动等同于种族攻击。",
+      "reviewed_at": "2026-09-22T17:03:47.436Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-56fc9f54b9c070f96eca",
+      "text_sha256": "56fc9f54b9c070f96ecad6c624dfe62dd24672a5b93489140870ec0250f0c8cf",
+      "gold_action": "allow", "gold_severity": 0, "gold_categories": [],
+      "rationale": "stupid 修饰文章，后续围绕录播、技术失误和作者是否查资料展开批评，没有直接称作者为蠢货。按观点、文章和工作质量批评通常允许的规则处理，语气不客气本身不构成人身辱骂。",
+      "reviewed_at": "2026-09-22T17:03:48.914Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-598ddf1960b80d6e5076",
+      "text_sha256": "598ddf1960b80d6e5076e0e065598b858497293d91a440e014654ace22c0e0ad",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "把 they 指代的一组人描述为没有道德，并使用 greedy、lying 等贬损词，构成普通定向辱骂。句子也可能是在指控某群体偏袒白人基督徒男性；不能仅因出现这些身份词就断言其攻击所有该身份者。先按明确的辱骂交人工。",
+      "reviewed_at": "2026-09-22T17:03:49.656Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-5b142f3abb8ecc79fa07",
+      "text_sha256": "5b142f3abb8ecc79fa0757292051259472ed1e01550fa95a8ed47eee8760acf8",
+      "gold_action": "human-review", "gold_severity": 1, "gold_categories": ["identity_hate"],
+      "rationale": "并列举出中餐馆、烧烤店和游泳池可能引发气味投诉，没有把负面属性归于中国人或其他身份群体。Chinese 修饰餐馆类型；darn 在这里是轻微语气词，未形成对人的攻击或明显淫秽内容。允许。",
+      "reviewed_at": "2026-09-22T17:08:25.299Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-051a58f317748b6a5445",
+      "text_sha256": "051a58f317748b6a54452cca17df404308f76897f39bd250d6168207940ff7be",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "评论除批评媒体外，还用 bullys and miscreants 直接贬低记者群体，属于普通定向辱骂，按政策记 2 并交人工。记者职业和媒体机构不是这里定义的受保护身份；没有威胁、粗口或严重攻击证据。文中政治说法的真假不在此次六类审核范围内。",
+      "reviewed_at": "2026-09-22T17:09:26.763Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-17a94b7be242ffbd1826",
+      "text_sha256": "17a94b7be242ffbd18261bef52c2605bdb1a513b61dccd8c4e1a4b664e306a70",
+      "gold_action": "human-review", "gold_severity": 2, "gold_categories": ["toxic", "insult"],
+      "rationale": "用奶嘴和等大人回来连续把对方比作幼儿，整体是在贬低对方的成熟度。反问和讽刺不免除定向辱骂；属于普通程度，交人工，不自动删除。",
+      "reviewed_at": "2026-09-22T17:09:28.773Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-2807c06058413c2280a6",
+      "text_sha256": "2807c06058413c2280a6db8552a3e92d4517851a84121d4f49321ca126843f06",
+      "gold_action": "allow", "gold_severity": 0, "gold_categories": [],
+      "rationale": "stupid 的对象是 what she did，即政治人物的行为；其余内容围绕偏袒、资金和参选资格表达批评，没有直接称该人为蠢货。按允许批评行为与观点的规则处理；感叹号和激烈立场本身不是辱骂。",
+      "reviewed_at": "2026-09-22T17:09:32.959Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    },
+    {
+      "id": "civil-comments-2bd11050bc032ee16e07",
+      "text_sha256": "2bd11050bc032ee16e07d1869cc5ae34a32f9dc479e2a7ae81e1d591b0811a1f",
+      "gold_action": "remove", "gold_severity": 3, "gold_categories": ["toxic", "insult", "identity_hate"],
+      "rationale": "作者以赞同口吻引用 debased mind，直接贬低具有同性性倾向的人；不只是转述、谴责攻击或讨论宗教观点。按现行政策，明确针对受保护性倾向群体的攻击记 3 并删除。触发点是对人的身份攻击，而不是提到宗教或引用经文这一行为本身。",
+      "reviewed_at": "2026-09-22T17:09:40.646Z",
+      "annotation_method": "ai_assisted", "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93"
+    }
+  ]
+}

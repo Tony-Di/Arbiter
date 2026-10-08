@@ -1,0 +1,133 @@
+{
+  "policy_version": "2026-09-22.2",
+  "purpose": "首批 20 条：AI 预标注已完成，等待用户逐条确认或修改。",
+  "provenance": {
+    "annotation_method": "ai_assisted",
+    "original_packet_id": "860392da19d0c3eca83305e7d13f663d39dcc646def5c6524567e34c0f89c64d",
+    "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93",
+    "human_review_status": "pending"
+  },
+  "cases": [
+    {
+      "id": "civil-comments-051a58f317748b6a5445",
+      "text": "During the last federal election in Canada, journalists were registered as a \"third party\" so that they could campaign against Harper while reporting on the election … and in the United States it's even worse.\n\nI applaud the White House for standing up to these bullys and miscreants.  A recent Edelman poll indicates that most people do not trust the mainstream media - it is fake news … and that includes the Globe and the CBC.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "051a58f317748b6a54452cca17df404308f76897f39bd250d6168207940ff7be"
+    },
+    {
+      "id": "civil-comments-17a94b7be242ffbd1826",
+      "text": "Will you be OK alone? Do you have a pacifier laying around? It will help till the adults return.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "17a94b7be242ffbd18261bef52c2605bdb1a513b61dccd8c4e1a4b664e306a70"
+    },
+    {
+      "id": "civil-comments-2807c06058413c2280a6",
+      "text": "Give me a break! Don't kno what she did wrong..she should'nt run at all! Who wants a person,who does \"favoritism!!\" She was only thinking of herself n family,when she did what she did..sure she helped the borough,but we look at the facts of what she did,it's stupid! Try to blame other people for her mistakes, she shud give all that $ bak..GO George Ahmoagak,my votes are for u!!",
+      "split": "previously_seen_holdout",
+      "text_sha256": "2807c06058413c2280a6db8552a3e92d4517851a84121d4f49321ca126843f06"
+    },
+    {
+      "id": "civil-comments-2bd11050bc032ee16e07",
+      "text": "To Tim Miller's letter to the editor:  Jesus Christ is God.  God is love.  Abolutely.  But God almighty, the same God that formed you in your mother's womb, will NOT allow His love that His Holy Character condemned.  Homosexuality is \"detestable sin\" in God's eyes.  In the book of Romans He call those involved with homosexuality having a \"debased mind.\"  \n     Obviously you do not believe in the God of the Bible.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "2bd11050bc032ee16e07d1869cc5ae34a32f9dc479e2a7ae81e1d591b0811a1f"
+    },
+    {
+      "id": "civil-comments-2f9096a93b9f104833cf",
+      "text": "Too many people use the military as their mommy and daddy.  The country needs healthy people to defend the country, not welfare leaches who  take advantage of taxpayer money offered by the armed forces to treat their mental issues.  These sexually confused people are the classic Section 8 candidates.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "2f9096a93b9f104833cfd4733ca09865f1ddd14d98163d3a7034043e8455d672"
+    },
+    {
+      "id": "civil-comments-306860d0b8ed1ff26f79",
+      "text": "I should mute every knucklehead that uses the word, left, liberal, right or conservative. What follows is almost always a dumb generalization and a bad post.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "306860d0b8ed1ff26f798d5d13351a63252dfa7bf58613e1b4b54e79c6a6e164"
+    },
+    {
+      "id": "civil-comments-34e91fcf0b2df68092b6",
+      "text": "What I was thinking about you!!!!!",
+      "split": "previously_seen_holdout",
+      "text_sha256": "34e91fcf0b2df68092b6446fa1a2a54c25bb529260205ea89c965cc1f773c2ad"
+    },
+    {
+      "id": "civil-comments-397bd3cb68de98b2bca8",
+      "text": "That Trump is patholigical is not news. Nor is it news that EWTN and National Catholic Register put party above sanity.\n\nIt is amazing that the Vatican is now more progressive than the Alt-Right Catholic media.",
+      "split": "previously_seen_development",
+      "text_sha256": "397bd3cb68de98b2bca8219146b196ef57c983099da2981a0c147609ab85097a"
+    },
+    {
+      "id": "civil-comments-3de0fa2c6075b0428fd1",
+      "text": "True. I won't visit the Excited States of Murrica because of all the angry white guys with guns.",
+      "split": "previously_seen_stress",
+      "text_sha256": "3de0fa2c6075b0428fd191c15f31b128d4cf3e5f0230c962d7a88da2f912931e"
+    },
+    {
+      "id": "civil-comments-3fab7c3996ebd0dc544b",
+      "text": "Oh any reporting of fact that doesnt jibe with your view of this scum bag and your out?  With so much time before November you better just dig a hole and stick your head in it (keep telling yourself your a patriot)  Because with this dim witted blow hard this wont be the last time he is an embarrasment!",
+      "split": "previously_seen_holdout",
+      "text_sha256": "3fab7c3996ebd0dc544bf13b1d4db79eb34aae35d23e2b174efe2daca782a1d4"
+    },
+    {
+      "id": "civil-comments-405f38e61e0c7f7eafaf",
+      "text": "your either joking or an idiot?",
+      "split": "previously_seen_development",
+      "text_sha256": "405f38e61e0c7f7eafafaeb2183f2fb3b49357b88f8a70be03db42c28a763b0c"
+    },
+    {
+      "id": "civil-comments-42dcb34439d14fe04900",
+      "text": "How can someone be that ignorant?",
+      "split": "previously_seen_holdout",
+      "text_sha256": "42dcb34439d14fe0490087f102ba5c392f1129673965d22979b22f3419961f0f"
+    },
+    {
+      "id": "civil-comments-4454ad6d7fdb71498a73",
+      "text": "That's it, boast about your stupidity.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "4454ad6d7fdb71498a73dd63b294b960df9f3fbc3b21881e179a1445374a20fe"
+    },
+    {
+      "id": "civil-comments-49a8264f34e1f733c106",
+      "text": "No Taipan, Ellen and all on the left blindly disagree with everything and anything Trump does. Even when Hillary actually traveled to Russia to try a \"redo\" with Putin.  Trump just made the customary calls upon becoming the new President of the United States and was chastised for it by the left. Hypocrites all!",
+      "split": "previously_seen_development",
+      "text_sha256": "49a8264f34e1f733c106abc9b05e99fe913774f915261d5475700b537df3e376"
+    },
+    {
+      "id": "civil-comments-49b164ed5e71dca39524",
+      "text": "Girls today have very few male role models. The parents maybe divorced and they only see the father on weekends. All their influences are women, the baby sitters, teachers, nannies etc.\n So these girls today in fact do not understand men at all, how can they? It even encourages them to become lesbians by rejecting men. That is why there are more lesbians today then ever before.",
+      "split": "previously_seen_stress",
+      "text_sha256": "49b164ed5e71dca39524b581da95334731059daacf1642a5618c31a34f0783d1"
+    },
+    {
+      "id": "civil-comments-4c15cc0eb6664f99d246",
+      "text": "Careful, don't hurt yourself.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "4c15cc0eb6664f99d246966e1c16a79d7357b48621df1c75749234f431fdcb39"
+    },
+    {
+      "id": "civil-comments-53b1efe314120ca19bf4",
+      "text": "Not long ago we had a president with class. Now we have a teenaged chimp. Obama is an actual, real life, family man. I sure do miss his smile and leadership.",
+      "split": "previously_seen_stress",
+      "text_sha256": "53b1efe314120ca19bf404e866ee27f127cd6fa0f5fefbe49a6284d29274b6ee"
+    },
+    {
+      "id": "civil-comments-56fc9f54b9c070f96eca",
+      "text": "This is a stupid article that obviously does not care for Mariah Carey. Most of the acts that appeared on Dick clark Live NYE were taped & edited days prior, therefore did not have the same risk of technical mishaps as MC.\nAlso, Mariah Carey in 2016 had an acclaimed tour of the UK,Europe, and South Africa and did not have any embarrassing moments occur with the sound. If you had googled any research the writer would know all this to be true.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "56fc9f54b9c070f96ecad6c624dfe62dd24672a5b93489140870ec0250f0c8cf"
+    },
+    {
+      "id": "civil-comments-598ddf1960b80d6e5076",
+      "text": "Nothing ironic about it at all.  They hate everyone who isn't a greedy, lying, white Christian, old man.  They have never had and morals or values since day one.",
+      "split": "previously_seen_stress",
+      "text_sha256": "598ddf1960b80d6e5076e0e065598b858497293d91a440e014654ace22c0e0ad"
+    },
+    {
+      "id": "civil-comments-5b142f3abb8ecc79fa07",
+      "text": "Yep. Just wait until a resident(s) has an odor complaint against the local Chinese eatery....or Bubba's BBQ.....or that darn community pool that reeks of chlorine.",
+      "split": "previously_seen_holdout",
+      "text_sha256": "5b142f3abb8ecc79fa0757292051259472ed1e01550fa95a8ed47eee8760acf8"
+    }
+  ],
+  "packet_id": "7490239f5b9bec43f428311371e56fc2c529aabd5d849529edb0913ff7f64df8"
+}

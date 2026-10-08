@@ -1,0 +1,20 @@
+{
+  "source": "ai_preannotation",
+  "n_ai_labels": 20,
+  "human_labels_completed": 0,
+  "action_counts": {
+    "human-review": 14,
+    "allow": 5,
+    "remove": 1
+  },
+  "needs_attention_ids": [
+    "civil-comments-2f9096a93b9f104833cf",
+    "civil-comments-3de0fa2c6075b0428fd1",
+    "civil-comments-49b164ed5e71dca39524",
+    "civil-comments-4c15cc0eb6664f99d246",
+    "civil-comments-598ddf1960b80d6e5076"
+  ],
+  "not_human_gold": true,
+  "independent_blind_review": false,
+  "production_data_changed": false
+}

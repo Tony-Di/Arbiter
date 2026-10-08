@@ -1,0 +1,47 @@
+{
+  "source": {
+    "dataset_id": "google/civil_comments",
+    "dataset_revision": "f2970eb3a55777454c94069077cc8d9b5866312d",
+    "dataset_split": "train",
+    "quotas": {
+      "gray": 70,
+      "harmful": 30,
+      "safe": 30
+    },
+    "seed": 42,
+    "slice_thresholds": {
+      "gray_max": 0.7,
+      "gray_min": 0.3,
+      "harmful_min": 0.9,
+      "safe_max": 0.1
+    }
+  },
+  "source_prefix_rows": 50000,
+  "seed": 20260922,
+  "n_calibration": 20,
+  "n_holdout": 40,
+  "source_score_quotas": {
+    "safe": 12,
+    "gray": 36,
+    "harmful": 12
+  },
+  "human_labels_completed": 0,
+  "model_predictions_completed": 0,
+  "near_duplicate_rule": "normalized text equality or word-trigram Jaccard >= 0.8; not semantic deduplication",
+  "excluded_text_count": 184,
+  "excluded_ids": 160,
+  "exclusion_sha256": {
+    "eval\\experiments\\system-ablation-v1\\development.jsonl": "f191bb4dd814c74debd4ab0ba3ccf48557230cd54aa1eb671125aa89caa1ccce",
+    "eval\\experiments\\system-ablation-v1\\holdout.jsonl": "f71f8cbbe3c385b576601d79a2490dac489c1a45b4cf56d4a0df7d24070102ec",
+    "eval\\experiments\\system-ablation-v1\\stress.jsonl": "04b743407950f9537100771e7e65e973cdf95a36e4d843c386561607472d2bb2",
+    "eval\\experiments\\policy-v2-probe\\cases.json": "e440f17d45a72b7f8bdef74b191bdbc65729ae6fdb35fb0659d37c396bd51e6f",
+    "scripts\\seed_precedents.py": "eeb9cdcb53cd2c1f7c340c70b6f70f20bcb1840daca62b031debeb3f68d63e30"
+  },
+  "protocol": [
+    "Human-label before inference; do not expose holdout predictions during tuning.",
+    "Calibrate/choose thresholds on calibration only; freeze choices before opening holdout.",
+    "Never insert these cases into production precedents.",
+    "Source toxicity strata are not gold moderation actions.",
+    "No population accuracy or removal-recall claim from a small stratified sample."
+  ]
+}

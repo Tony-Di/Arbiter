@@ -1,0 +1,399 @@
+{
+  "cache_version": "2",
+  "config_fingerprint": "348eecc96bcf80a2ec5080f6c6a05da876e8c8ecf16fb89d9e5d9e17e2083f2c",
+  "benchmark_fingerprint": "68e22047ed28ca36a9472d7a909b795d0d360b1194ce3fd7d4b6fc95d9b08400",
+  "variants": [
+    "single_call",
+    "specialists_only",
+    "specialist_panel",
+    "policy_agent"
+  ],
+  "n_cases": 20,
+  "n_cached_predictions": 4,
+  "n_new_predictions": 76,
+  "max_workers": 4,
+  "run_metadata": {
+    "finished_at_utc": "2026-09-22T19:54:01.085279+00:00",
+    "cases_path": "eval/experiments/human-review-v2/first20-human-assisted.jsonl",
+    "annotation_status": "human-confirmed",
+    "single_model": "gpt-5.4-mini",
+    "routing_table": {
+      "toxic": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "severe_toxic": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "obscene": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "threat": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "insult": {
+        "model": "gpt-5.4-mini",
+        "threshold": 2
+      },
+      "identity_hate": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      }
+    },
+    "context_model": "gpt-5.4-mini",
+    "adjudicator_model": "gpt-5.4-mini",
+    "precedent_fingerprint": "disabled",
+    "confidence_threshold": 0.95,
+    "max_tool_steps": 6,
+    "latency_scope": "complete variant including confidence gate, excluding human response time; concurrent benchmark load",
+    "logical_model_turns_scope": "successful logical model turns; excludes retries, failed attempts, embeddings; not token or dollar cost"
+  },
+  "paired_comparisons": [
+    {
+      "before": "single_call",
+      "after": "specialists_only",
+      "n_paired": 20,
+      "n_corrected": 4,
+      "n_regressed": 5,
+      "n_changed": 10,
+      "corrected_ids": [
+        "civil-comments-3de0fa2c6075b0428fd1",
+        "civil-comments-56fc9f54b9c070f96eca",
+        "civil-comments-051a58f317748b6a5445",
+        "civil-comments-2807c06058413c2280a6"
+      ],
+      "regressed_ids": [
+        "civil-comments-2f9096a93b9f104833cf",
+        "civil-comments-397bd3cb68de98b2bca8",
+        "civil-comments-3fab7c3996ebd0dc544b",
+        "civil-comments-49a8264f34e1f733c106",
+        "civil-comments-598ddf1960b80d6e5076"
+      ],
+      "changed_ids": [
+        "civil-comments-2f9096a93b9f104833cf",
+        "civil-comments-397bd3cb68de98b2bca8",
+        "civil-comments-3de0fa2c6075b0428fd1",
+        "civil-comments-3fab7c3996ebd0dc544b",
+        "civil-comments-49a8264f34e1f733c106",
+        "civil-comments-56fc9f54b9c070f96eca",
+        "civil-comments-598ddf1960b80d6e5076",
+        "civil-comments-051a58f317748b6a5445",
+        "civil-comments-2807c06058413c2280a6",
+        "civil-comments-2bd11050bc032ee16e07"
+      ]
+    },
+    {
+      "before": "specialists_only",
+      "after": "specialist_panel",
+      "n_paired": 20,
+      "n_corrected": 2,
+      "n_regressed": 2,
+      "n_changed": 5,
+      "corrected_ids": [
+        "civil-comments-3fab7c3996ebd0dc544b",
+        "civil-comments-598ddf1960b80d6e5076"
+      ],
+      "regressed_ids": [
+        "civil-comments-306860d0b8ed1ff26f79",
+        "civil-comments-49b164ed5e71dca39524"
+      ],
+      "changed_ids": [
+        "civil-comments-306860d0b8ed1ff26f79",
+        "civil-comments-3fab7c3996ebd0dc544b",
+        "civil-comments-49b164ed5e71dca39524",
+        "civil-comments-598ddf1960b80d6e5076",
+        "civil-comments-2bd11050bc032ee16e07"
+      ]
+    },
+    {
+      "before": "specialist_panel",
+      "after": "policy_agent",
+      "n_paired": 20,
+      "n_corrected": 0,
+      "n_regressed": 2,
+      "n_changed": 2,
+      "corrected_ids": [],
+      "regressed_ids": [
+        "civil-comments-34e91fcf0b2df68092b6",
+        "civil-comments-3de0fa2c6075b0428fd1"
+      ],
+      "changed_ids": [
+        "civil-comments-34e91fcf0b2df68092b6",
+        "civil-comments-3de0fa2c6075b0428fd1"
+      ]
+    }
+  ],
+  "errors": [],
+  "metrics": {
+    "single_call": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.4091954022988506,
+      "unsafe_auto_allow_rate": 0.25,
+      "over_remove_rate": 0.0,
+      "human_review_rate": 0.7,
+      "auto_decision_accuracy": 0.3333333333333333,
+      "high_risk_recall": 0.25,
+      "p50_latency_ms": 2948.7258500012103,
+      "p95_latency_ms": 4068.421059997128,
+      "n_auto_decisions": 6,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 4,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 0,
+      "over_remove_denominator": 19,
+      "human_review_count": 14,
+      "escalated_count": 0,
+      "logical_model_turns": 20,
+      "action_confusion": {
+        "allow": {
+          "allow": 2,
+          "human-review": 2,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 3,
+          "human-review": 12,
+          "remove": 0
+        },
+        "remove": {
+          "allow": 1,
+          "human-review": 0,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 2,
+          "fp": 4,
+          "fn": 2,
+          "precision": 0.3333333333333333,
+          "recall": 0.5,
+          "f1": 0.4
+        },
+        "human-review": {
+          "tp": 12,
+          "fp": 2,
+          "fn": 3,
+          "precision": 0.8571428571428571,
+          "recall": 0.8,
+          "f1": 0.8275862068965517
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "specialists_only": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.4824242424242424,
+      "unsafe_auto_allow_rate": 0.1875,
+      "over_remove_rate": 0.15789473684210525,
+      "human_review_rate": 0.5,
+      "auto_decision_accuracy": 0.4,
+      "high_risk_recall": 0.75,
+      "p50_latency_ms": 2363.151299998208,
+      "p95_latency_ms": 3351.925185001166,
+      "n_auto_decisions": 10,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 3,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 3,
+      "over_remove_denominator": 19,
+      "human_review_count": 10,
+      "escalated_count": 0,
+      "logical_model_turns": 120,
+      "action_confusion": {
+        "allow": {
+          "allow": 4,
+          "human-review": 0,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 3,
+          "human-review": 9,
+          "remove": 3
+        },
+        "remove": {
+          "allow": 0,
+          "human-review": 1,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 4,
+          "fp": 3,
+          "fn": 0,
+          "precision": 0.5714285714285714,
+          "recall": 1.0,
+          "f1": 0.7272727272727273
+        },
+        "human-review": {
+          "tp": 9,
+          "fp": 1,
+          "fn": 6,
+          "precision": 0.9,
+          "recall": 0.6,
+          "f1": 0.72
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "specialist_panel": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.44047619047619047,
+      "unsafe_auto_allow_rate": 0.375,
+      "over_remove_rate": 0.05263157894736842,
+      "human_review_rate": 0.45,
+      "auto_decision_accuracy": 0.36363636363636365,
+      "high_risk_recall": 0.25,
+      "p50_latency_ms": 2567.2541499989165,
+      "p95_latency_ms": 4356.145435000873,
+      "n_auto_decisions": 11,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 6,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 1,
+      "over_remove_denominator": 19,
+      "human_review_count": 9,
+      "escalated_count": 0,
+      "logical_model_turns": 140,
+      "action_confusion": {
+        "allow": {
+          "allow": 4,
+          "human-review": 0,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 5,
+          "human-review": 9,
+          "remove": 1
+        },
+        "remove": {
+          "allow": 1,
+          "human-review": 0,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 4,
+          "fp": 6,
+          "fn": 0,
+          "precision": 0.4,
+          "recall": 1.0,
+          "f1": 0.5714285714285714
+        },
+        "human-review": {
+          "tp": 9,
+          "fp": 0,
+          "fn": 6,
+          "precision": 1.0,
+          "recall": 0.6,
+          "f1": 0.75
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "policy_agent": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.36507936507936506,
+      "unsafe_auto_allow_rate": 0.4375,
+      "over_remove_rate": 0.05263157894736842,
+      "human_review_rate": 0.45,
+      "auto_decision_accuracy": 0.2727272727272727,
+      "high_risk_recall": 0.0,
+      "p50_latency_ms": 2692.494599999918,
+      "p95_latency_ms": 5911.420109997381,
+      "n_auto_decisions": 11,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 7,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 1,
+      "over_remove_denominator": 19,
+      "human_review_count": 9,
+      "escalated_count": 2,
+      "logical_model_turns": 144,
+      "action_confusion": {
+        "allow": {
+          "allow": 3,
+          "human-review": 1,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 6,
+          "human-review": 8,
+          "remove": 1
+        },
+        "remove": {
+          "allow": 1,
+          "human-review": 0,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 3,
+          "fp": 7,
+          "fn": 1,
+          "precision": 0.3,
+          "recall": 0.75,
+          "f1": 0.42857142857142855
+        },
+        "human-review": {
+          "tp": 8,
+          "fp": 1,
+          "fn": 7,
+          "precision": 0.8888888888888888,
+          "recall": 0.5333333333333333,
+          "f1": 0.6666666666666666
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    }
+  },
+  "metric_definitions": {
+    "unsafe_auto_allow_rate": "predicted allow among gold human-review/remove cases",
+    "over_remove_rate": "predicted remove among gold allow/human-review cases",
+    "auto_decision_accuracy": "exact action accuracy among predicted allow/remove cases",
+    "high_risk_recall": "predicted human-review/remove among gold high-risk cases",
+    "coverage": "completed predictions divided by total benchmark cases"
+  }
+}

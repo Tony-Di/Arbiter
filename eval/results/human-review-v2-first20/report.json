@@ -1,0 +1,430 @@
+{
+  "packet_id": "7490239f5b9bec43f428311371e56fc2c529aabd5d849529edb0913ff7f64df8",
+  "policy_version": "2026-09-22.2",
+  "n_cases": 20,
+  "variants": [
+    "single_call",
+    "specialists_only",
+    "specialist_panel",
+    "policy_agent"
+  ],
+  "model_calls": 0,
+  "scope": "Disagreement-prioritized diagnostic cases rescored from saved predictions; not a population estimate.",
+  "labels": {
+    "annotation_method": "ai_assisted",
+    "reviewer": "project-owner",
+    "ai_draft_id": "79e90458ac745245d36809d67b473fa2ef5692bc3dff208141447ebe55c0ea93",
+    "accepted_ai_draft_unchanged": 19,
+    "changed_from_ai_draft_ids": [
+      "civil-comments-5b142f3abb8ecc79fa07"
+    ],
+    "revisions": [
+      {
+        "id": "civil-comments-5b142f3abb8ecc79fa07",
+        "field": "rationale",
+        "revised_at": "2026-09-22T19:46:16.865Z",
+        "reason": "Initial export kept the AI draft rationale ending in 'allow' after the reviewer changed the label to human-review/1/identity_hate.",
+        "label_decided_by": "project-owner",
+        "rationale_text": "drafted by assistant as an option; chosen by the reviewer in chat",
+        "previous_rationale": "并列举出中餐馆、烧烤店和游泳池可能引发气味投诉，没有把负面属性归于中国人或其他身份群体。Chinese 修饰餐馆类型；darn 在这里是轻微语气词，未形成对人的攻击或明显淫秽内容。允许。",
+        "reviewer_note": "Only case where the reviewer disagreed with the AI draft. No surrounding context; the reviewer may have read discrimination into it, so the label records unclear intent rather than a confirmed attack."
+      }
+    ]
+  },
+  "old_reference": {
+    "overturned_ids": [
+      "civil-comments-2f9096a93b9f104833cf",
+      "civil-comments-306860d0b8ed1ff26f79",
+      "civil-comments-397bd3cb68de98b2bca8",
+      "civil-comments-3de0fa2c6075b0428fd1",
+      "civil-comments-3fab7c3996ebd0dc544b",
+      "civil-comments-42dcb34439d14fe04900",
+      "civil-comments-49a8264f34e1f733c106",
+      "civil-comments-5b142f3abb8ecc79fa07",
+      "civil-comments-051a58f317748b6a5445",
+      "civil-comments-17a94b7be242ffbd1826",
+      "civil-comments-2bd11050bc032ee16e07"
+    ]
+  },
+  "predictions": {
+    "cache": "eval_cache/system-ablation-controlled-v1.jsonl",
+    "stages": {
+      "holdout": {
+        "n_cases": 13,
+        "config_fingerprint": "7c29ac54e4919fc9473447895e1490fb92069124b229b5b1136049b6e9c2a25e",
+        "cache_version": "2",
+        "finished_at_utc": "2026-09-22T01:38:17.073831+00:00",
+        "models": [
+          "gpt-5.4-mini"
+        ]
+      },
+      "development": {
+        "n_cases": 3,
+        "config_fingerprint": "7c29ac54e4919fc9473447895e1490fb92069124b229b5b1136049b6e9c2a25e",
+        "cache_version": "2",
+        "finished_at_utc": "2026-09-22T01:28:04.959236+00:00",
+        "models": [
+          "gpt-5.4-mini"
+        ]
+      },
+      "stress": {
+        "n_cases": 4,
+        "config_fingerprint": "7c29ac54e4919fc9473447895e1490fb92069124b229b5b1136049b6e9c2a25e",
+        "cache_version": "2",
+        "finished_at_utc": "2026-09-22T02:06:14.945285+00:00",
+        "models": [
+          "gpt-5.4-mini"
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "single_call": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.41954022988505746,
+      "unsafe_auto_allow_rate": 0.125,
+      "over_remove_rate": 0.10526315789473684,
+      "human_review_rate": 0.7,
+      "auto_decision_accuracy": 0.3333333333333333,
+      "high_risk_recall": 0.5,
+      "p50_latency_ms": 3072.508299985202,
+      "p95_latency_ms": 3465.895689991885,
+      "n_auto_decisions": 6,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 2,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 2,
+      "over_remove_denominator": 19,
+      "human_review_count": 14,
+      "escalated_count": 0,
+      "logical_model_turns": 20,
+      "action_confusion": {
+        "allow": {
+          "allow": 2,
+          "human-review": 2,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 2,
+          "human-review": 11,
+          "remove": 2
+        },
+        "remove": {
+          "allow": 0,
+          "human-review": 1,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 2,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5
+        },
+        "human-review": {
+          "tp": 11,
+          "fp": 3,
+          "fn": 4,
+          "precision": 0.7857142857142857,
+          "recall": 0.7333333333333333,
+          "f1": 0.7586206896551724
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 2,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "specialists_only": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.3,
+      "unsafe_auto_allow_rate": 0.5,
+      "over_remove_rate": 0.15789473684210525,
+      "human_review_rate": 0.25,
+      "auto_decision_accuracy": 0.26666666666666666,
+      "high_risk_recall": 0.5,
+      "p50_latency_ms": 2567.196750023868,
+      "p95_latency_ms": 32769.57077495172,
+      "n_auto_decisions": 15,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 8,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 3,
+      "over_remove_denominator": 19,
+      "human_review_count": 5,
+      "escalated_count": 0,
+      "logical_model_turns": 120,
+      "action_confusion": {
+        "allow": {
+          "allow": 4,
+          "human-review": 0,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 8,
+          "human-review": 4,
+          "remove": 3
+        },
+        "remove": {
+          "allow": 0,
+          "human-review": 1,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 4,
+          "fp": 8,
+          "fn": 0,
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1": 0.5
+        },
+        "human-review": {
+          "tp": 4,
+          "fp": 1,
+          "fn": 11,
+          "precision": 0.8,
+          "recall": 0.26666666666666666,
+          "f1": 0.4
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "specialist_panel": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.27647714604236345,
+      "unsafe_auto_allow_rate": 0.4375,
+      "over_remove_rate": 0.15789473684210525,
+      "human_review_rate": 0.4,
+      "auto_decision_accuracy": 0.16666666666666666,
+      "high_risk_recall": 0.75,
+      "p50_latency_ms": 2555.4658499604557,
+      "p95_latency_ms": 2820.329435018357,
+      "n_auto_decisions": 12,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 7,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 3,
+      "over_remove_denominator": 19,
+      "human_review_count": 8,
+      "escalated_count": 0,
+      "logical_model_turns": 140,
+      "action_confusion": {
+        "allow": {
+          "allow": 2,
+          "human-review": 2,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 6,
+          "human-review": 6,
+          "remove": 3
+        },
+        "remove": {
+          "allow": 1,
+          "human-review": 0,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 2,
+          "fp": 7,
+          "fn": 2,
+          "precision": 0.2222222222222222,
+          "recall": 0.5,
+          "f1": 0.3076923076923077
+        },
+        "human-review": {
+          "tp": 6,
+          "fp": 2,
+          "fn": 9,
+          "precision": 0.75,
+          "recall": 0.4,
+          "f1": 0.5217391304347826
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    },
+    "policy_agent": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.2222222222222222,
+      "unsafe_auto_allow_rate": 0.5,
+      "over_remove_rate": 0.21052631578947367,
+      "human_review_rate": 0.3,
+      "auto_decision_accuracy": 0.14285714285714285,
+      "high_risk_recall": 0.75,
+      "p50_latency_ms": 2863.7575499888044,
+      "p95_latency_ms": 8576.097650011088,
+      "n_auto_decisions": 14,
+      "n_high_risk": 4,
+      "unsafe_auto_allow_count": 8,
+      "unsafe_auto_allow_denominator": 16,
+      "over_remove_count": 4,
+      "over_remove_denominator": 19,
+      "human_review_count": 6,
+      "escalated_count": 8,
+      "logical_model_turns": 157,
+      "action_confusion": {
+        "allow": {
+          "allow": 2,
+          "human-review": 2,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 7,
+          "human-review": 4,
+          "remove": 4
+        },
+        "remove": {
+          "allow": 1,
+          "human-review": 0,
+          "remove": 0
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 2,
+          "fp": 8,
+          "fn": 2,
+          "precision": 0.2,
+          "recall": 0.5,
+          "f1": 0.2857142857142857
+        },
+        "human-review": {
+          "tp": 4,
+          "fp": 2,
+          "fn": 11,
+          "precision": 0.6666666666666666,
+          "recall": 0.26666666666666666,
+          "f1": 0.38095238095238093
+        },
+        "remove": {
+          "tp": 0,
+          "fp": 4,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    }
+  },
+  "paired_comparisons": [
+    {
+      "before": "single_call",
+      "after": "specialists_only",
+      "n_paired": 20,
+      "n_corrected": 3,
+      "n_regressed": 8,
+      "n_changed": 11,
+      "corrected_ids": [
+        "civil-comments-3fab7c3996ebd0dc544b",
+        "civil-comments-56fc9f54b9c070f96eca",
+        "civil-comments-2807c06058413c2280a6"
+      ],
+      "regressed_ids": [
+        "civil-comments-2f9096a93b9f104833cf",
+        "civil-comments-306860d0b8ed1ff26f79",
+        "civil-comments-397bd3cb68de98b2bca8",
+        "civil-comments-42dcb34439d14fe04900",
+        "civil-comments-49a8264f34e1f733c106",
+        "civil-comments-598ddf1960b80d6e5076",
+        "civil-comments-051a58f317748b6a5445",
+        "civil-comments-17a94b7be242ffbd1826"
+      ],
+      "changed_ids": [
+        "civil-comments-2f9096a93b9f104833cf",
+        "civil-comments-306860d0b8ed1ff26f79",
+        "civil-comments-397bd3cb68de98b2bca8",
+        "civil-comments-3fab7c3996ebd0dc544b",
+        "civil-comments-42dcb34439d14fe04900",
+        "civil-comments-49a8264f34e1f733c106",
+        "civil-comments-56fc9f54b9c070f96eca",
+        "civil-comments-598ddf1960b80d6e5076",
+        "civil-comments-051a58f317748b6a5445",
+        "civil-comments-17a94b7be242ffbd1826",
+        "civil-comments-2807c06058413c2280a6"
+      ]
+    },
+    {
+      "before": "specialists_only",
+      "after": "specialist_panel",
+      "n_paired": 20,
+      "n_corrected": 2,
+      "n_regressed": 2,
+      "n_changed": 5,
+      "corrected_ids": [
+        "civil-comments-3de0fa2c6075b0428fd1",
+        "civil-comments-5b142f3abb8ecc79fa07"
+      ],
+      "regressed_ids": [
+        "civil-comments-34e91fcf0b2df68092b6",
+        "civil-comments-4c15cc0eb6664f99d246"
+      ],
+      "changed_ids": [
+        "civil-comments-34e91fcf0b2df68092b6",
+        "civil-comments-3de0fa2c6075b0428fd1",
+        "civil-comments-4c15cc0eb6664f99d246",
+        "civil-comments-5b142f3abb8ecc79fa07",
+        "civil-comments-2bd11050bc032ee16e07"
+      ]
+    },
+    {
+      "before": "specialist_panel",
+      "after": "policy_agent",
+      "n_paired": 20,
+      "n_corrected": 2,
+      "n_regressed": 4,
+      "n_changed": 6,
+      "corrected_ids": [
+        "civil-comments-4c15cc0eb6664f99d246",
+        "civil-comments-53b1efe314120ca19bf4"
+      ],
+      "regressed_ids": [
+        "civil-comments-405f38e61e0c7f7eafaf",
+        "civil-comments-4454ad6d7fdb71498a73",
+        "civil-comments-49b164ed5e71dca39524",
+        "civil-comments-2807c06058413c2280a6"
+      ],
+      "changed_ids": [
+        "civil-comments-405f38e61e0c7f7eafaf",
+        "civil-comments-4454ad6d7fdb71498a73",
+        "civil-comments-49b164ed5e71dca39524",
+        "civil-comments-4c15cc0eb6664f99d246",
+        "civil-comments-53b1efe314120ca19bf4",
+        "civil-comments-2807c06058413c2280a6"
+      ]
+    }
+  ]
+}
