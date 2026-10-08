@@ -17,11 +17,17 @@ export interface ContextFlags {
   direct_threat?: boolean;
   ambiguity?: boolean;
   note?: string | null;
-  [k: string]: boolean | string | null | undefined;
+  language_use?: string;
+  evidence_span?: string | null;
+  mitigation_categories?: string[];
+  [k: string]: boolean | string | string[] | null | undefined;
 }
 
 /** The adjudicator's trace when a gray case was escalated (spec 2026-06-08 §8). */
 export interface Adjudication {
+  policy_version?: string;
+  policy_category?: string;
+  evidence_span?: string;
   final_action?: ActionKey;
   note?: string | null;
   confidence?: number;
@@ -39,6 +45,7 @@ export interface Verdict {
   model?: string | null;
   escalated?: boolean;
   adjudication?: Adjudication | null;
+  audit?: { policy_version?: string };
   // HITL (spec 2026-06-09 §7): present on live responses; old mocks omit them.
   status?: "final";
   case_id?: string | null;
@@ -50,6 +57,9 @@ export interface PendingCase {
   case_id: string;
   comment: string;
   recommendation: {
+    policy_version?: string;
+    policy_category?: string;
+    evidence_span?: string | null;
     recommended_action: string;
     overall_severity: number;
     note?: string | null;
@@ -65,6 +75,8 @@ export interface ReviewCase {
   comment: string;
   recommendation: PendingCase["recommendation"];
   created_at: string;
+  status?: "pending" | "resolving";
+  decision?: { action: ReviewAction; note?: string | null } | null;
 }
 
 /** Body of POST /api/review/{case_id} ("confirm" keeps the AI's recommendation). */

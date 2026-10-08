@@ -144,6 +144,13 @@ export function Ruling() {
           )}
         </div>
         {cf.note && <div className="vb-note-txt">{cf.note}</div>}
+        {cf.language_use && cf.language_use !== "none" && (
+          <div className="vb-note-txt">Language use: {cf.language_use.replace(/_/g, " ")}</div>
+        )}
+        {cf.evidence_span && <div className="vb-note-txt">Context evidence: &ldquo;{cf.evidence_span}&rdquo;</div>}
+        {!!cf.mitigation_categories?.length && (
+          <div className="vb-note-txt">Context adjustment: {cf.mitigation_categories.join(", ")}</div>
+        )}
         {r.escalated && r.adjudication && (
           <div className="vb-adj" style={{ marginTop: 8, fontSize: "0.9em", opacity: 0.85 }}>
             <b>Adjudicator</b>
@@ -151,8 +158,10 @@ export function Ruling() {
               ? ` · consulted policy: ${r.adjudication.policies_consulted.join(", ")}`
               : ""}
             {r.adjudication.note ? ` · ${r.adjudication.note}` : ""}
+            {r.adjudication.evidence_span && <div>Decision evidence: &ldquo;{r.adjudication.evidence_span}&rdquo;</div>}
           </div>
         )}
+        {r.audit?.policy_version && <div className="vb-f-none">Policy {r.audit.policy_version}</div>}
       </div>
     </div>
   );

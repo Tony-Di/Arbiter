@@ -323,12 +323,13 @@ export async function moderate(comment: string): Promise<ModerateOutcome> {
 
 /** GET /api/review-queue; offline -> the mock queue (same live->mock pattern
  *  as moderate(), so the demo works with no backend). */
-export async function fetchQueue(): Promise<ReviewCase[]> {
+export async function fetchQueue(allowMock = true): Promise<ReviewCase[]> {
   let res: Response;
   try {
     res = await fetch("/api/review-queue");
   } catch {
-    return [...mockQueue]; // network down -> offline demo
+    if (allowMock && mockQueue.length) return [...mockQueue];
+    throw new Error("Cannot reach the review queue. Reconnect and refresh to see saved cases.");
   }
   if (!res.ok) throw new Error("Server returned " + res.status);
   return (await res.json()) as ReviewCase[];
@@ -336,20 +337,26 @@ export async function fetchQueue(): Promise<ReviewCase[]> {
 
 /** POST /api/review/{caseId}. HTTP errors surface (409 = already resolved);
  *  only a NETWORK failure falls back to resolving the mock case locally. */
-export async function resolveCase(caseId: string, action: ReviewAction): Promise<void> {
+export async function resolveCase(caseId: string, action: ReviewAction, note: string | null = null): Promise<void> {
   let res: Response;
   try {
     res = await fetch(`/api/review/${caseId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, note: null }),
+      body: JSON.stringify({ action, note }),
     });
   } catch {
     const i = mockQueue.findIndex((c) => c.case_id === caseId);
-    if (i >= 0) mockQueue.splice(i, 1);
-    return;
+    if (i >= 0) {
+      mockQueue.splice(i, 1);
+      return;
+    }
+    throw new Error("Connection lost. Your decision may have been saved; refresh and retry the same decision.");
   }
-  if (!res.ok) throw new Error("Server returned " + res.status);
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.detail ?? "Server returned " + res.status);
+  }
 }
 
 // ---- span -> highlight segmentation ----

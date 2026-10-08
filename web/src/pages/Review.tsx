@@ -84,6 +84,14 @@ function RQRow({
             <span className="dot" />
             {resolvedMeta.word}
           </span>
+        ) : item.decision ? (
+          <span className="rq-act" onClick={(e) => e.stopPropagation()}>
+            <button className="rq-btn primary" disabled={busy}
+              onClick={() => onRule(item.case_id, item.decision!.action,
+                item.decision!.action === "remove" ? "removed" : item.decision!.action === "allow" ? "allowed" : "confirmed")}>
+              Retry saving {item.decision.action}
+            </button>
+          </span>
         ) : (
           <span className="rq-act" onClick={(e) => e.stopPropagation()}>
             {/* "Confirm AI" is circular when the AI's recommendation IS
@@ -117,7 +125,7 @@ function RQRow({
               <div className="vb-evi">{item.comment}</div>
             </div>
             <div className="vb-notes">
-              <div className="nh">Adjudicator&rsquo;s reasoning</div>
+              <div className="nh">Reason for review</div>
               <div className="vb-fl">
                 {rec.policies_consulted?.length || rec.precedents_consulted?.length ? (
                   <>
@@ -133,10 +141,13 @@ function RQRow({
                     ))}
                   </>
                 ) : (
-                  <span className="vb-f-none">Ruled without consulting policy or precedent.</span>
+                  <span className="vb-f-none">No additional policy or precedent lookup.</span>
                 )}
               </div>
               {rec.note && <div className="vb-note-txt">{rec.note}</div>}
+              {rec.evidence_span && <div className="vb-note-txt">Evidence: &ldquo;{rec.evidence_span}&rdquo;</div>}
+              {rec.policy_version && <div className="vb-f-none">Policy {rec.policy_version}</div>}
+              {item.decision && <div className="vb-note-txt">Your {item.decision.action} decision is recorded. Retry to finish saving it.</div>}
             </div>
           </div>
         </div>
@@ -179,14 +190,16 @@ export default function Review({ onCount }: { onCount?: (n: number) => void }) {
     setError(null);
     setBusyId(caseId);
     try {
-      await resolveCase(caseId, action);
+      const saved = cases.find((c) => c.case_id === caseId)?.decision;
+      await resolveCase(caseId, action, saved?.note ?? null);
       setResolved((r) => ({ ...r, [caseId]: mark }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to resolve the case.");
+      try { setCases(await fetchQueue(false)); } catch { /* Keep real rows while disconnected. */ }
     } finally {
       setBusyId(null);
     }
-  }, []);
+  }, [cases]);
 
   return (
     <div className="rq">
@@ -194,7 +207,8 @@ export default function Review({ onCount }: { onCount?: (n: number) => void }) {
         <div className="t">
           Review queue<span className="n">{pending}</span>
         </div>
-        <div className="sub">Comments the model routed to human review — confirm its call or override.</div>
+        <div className="sub">Comments requiring a human decision under the moderation policy.</div>
+        <button className="rq-btn" onClick={refresh} disabled={loading || busyId !== null}>Refresh queue</button>
       </div>
 
       {error && <div className="vb-err">{error}</div>}
@@ -204,7 +218,7 @@ export default function Review({ onCount }: { onCount?: (n: number) => void }) {
       ) : cases.length === 0 ? (
         <div className="rq-empty">
           <div className="big">No cases waiting for review.</div>
-          Low-confidence rulings land here for a human call.
+          Policy review cases and uncertain rulings appear here.
         </div>
       ) : (
         <>
