@@ -1,0 +1,379 @@
+{
+  "cache_version": "2",
+  "config_fingerprint": "7c29ac54e4919fc9473447895e1490fb92069124b229b5b1136049b6e9c2a25e",
+  "benchmark_fingerprint": "879ebf1d518a26f534dbeb5af32beb0c518af49eda5812d2ec1cfcd36da68179",
+  "variants": [
+    "single_call",
+    "specialists_only",
+    "specialist_panel",
+    "policy_agent"
+  ],
+  "n_cases": 20,
+  "n_cached_predictions": 0,
+  "n_new_predictions": 80,
+  "max_workers": 4,
+  "run_metadata": {
+    "finished_at_utc": "2026-09-22T01:28:04.959236+00:00",
+    "cases_path": "eval/experiments/system-ablation-v1/development.jsonl",
+    "annotation_status": "unverified",
+    "single_model": "gpt-5.4-mini",
+    "routing_table": {
+      "toxic": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "severe_toxic": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "obscene": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "threat": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      },
+      "insult": {
+        "model": "gpt-5.4-mini",
+        "threshold": 2
+      },
+      "identity_hate": {
+        "model": "gpt-5.4-mini",
+        "threshold": 1
+      }
+    },
+    "context_model": "gpt-5.4-mini",
+    "adjudicator_model": "gpt-5.4-mini",
+    "precedent_fingerprint": "disabled",
+    "confidence_threshold": 0.95,
+    "max_tool_steps": 6,
+    "latency_scope": "complete variant including confidence gate, excluding human response time; concurrent benchmark load",
+    "logical_model_turns_scope": "successful logical model turns; excludes retries, failed attempts, embeddings; not token or dollar cost"
+  },
+  "paired_comparisons": [
+    {
+      "before": "single_call",
+      "after": "specialists_only",
+      "n_paired": 20,
+      "n_corrected": 3,
+      "n_regressed": 1,
+      "n_changed": 4,
+      "corrected_ids": [
+        "civil-comments-397bd3cb68de98b2bca8",
+        "civil-comments-49a8264f34e1f733c106",
+        "civil-comments-89298725513d339be0d3"
+      ],
+      "regressed_ids": [
+        "civil-comments-5fe1f22433248305f376"
+      ],
+      "changed_ids": [
+        "civil-comments-397bd3cb68de98b2bca8",
+        "civil-comments-49a8264f34e1f733c106",
+        "civil-comments-5fe1f22433248305f376",
+        "civil-comments-89298725513d339be0d3"
+      ]
+    },
+    {
+      "before": "specialists_only",
+      "after": "specialist_panel",
+      "n_paired": 20,
+      "n_corrected": 0,
+      "n_regressed": 0,
+      "n_changed": 0,
+      "corrected_ids": [],
+      "regressed_ids": [],
+      "changed_ids": []
+    },
+    {
+      "before": "specialist_panel",
+      "after": "policy_agent",
+      "n_paired": 20,
+      "n_corrected": 0,
+      "n_regressed": 3,
+      "n_changed": 4,
+      "corrected_ids": [],
+      "regressed_ids": [
+        "civil-comments-405f38e61e0c7f7eafaf",
+        "civil-comments-add93bba132ee3fe7f1b",
+        "civil-comments-db70629d0e0e13e5b274"
+      ],
+      "changed_ids": [
+        "civil-comments-405f38e61e0c7f7eafaf",
+        "civil-comments-a4385cb52290fd9239c6",
+        "civil-comments-add93bba132ee3fe7f1b",
+        "civil-comments-db70629d0e0e13e5b274"
+      ]
+    }
+  ],
+  "errors": [],
+  "metrics": {
+    "single_call": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.6555555555555556,
+      "unsafe_auto_allow_rate": 0.0,
+      "over_remove_rate": 0.05263157894736842,
+      "human_review_rate": 0.4,
+      "auto_decision_accuracy": 0.9166666666666666,
+      "high_risk_recall": 1.0,
+      "p50_latency_ms": 3000.760650029406,
+      "p95_latency_ms": 3977.636255006655,
+      "n_auto_decisions": 12,
+      "n_high_risk": 3,
+      "unsafe_auto_allow_count": 0,
+      "unsafe_auto_allow_denominator": 5,
+      "over_remove_count": 1,
+      "over_remove_denominator": 19,
+      "human_review_count": 8,
+      "escalated_count": 0,
+      "logical_model_turns": 20,
+      "action_confusion": {
+        "allow": {
+          "allow": 10,
+          "human-review": 5,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 0,
+          "human-review": 3,
+          "remove": 1
+        },
+        "remove": {
+          "allow": 0,
+          "human-review": 0,
+          "remove": 1
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 5,
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "f1": 0.8
+        },
+        "human-review": {
+          "tp": 3,
+          "fp": 5,
+          "fn": 1,
+          "precision": 0.375,
+          "recall": 0.75,
+          "f1": 0.5
+        },
+        "remove": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        }
+      }
+    },
+    "specialists_only": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.6428571428571429,
+      "unsafe_auto_allow_rate": 0.0,
+      "over_remove_rate": 0.10526315789473684,
+      "human_review_rate": 0.2,
+      "auto_decision_accuracy": 0.875,
+      "high_risk_recall": 1.0,
+      "p50_latency_ms": 2530.92764999019,
+      "p95_latency_ms": 3205.712144993595,
+      "n_auto_decisions": 16,
+      "n_high_risk": 3,
+      "unsafe_auto_allow_count": 0,
+      "unsafe_auto_allow_denominator": 5,
+      "over_remove_count": 2,
+      "over_remove_denominator": 19,
+      "human_review_count": 4,
+      "escalated_count": 0,
+      "logical_model_turns": 120,
+      "action_confusion": {
+        "allow": {
+          "allow": 13,
+          "human-review": 2,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 0,
+          "human-review": 2,
+          "remove": 2
+        },
+        "remove": {
+          "allow": 0,
+          "human-review": 0,
+          "remove": 1
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 13,
+          "fp": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.8666666666666667,
+          "f1": 0.9285714285714286
+        },
+        "human-review": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 2,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5
+        },
+        "remove": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1": 0.5
+        }
+      }
+    },
+    "specialist_panel": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.6428571428571429,
+      "unsafe_auto_allow_rate": 0.0,
+      "over_remove_rate": 0.10526315789473684,
+      "human_review_rate": 0.2,
+      "auto_decision_accuracy": 0.875,
+      "high_risk_recall": 1.0,
+      "p50_latency_ms": 2684.917700011283,
+      "p95_latency_ms": 3179.830860023503,
+      "n_auto_decisions": 16,
+      "n_high_risk": 3,
+      "unsafe_auto_allow_count": 0,
+      "unsafe_auto_allow_denominator": 5,
+      "over_remove_count": 2,
+      "over_remove_denominator": 19,
+      "human_review_count": 4,
+      "escalated_count": 0,
+      "logical_model_turns": 140,
+      "action_confusion": {
+        "allow": {
+          "allow": 13,
+          "human-review": 2,
+          "remove": 0
+        },
+        "human-review": {
+          "allow": 0,
+          "human-review": 2,
+          "remove": 2
+        },
+        "remove": {
+          "allow": 0,
+          "human-review": 0,
+          "remove": 1
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 13,
+          "fp": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.8666666666666667,
+          "f1": 0.9285714285714286
+        },
+        "human-review": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 2,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5
+        },
+        "remove": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1": 0.5
+        }
+      }
+    },
+    "policy_agent": {
+      "n_cases": 20,
+      "n_scored": 20,
+      "coverage": 1.0,
+      "action_macro_f1": 0.39153439153439146,
+      "unsafe_auto_allow_rate": 0.0,
+      "over_remove_rate": 0.2631578947368421,
+      "human_review_rate": 0.1,
+      "auto_decision_accuracy": 0.7222222222222222,
+      "high_risk_recall": 1.0,
+      "p50_latency_ms": 2755.5327499867417,
+      "p95_latency_ms": 6650.242155010348,
+      "n_auto_decisions": 18,
+      "n_high_risk": 3,
+      "unsafe_auto_allow_count": 0,
+      "unsafe_auto_allow_denominator": 5,
+      "over_remove_count": 5,
+      "over_remove_denominator": 19,
+      "human_review_count": 2,
+      "escalated_count": 5,
+      "logical_model_turns": 150,
+      "action_confusion": {
+        "allow": {
+          "allow": 12,
+          "human-review": 2,
+          "remove": 1
+        },
+        "human-review": {
+          "allow": 0,
+          "human-review": 0,
+          "remove": 4
+        },
+        "remove": {
+          "allow": 0,
+          "human-review": 0,
+          "remove": 1
+        }
+      },
+      "action_per_class": {
+        "allow": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 3,
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.8888888888888888
+        },
+        "human-review": {
+          "tp": 0,
+          "fp": 2,
+          "fn": 4,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "remove": {
+          "tp": 1,
+          "fp": 5,
+          "fn": 0,
+          "precision": 0.16666666666666666,
+          "recall": 1.0,
+          "f1": 0.2857142857142857
+        }
+      }
+    }
+  },
+  "metric_definitions": {
+    "unsafe_auto_allow_rate": "predicted allow among gold human-review/remove cases",
+    "over_remove_rate": "predicted remove among gold allow/human-review cases",
+    "auto_decision_accuracy": "exact action accuracy among predicted allow/remove cases",
+    "high_risk_recall": "predicted human-review/remove among gold high-risk cases",
+    "coverage": "completed predictions divided by total benchmark cases"
+  }
+}

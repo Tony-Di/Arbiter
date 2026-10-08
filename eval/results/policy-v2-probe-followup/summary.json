@@ -1,0 +1,9 @@
+{
+  "n_cases": 12,
+  "completed": 12,
+  "passed_all_checks": 11,
+  "failed_cases": [
+    "unclear-threat"
+  ],
+  "note": "Assistant-authored mechanism checks, not independent accuracy measurement."
+}

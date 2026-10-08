@@ -1,0 +1,22 @@
+{
+  "status": "specified before controlled inference and before any holdout inference",
+  "reason": "Mixed-provider development pilot showed substantial DeepSeek latency; separate model/provider effects from architecture effects.",
+  "model": "gpt-5.4-mini",
+  "variants": ["single_call", "specialists_only", "specialist_panel", "policy_agent"],
+  "comparisons": [
+    "single_call -> specialists_only: same model and deterministic aggregation, joint versus category-specific classification calls",
+    "specialists_only -> specialist_panel: add model-based context interpretation",
+    "specialist_panel -> policy_agent: add conditional policy-tool adjudication and the unchanged 0.95 human-review confidence gate"
+  ],
+  "max_workers": 4,
+  "policy_and_thresholds": "unchanged product policy, 0.95 confidence threshold, six-step cap; not retuned for GPT",
+  "datasets": ["development: 20 for implementation smoke", "holdout: 110 for primary comparison", "stress: 30 reported separately"],
+  "annotation_status": "existing reference labels, human authorship unconfirmed",
+  "caveats": [
+    "This controlled experiment is not the mixed-model production default.",
+    "Each arm executes independently; repeated model outputs may vary even at temperature zero.",
+    "No quality tuning after inspecting holdout results; any future optimization needs new validation data.",
+    "Report every arm; no claim of population-level significance or calibrated confidence.",
+    "Human-precedent arm pending independently confirmed precedent records."
+  ]
+}

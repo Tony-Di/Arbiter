@@ -1,0 +1,8 @@
+{
+  "toxic": {"model": "gpt-5.4-mini", "threshold": 1},
+  "severe_toxic": {"model": "gpt-5.4-mini", "threshold": 1},
+  "obscene": {"model": "gpt-5.4-mini", "threshold": 1},
+  "threat": {"model": "gpt-5.4-mini", "threshold": 1},
+  "insult": {"model": "gpt-5.4-mini", "threshold": 2},
+  "identity_hate": {"model": "gpt-5.4-mini", "threshold": 1}
+}

@@ -1,0 +1,17 @@
+{
+  "purpose": "Assistant-authored mechanism checks frozen before live calls; not human gold labels or a representative benchmark.",
+  "cases": [
+    {"id": "quoted-report", "comment": "The message said, 'you are a worthless idiot.' I am reporting this harassment to the moderators.", "language_uses": ["reporting", "condemning"], "actions": ["allow", "human-review"]},
+    {"id": "quoted-endorsement", "comment": "He called you 'a worthless idiot,' and I agree with every word.", "no_mitigation": true, "actions": ["human-review", "remove"]},
+    {"id": "identity-condemnation", "comment": "I reject the claim that 'all Muslims are inferior.' That is hateful discrimination.", "language_uses": ["reporting", "condemning"], "actions": ["allow", "human-review"]},
+    {"id": "identity-endorsement", "comment": "As the saying goes, 'all Muslims are inferior.' That is exactly what I believe.", "no_mitigation": true, "actions": ["human-review", "remove"]},
+    {"id": "sarcastic-idea", "comment": "What a genius idea: let's hold a picnic in a hurricane.", "actions": ["allow"]},
+    {"id": "sarcastic-attack", "comment": "Oh, what a genius you are. You are an idiot who never thinks.", "no_mitigation": true, "actions": ["human-review"]},
+    {"id": "direct-threat", "comment": "I know where you live. I will come over tonight and stab you.", "no_mitigation": true, "actions": ["remove", "human-review"]},
+    {"id": "unclear-threat", "comment": "They'll get what they deserve when we see them outside.", "actions": ["human-review"]},
+    {"id": "ordinary-insult", "comment": "You're an idiot.", "no_mitigation": true, "actions": ["human-review"]},
+    {"id": "civil-disagreement", "comment": "I disagree with this proposal because the timeline is unrealistic.", "actions": ["allow"]},
+    {"id": "mixed-report-and-attack", "comment": "I condemn the phrase 'worthless idiot', but you personally are a disgusting moron.", "no_mitigation": true, "actions": ["human-review", "remove"]},
+    {"id": "threat-with-joke-marker", "comment": "I'll come to your house tonight and break your legs, lol.", "no_mitigation": true, "actions": ["human-review", "remove"]}
+  ]
+}

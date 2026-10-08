@@ -1,0 +1,145 @@
+{
+  "method": "Counterfactual deterministic replay on identical saved classifier outputs. No additional model calls; not a separate end-to-end arm and no latency assigned.",
+  "stages": {
+    "development": {
+      "context": {
+        "before": "before",
+        "after": "after",
+        "n_paired": 20,
+        "n_corrected": 0,
+        "n_regressed": 0,
+        "n_changed": 0,
+        "corrected_ids": [],
+        "regressed_ids": [],
+        "changed_ids": []
+      },
+      "adjudication_and_gate": {
+        "before": "before",
+        "after": "after",
+        "n_paired": 20,
+        "n_corrected": 0,
+        "n_regressed": 2,
+        "n_changed": 3,
+        "corrected_ids": [],
+        "regressed_ids": [
+          "civil-comments-405f38e61e0c7f7eafaf",
+          "civil-comments-add93bba132ee3fe7f1b"
+        ],
+        "changed_ids": [
+          "civil-comments-405f38e61e0c7f7eafaf",
+          "civil-comments-a4385cb52290fd9239c6",
+          "civil-comments-add93bba132ee3fe7f1b"
+        ]
+      },
+      "confidence_gate": {
+        "escalated": 5,
+        "recommendations_sent_to_review": 2
+      }
+    },
+    "holdout": {
+      "context": {
+        "before": "before",
+        "after": "after",
+        "n_paired": 110,
+        "n_corrected": 3,
+        "n_regressed": 6,
+        "n_changed": 9,
+        "corrected_ids": [
+          "civil-comments-051a58f317748b6a5445",
+          "civil-comments-8fad7b841966aec7c479",
+          "civil-comments-b2e9c8c2609609e9a2a6"
+        ],
+        "regressed_ids": [
+          "civil-comments-2bd11050bc032ee16e07",
+          "civil-comments-34e91fcf0b2df68092b6",
+          "civil-comments-4c15cc0eb6664f99d246",
+          "civil-comments-5b142f3abb8ecc79fa07",
+          "civil-comments-80ed6b7a5e0532071c15",
+          "civil-comments-f484f055d1cbc8c9063e"
+        ],
+        "changed_ids": [
+          "civil-comments-051a58f317748b6a5445",
+          "civil-comments-2bd11050bc032ee16e07",
+          "civil-comments-34e91fcf0b2df68092b6",
+          "civil-comments-4c15cc0eb6664f99d246",
+          "civil-comments-5b142f3abb8ecc79fa07",
+          "civil-comments-80ed6b7a5e0532071c15",
+          "civil-comments-8fad7b841966aec7c479",
+          "civil-comments-b2e9c8c2609609e9a2a6",
+          "civil-comments-f484f055d1cbc8c9063e"
+        ]
+      },
+      "adjudication_and_gate": {
+        "before": "before",
+        "after": "after",
+        "n_paired": 110,
+        "n_corrected": 0,
+        "n_regressed": 4,
+        "n_changed": 9,
+        "corrected_ids": [],
+        "regressed_ids": [
+          "civil-comments-2807c06058413c2280a6",
+          "civil-comments-a6198dd68c7b9aae91c7",
+          "civil-comments-ead4d2967fa675adb590",
+          "civil-comments-ecfe2a401c8cce84ca3e"
+        ],
+        "changed_ids": [
+          "civil-comments-2807c06058413c2280a6",
+          "civil-comments-8313e6719853a124eea2",
+          "civil-comments-a6198dd68c7b9aae91c7",
+          "civil-comments-b620753af06c14b96a71",
+          "civil-comments-bf25f5801beaaa49c0a1",
+          "civil-comments-d373acfc20bbff3b78cf",
+          "civil-comments-ead4d2967fa675adb590",
+          "civil-comments-ecfe2a401c8cce84ca3e",
+          "civil-comments-fe3dfc5ed964629d90d1"
+        ]
+      },
+      "confidence_gate": {
+        "escalated": 43,
+        "recommendations_sent_to_review": 35
+      }
+    },
+    "stress": {
+      "context": {
+        "before": "before",
+        "after": "after",
+        "n_paired": 30,
+        "n_corrected": 1,
+        "n_regressed": 0,
+        "n_changed": 2,
+        "corrected_ids": [
+          "civil-comments-6f535f85baf65ce9c3b2"
+        ],
+        "regressed_ids": [],
+        "changed_ids": [
+          "civil-comments-6c8f96e84a351d137812",
+          "civil-comments-6f535f85baf65ce9c3b2"
+        ]
+      },
+      "adjudication_and_gate": {
+        "before": "before",
+        "after": "after",
+        "n_paired": 30,
+        "n_corrected": 0,
+        "n_regressed": 3,
+        "n_changed": 3,
+        "corrected_ids": [],
+        "regressed_ids": [
+          "civil-comments-49b164ed5e71dca39524",
+          "civil-comments-7231a4c37fb0049201a2",
+          "civil-comments-b23b12a60cc2aa4e6f47"
+        ],
+        "changed_ids": [
+          "civil-comments-49b164ed5e71dca39524",
+          "civil-comments-7231a4c37fb0049201a2",
+          "civil-comments-b23b12a60cc2aa4e6f47"
+        ]
+      },
+      "confidence_gate": {
+        "escalated": 15,
+        "recommendations_sent_to_review": 11
+      }
+    }
+  }
+}

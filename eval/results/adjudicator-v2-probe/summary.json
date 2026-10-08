@@ -1,0 +1,319 @@
+{
+  "natural:gpt-5.4-mini": {
+    "n_cases": 8,
+    "n_completed": 8,
+    "n_triggered": 5,
+    "n_valid_submissions": 5,
+    "n_fallbacks": 0,
+    "n_changed_after_gate": 0,
+    "api_attempts": 11,
+    "added_latency_ms": [
+      2114.2141999998785,
+      2947.5671999998667,
+      2525.776599999517,
+      2117.539700000634,
+      2759.649999999965
+    ],
+    "thresholds": {
+      "label_status": "no_gold_labels",
+      "threshold_selected": null,
+      "production_threshold_changed": false,
+      "rows": [
+        {
+          "threshold": 0.5,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.7,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.8,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.85,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.9,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.95,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.97,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.99,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 1.0,
+          "n_cases": 8,
+          "n_escalated": 5,
+          "n_escalated_auto": 0,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        }
+      ],
+      "note": "Gate replay on saved recommendations only; it does not save already incurred adjudication latency. No threshold is selected. Unreviewed reference labels cannot establish calibration or accuracy."
+    }
+  },
+  "component:deepseek-chat": {
+    "n_cases": 6,
+    "n_completed": 6,
+    "n_triggered": 6,
+    "n_valid_submissions": 1,
+    "n_fallbacks": 5,
+    "n_changed_after_gate": 1,
+    "api_attempts": 22,
+    "added_latency_ms": [
+      53484.923699999854,
+      65899.0003000008,
+      34838.56780000042,
+      67828.16569999978,
+      60859.90500000025,
+      56108.942200000456
+    ],
+    "thresholds": {
+      "label_status": "no_gold_labels",
+      "threshold_selected": null,
+      "production_threshold_changed": false,
+      "rows": [
+        {
+          "threshold": 0.5,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 1,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.7,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 1,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.8,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 1,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.85,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 1,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.9,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 1,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.95,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 1,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.97,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 0,
+          "n_human_review": 6,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.99,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 0,
+          "n_human_review": 6,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 1.0,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 0,
+          "n_human_review": 6,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        }
+      ],
+      "note": "Gate replay on saved recommendations only; it does not save already incurred adjudication latency. No threshold is selected. Unreviewed reference labels cannot establish calibration or accuracy."
+    }
+  },
+  "component:gpt-5.4-mini": {
+    "n_cases": 6,
+    "n_completed": 6,
+    "n_triggered": 6,
+    "n_valid_submissions": 6,
+    "n_fallbacks": 0,
+    "n_changed_after_gate": 2,
+    "api_attempts": 12,
+    "added_latency_ms": [
+      2188.637899999776,
+      3906.718300000648,
+      2671.082600000773,
+      2562.38409999969,
+      2398.1483000006847,
+      2757.32170000083
+    ],
+    "thresholds": {
+      "label_status": "no_gold_labels",
+      "threshold_selected": null,
+      "production_threshold_changed": false,
+      "rows": [
+        {
+          "threshold": 0.5,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 3,
+          "n_human_review": 3,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.7,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 3,
+          "n_human_review": 3,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.8,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 3,
+          "n_human_review": 3,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.85,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 3,
+          "n_human_review": 3,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.9,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 3,
+          "n_human_review": 3,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.95,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 2,
+          "n_human_review": 4,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.97,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 2,
+          "n_human_review": 4,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 0.99,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 1,
+          "n_human_review": 5,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        },
+        {
+          "threshold": 1.0,
+          "n_cases": 6,
+          "n_escalated": 6,
+          "n_escalated_auto": 0,
+          "n_human_review": 6,
+          "quality_metrics": null,
+          "paired_vs_0.95": null
+        }
+      ],
+      "note": "Gate replay on saved recommendations only; it does not save already incurred adjudication latency. No threshold is selected. Unreviewed reference labels cannot establish calibration or accuracy."
+    }
+  }
+}

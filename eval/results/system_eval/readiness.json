@@ -1,0 +1,12 @@
+[
+  {
+    "model": "gpt-5.4-mini",
+    "provider_model": "gpt-5.4-mini",
+    "ready": true
+  },
+  {
+    "model": "deepseek-chat",
+    "provider_model": "deepseek-ai/DeepSeek-V4-Pro",
+    "ready": true
+  }
+]
