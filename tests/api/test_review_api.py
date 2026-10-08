@@ -25,7 +25,7 @@ def _fake_classify(model, comment, categories):
 
 
 def _fake_detect(comment):
-    return ContextFlags()
+    return ContextFlags(ambiguity=True)
 
 
 def _submitting(confidence, action="allow"):
@@ -33,7 +33,8 @@ def _submitting(confidence, action="allow"):
         return {"role": "assistant", "content": None, "tool_calls": [
             {"id": "1", "function": {"name": "submit_decision",
                 "arguments": json.dumps({"action": action, "overall_severity": 1,
-                                         "note": "n", "confidence": confidence})}}]}
+                                         "note": "n", "confidence": confidence,
+                                         "policy_category": "insult", "evidence_span": "you idiot"})}}]}
     return fn
 
 
@@ -121,7 +122,7 @@ def test_resolve_finalizes_persists_and_writes_precedent():
     assert db.query(Verdict).count() == 1
     assert db.query(ReviewCase).filter_by(status="resolved").count() == 1
     assert store.added == [{"comment_text": "you idiot", "action": "remove",
-                            "overall_severity": 1, "note": "clear attack",
+                            "overall_severity": 3, "note": "clear attack",
                             "source": "human"}]
 
 

@@ -30,11 +30,10 @@ def test_graph_runs_end_to_end_with_fakes():
     assert out["context_flags"]["sarcasm"] is False
 
 
-def test_graph_sarcasm_flag_downgrades_to_allow():
+def test_graph_sarcasm_flag_alone_does_not_downgrade():
     def fake_detect_sarcasm(comment):
         return ContextFlags(sarcasm=True)
     graph = build_graph(TABLE, classify_fn=_fake_classify, detect_fn=fake_detect_sarcasm)
     out = graph.invoke(initial_state("you idiot (jk)"))
-    # insult 2 -> 1 under sarcasm -> action allow
-    assert out["effective_verdicts"]["insult"] == 1
-    assert out["action"] == "allow"
+    assert out["effective_verdicts"]["insult"] == 2
+    assert out["action"] == "human-review"

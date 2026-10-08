@@ -21,7 +21,7 @@ from arbiter.product.adjudicator import (  # noqa: E402
     after_adjudicate,
     default_adjudicate_fn,
     make_adjudicate_node,
-    policy_tool_node,
+    make_tools_node,
     should_escalate,
 )
 from arbiter.product.state import initial_state  # noqa: E402
@@ -55,7 +55,7 @@ node = make_adjudicate_node(default_adjudicate_fn)
 for _ in range(MAX := 6):  # hard outer bound so a bug can't loop forever
     state.update(node(state))
     if after_adjudicate(state) == "tool":
-        state.update(policy_tool_node(state))
+        state.update(make_tools_node(None)(state))
     else:
         break
 

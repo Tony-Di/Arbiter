@@ -60,7 +60,7 @@ def build_graph(table: dict, classify_fn=classify, detect_fn=detect_context,
         human_target = "human_review"
     # aggregator's verdict is now TENTATIVE: gray cases route to the adjudicator.
     g.add_conditional_edges("aggregator", should_escalate,
-                            {"escalate": "adjudicate", "done": END})
+                            {"escalate": "adjudicate", "human": human_target, "done": END})
     # one router, three exits: keep looping, queue for a human, or finalize.
     g.add_conditional_edges("adjudicate", route_after_adjudicate,
                             {"tool": "policy_tool", "human": human_target,

@@ -25,7 +25,7 @@ def _fake_classify(model, comment, categories):
 
 
 def _fake_detect(comment):
-    return ContextFlags()
+    return ContextFlags(ambiguity=True)
 
 
 def _submitting(confidence, action="allow"):
@@ -33,7 +33,8 @@ def _submitting(confidence, action="allow"):
         return {"role": "assistant", "content": None, "tool_calls": [
             {"id": "1", "function": {"name": "submit_decision",
                 "arguments": json.dumps({"action": action, "overall_severity": 1,
-                                         "note": "n", "confidence": confidence})}}]}
+                                         "note": "n", "confidence": confidence,
+                                         "policy_category": "insult", "evidence_span": "you idiot"})}}]}
     return fn
 
 
@@ -56,6 +57,7 @@ def test_resume_applies_human_decision():
     final = g.invoke(Command(resume={"action": "remove", "note": "clear attack"}),
                      config=CFG)
     assert final["action"] == "remove"
+    assert final["overall_severity"] == 3
     assert final["adjudication"]["human"] == {"action": "remove", "note": "clear attack"}
 
 

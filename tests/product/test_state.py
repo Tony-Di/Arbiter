@@ -44,12 +44,14 @@ def test_state_has_expected_keys():
         "comment", "raw_verdicts", "routing_snapshot",
         "context_flags", "effective_verdicts", "overall_severity", "action",
         # escalation channels (spec 2026-06-08 §6)
-        "escalated", "adj_messages", "adj_steps", "adjudication",
+        "escalated", "adj_messages", "adj_steps", "adjudication", "audit",
     }
 
 
 def test_initial_state_seeds_reducer_channels():
     from arbiter.product.state import initial_state
     s = initial_state("hello")
+    from arbiter.moderation_policy import POLICY_VERSION
+    assert s.pop("audit")["policy_version"] == POLICY_VERSION
     assert s == {"comment": "hello", "raw_verdicts": {}, "routing_snapshot": {},
                  "escalated": False, "adj_messages": [], "adj_steps": 0}

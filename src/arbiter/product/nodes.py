@@ -8,7 +8,7 @@ Check:  python -m pytest tests/product/test_nodes.py -v   (goal: 4 passed)
 """
 from arbiter.classify import classify
 from arbiter.product.aggregator import aggregate
-from arbiter.product.context import detect_context
+from arbiter.product.context import detect_context, ground_context
 from arbiter.product.routing import model_for
 
 
@@ -23,7 +23,7 @@ def make_specialist_node(category: str, table: dict, classify_fn=classify):
 
 def make_context_node(detect_fn=detect_context):
     def node(state):
-        return {"context_flags": detect_fn(state["comment"]).model_dump()}
+        return {"context_flags": ground_context(detect_fn(state["comment"]), state["comment"]).model_dump()}
     return node
 
 

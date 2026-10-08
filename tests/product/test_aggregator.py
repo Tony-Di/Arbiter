@@ -17,10 +17,10 @@ def _sev(**kw):
 
 # --- adjust_severities ---
 
-def test_sarcasm_downgrades_the_four_but_not_severe_or_threat():
+def test_sarcasm_alone_does_not_downgrade_any_category():
     raw = _sev(toxic=2, obscene=2, insult=2, identity_hate=2, severe_toxic=2, threat=2)
     eff = adjust_severities(raw, {**NO_FLAGS, "sarcasm": True})
-    assert eff["toxic"] == 1 and eff["obscene"] == 1 and eff["insult"] == 1 and eff["identity_hate"] == 1
+    assert eff == raw
     assert eff["severe_toxic"] == 2  # NOT in the downgrade set
     assert eff["threat"] == 2        # NOT in the downgrade set
 
@@ -77,16 +77,15 @@ def test_overall_empty_is_zero():
 
 # --- aggregate (end-to-end of the deterministic policy) ---
 
-def test_aggregate_sarcastic_insult_is_allowed():
+def test_aggregate_sarcastic_insult_still_requires_review():
     raw_verdicts = {
         "insult": {"severity": 2, "reason": "name-calling", "span": "idiot"},
         "toxic": {"severity": 1, "reason": "rude", "span": None},
     }
     out = aggregate(raw_verdicts, {**NO_FLAGS, "sarcasm": True})
-    # insult 2->1, toxic 1->0 ; max severity 1 ; action allow
-    assert out["effective_verdicts"]["insult"] == 1
-    assert out["overall_severity"] == 1
-    assert out["action"] == "allow"
+    assert out["effective_verdicts"]["insult"] == 2
+    assert out["overall_severity"] == 2
+    assert out["action"] == "human-review"
 
 
 def test_aggregate_direct_threat_forces_remove():

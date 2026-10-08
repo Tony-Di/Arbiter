@@ -41,6 +41,5 @@ def test_aggregator_node_runs_the_policy():
                           "direct_threat": False, "ambiguity": False, "note": None},
     }
     out = aggregator_node(state)
-    # insult 2 -> 1 under sarcasm; action allow
-    assert out["effective_verdicts"]["insult"] == 1
-    assert out["action"] == "allow"
+    assert out["effective_verdicts"]["insult"] == 2
+    assert out["action"] == "human-review"

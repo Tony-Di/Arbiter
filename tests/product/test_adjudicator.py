@@ -31,7 +31,8 @@ def _submit_msg(action, sev, note, call_id="c2", confidence=0.9):
         {"id": call_id, "type": "function",
          "function": {"name": "submit_decision",
                       "arguments": json.dumps({"action": action, "overall_severity": sev,
-                                               "note": note, "confidence": confidence})}}]}
+                                               "note": note, "confidence": confidence,
+                                               "policy_category": "insult", "evidence_span": "you"})}}]}
 
 
 def _searchprec_msg(query, call_id="c3"):
@@ -56,11 +57,11 @@ def _fake_classify(model, comment, categories):
 
 # --- should_escalate (trigger) ----------------------------------------------------
 def test_should_escalate_on_human_review():
-    assert should_escalate({"action": "human-review", "context_flags": {}}) == "escalate"
+    assert should_escalate({"action": "human-review", "overall_severity": 2, "context_flags": {}}) == "human"
 
 
 def test_should_escalate_on_ambiguity():
-    assert should_escalate({"action": "allow", "context_flags": {"ambiguity": True}}) == "escalate"
+    assert should_escalate({"action": "human-review", "overall_severity": 1, "context_flags": {"ambiguity": True}}) == "escalate"
 
 
 def test_should_not_escalate_clean_case():
@@ -174,7 +175,8 @@ def test_node_degrades_on_repeated_failure_without_crashing():
     assert upd["escalated"] is True
     assert upd["adj_messages"]                      # non-empty -> after_adjudicate won't IndexError
     assert "unavailable" in upd["adjudication"]["note"].lower()
-    assert "action" not in upd                      # tentative verdict kept
+    assert upd["action"] == "human-review"
+    assert upd["adjudication"]["confidence"] == 0
 
 
 # --- full loop through the graph (offline) ----------------------------------------
@@ -298,11 +300,10 @@ def test_human_review_action_always_queues():
                         "adjudication": {"confidence": 0.99}}) == "human"
 
 
-def test_degrade_without_confidence_only_queues_on_action():
-    # degrade path writes no confidence key -> default 1.0; only the action decides
+def test_missing_confidence_requires_review():
     deg = {"note": "adjudicator unavailable, kept rule-based verdict",
            "policies_consulted": []}
-    assert needs_human({"action": "allow", "adjudication": deg}) == "finalize"
+    assert needs_human({"action": "allow", "adjudication": deg}) == "human"
     assert needs_human({"action": "human-review", "adjudication": deg}) == "human"
 
 
