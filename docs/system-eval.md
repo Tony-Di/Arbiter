@@ -1,12 +1,11 @@
 # System-level ablation benchmark
 
 This benchmark measures the final moderation action, rather than only the six
-category classifiers. It is designed to answer the resume/interview question:
-"what does the multi-agent system add over one model call?"
+category classifiers. It answers the question: "what does the multi-agent system
+add over one model call?"
 
-**Label provenance update (2026-09-22):** the user confirmed that the existing
-160 reference labels were model-generated or have not been individually
-human-reviewed. Historical scores remain diagnostics against those references,
+**Label provenance update (2026-09-22):** the existing 160 reference labels are
+confirmed to be model-generated or not individually human-reviewed. Historical scores remain diagnostics against those references,
 not validated accuracy. Use the [new blind review workflow](./human-evaluation.zh-CN.md)
 for human annotation and the frozen 20/40 fresh calibration/holdout candidates.
 Do not mark an old reference file `human-confirmed` just by changing this CLI flag.

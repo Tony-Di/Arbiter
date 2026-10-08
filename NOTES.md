@@ -9,7 +9,8 @@
 run → `routing_table.json`), LangGraph pipeline with the tool-using adjudicator
 (escalation, 2026-06-08), **precedent memory + human-in-the-loop review**
 (2026-06-10, live-verified — see the design record at the bottom), FastAPI + React
-with the review docket. 122 zero-network tests green. Sections below are in
+with the review docket. Validation at that date: 157 zero-network tests green. Latest
+validation (2026-09-22): 241 offline tests; see the final entries. Sections below are in
 chronological order: the 2026-06-01 design-phase notes first (kept as the record
 of *why*), build-phase design records appended at the end.
 
@@ -563,3 +564,160 @@ with a real number instead of a structural hand-wave.
   calls), not full end-to-end request latency (aggregator/context/FastAPI overhead is
   small but not measured here). The bench prints; it isn't a committed artifact (the
   reproducible script is — re-run anytime).
+
+## Controlled system ablation — measured 2026-09-21
+
+The September experiment fixes an evaluation bug: without a checkpointer,
+low-confidence allow/remove recommendations used to be scored as automatic
+decisions instead of human-review. Cache v2, a regression against the real
+checkpointed graph, and an explicit input boundary (ID/text only, no gold labels)
+now keep the benchmark aligned with the product.
+
+Frozen data: 20 development, 110 held-out, and 30 separate stress cases. Existing
+labels were preserved, but human authorship has not been confirmed. The primary
+holdout contains only two remove labels, and the stress set only one.
+
+The controlled GPT run compares a single joint classification call, six separate
+classifiers, adding context, and adding policy adjudication. All 640 predictions
+completed. Held-out macro-F1: 0.498 / 0.637 / 0.544 / 0.505. Stress macro-F1:
+0.505 / 0.414 / 0.410 / 0.349. Thus neither specialist superiority across slices
+nor adjudicator quality gains are established. Keep this negative evidence.
+
+Replaying the deterministic transitions on the same saved intermediate outputs
+avoids attributing upstream model variation to the later stage: on holdout,
+context corrected 3 and regressed 6 reference decisions; adjudication plus the
+confidence gate corrected 0 and regressed 4. Of 43 adjudicated holdout cases,
+35 substantive model recommendations were still sent to human review.
+
+The mixed-provider development diagnostic completed 59/60 predictions. It is
+separate from the controlled experiment and includes one adapter failure; its
+latencies are not comparable to the old six-classifier-only microbenchmark.
+The local precedent store was empty, so the human-precedent comparison was not
+fabricated using unreviewed draft seeds.
+
+Artifacts: `eval/experiments/system-ablation-v1/` (frozen cases and protocols),
+`eval/results/system-ablation-controlled-v1/` (reports, case predictions and
+mechanism audit), `eval/results/system-ablation-v1/` (mixed-provider diagnostic).
+No production routing, prompts, confidence thresholds or step caps were changed.
+
+## Local policy and review reliability — 2026-09-22
+
+Implemented shared policy 2026-09-22.2, category-specific criteria, grounded
+context mitigation and validated adjudicator submissions. Ordinary medium abuse
+now queues directly for a human; unresolved harmful context takes the tool loop.
+Confidence remains a heuristic at 0.95 and the tool-step budget remains 6.
+
+Human review now persists its decision before resuming the checkpoint, then commits
+verdict + completion + embedding outbox together. Retries reuse completed graph
+state after an interrupted SQL save. A lease/fencing token protects concurrent
+resolvers; identical requests return the saved result and conflicting choices fail.
+Embedding retries are independent and unique by review case. Additive local
+migrations preserve existing data. Startup/shutdown and the background worker are
+tested with file SQLite; no hosted deployment was performed.
+
+Validation: 193 offline tests pass; TypeScript/Vite build passes. Two 12-case live
+GPT mechanism probes each met 11/12 AI-authored case expectations. Category
+criteria corrected cross-category contamination on the failed threat example,
+but the context model still over-removed it. No case triggered live adjudication;
+this probe does not establish adjudicator gains or independent accuracy. Preserve
+both runs in eval/results/policy-v2-probe{,-followup}/. Full report and limitations:
+eval/results/policy-v2-probe-followup/REPORT.md.
+
+Existing benchmark labels remain unconfirmed by a human. Seed drafts were not
+inserted; the seed script now requires human-review confirmation and rejects
+incompatible action/severity pairs before writes. Historical v1 results and the
+existing routing table are preserved; they do not describe the revised prompts.
+
+## Real adjudication and human evaluation preparation — 2026-09-22
+
+The old 160 reference labels are confirmed to be model-generated or not
+individually human-reviewed. No AI annotations were promoted to human gold. Blind packets contain only input text, IDs and policy/provenance metadata;
+the review UI embeds the same complete policy and category rules used in prompts.
+Exports require a reviewer, rationale and explicit human attestation. Import checks
+packet integrity, text hashes, policy, coverage and action/severity consistency.
+
+Historical cache-only analysis found 57 cross-variant action disagreements and
+83 cases where at least one variant differs from the unreviewed reference. A first
+20-case blind packet is prioritized for review. Threshold sweeps preserve 0.95:
+unreviewed labels cannot justify calibration, and a post-call gate saves no LLM time.
+
+Eight newly authored diagnostic inputs reused identical GPT upstream outputs before
+and after adjudication. Five naturally triggered the tool loop; all submitted valid
+decisions, all remained human-review, and incremental latency P50/P95 was 2.53/2.91s.
+Six constructed component states yielded 6/6 valid GPT submissions and 1/6 valid
+DeepSeek submissions; the other five fell back after provider call failures under
+the probe's 20-second per-call timeout. These are execution observations, not quality
+gains. Raw tool transcripts, manifests and the Chinese report are preserved in
+eval/results/adjudicator-v2-probe/. No precedents were loaded or created.
+
+Sixty new Civil Comments candidates were frozen into 20 calibration and 40 holdout
+items at the existing pinned source revision, excluding old cases and applying
+normalized-text/trigram deduplication. Source scores determine sampling strata,
+not moderation answers. Human labels and model predictions are both still pending.
+Use docs/human-evaluation.zh-CN.md; freeze choices before evaluating the fresh holdout.
+
+Validation: 230 offline tests pass, including synthetic CLI integration tests for
+annotation imports, corrections/regressions, and mismatched prediction rejection.
+The blind review UI was opened and checked locally without submitting human labels.
+No production threshold, model routing or deployment changes in this follow-up.
+
+## AI preannotation for the first 20 — 2026-09-22
+
+AI preannotations were completed for the current 20-case packet only: 5 allow,
+14 human-review, 1 remove, with 5 explicit uncertainty flags. Each includes a
+Chinese rationale and an exact source span. These are AI-generated suggestions,
+not human gold or independent labels. No new provider inference, production
+writes, or fresh holdout annotation.
+
+The separate first-20/ai-assisted/ page prefills editable suggestions while keeping
+human confirmation at zero. Its packet ID and local storage differ from the blind
+packet. Human-confirmed imports retain ai_assisted provenance and the draft hash,
+even if export-level method fields are omitted. AI drafts cannot enter the human
+import path. Tests cover those distinctions, mismatched evidence, and preservation
+of original packets; 241 offline tests passed. The page was checked without making
+any human confirmations or attestations.
+
+## Review completion feedback fix — 2026-09-22
+
+The last review row used to clamp navigation to the final index and immediately
+clear save feedback, even when earlier rows remained unconfirmed. Confirmation now
+advances to the next pending row with wraparound, reports what was saved, and
+exposes remaining count/navigation. A completed batch shows an explicit export
+prompt, without auto-attestation or download. Reload resumes the first pending row;
+existing packet IDs and saved labels are preserved. Verified on the live review page
+after refresh without submitting a new label. Five synthetic UI-handler regression
+tests and 36 related Python tests passed.
+
+## First-20 assisted review imported and rescored — 2026-09-22
+
+The reviewer confirmed all 20 AI-assisted labels: 19 unchanged, 1 changed (the
+Chinese-eatery odor-complaint case, allow -> human-review/1/identity_hate; no
+context, intent unclear). The first export kept the AI's "allow" rationale on that
+row; it is preserved as reviewed-export.initial.json and unused. The final export
+records the rewrite under `revisions`; imported labels are in
+eval/experiments/human-review-v2/first20-human-assisted.jsonl (ai_assisted
+provenance and draft hash retained). The review page now blocks confirming an
+edited label whose rationale still equals the AI draft; the offline rescoring
+script rejects the same inconsistency. All six review pages were re-rendered from
+the current template; frozen packets are byte-identical.
+
+scripts/score_reviewed_system.py rescored the saved controlled-v1 predictions
+(gpt-5.4-mini, no model calls) against these labels: action agreement single_call
+13/20, specialists_only 8/20, specialist_panel 8/20, policy_agent 6/20; unsafe
+auto-allows 2/16, 8/16, 7/16, 8/16. Old reference actions matched only 9/20.
+Scope: disagreement-prioritized cases, AI-assisted rather than blind, predictions
+made before policy 2026-09-22.2 — a diagnostic of the old system's gap to the new
+labels, not an accuracy claim for the current code. Report:
+eval/results/human-review-v2-first20/. 248 Python and 7 UI tests pass.
+
+Current code was then rerun on the same 20 labels (80 real gpt-5.4-mini variant
+runs, 0 failures, cache eval_cache/first20-current-v1.jsonl). Action agreement:
+single_call 14/20, specialists_only 13/20, specialist_panel 13/20, policy_agent
+11/20 (old 13/8/8/6); unsafe auto-allows 4/3/6/7 of 16. Replaying on identical
+upstream outputs: context changed 2 (1 corrected, 1 regressed); adjudication plus
+gate changed 0 (2 escalations, both submitted human-review), so panel vs agent is
+run-to-run variance. The only remove case (quoted "debased mind" about gay people)
+was removed by no arm; identity_hate scored it 1, which policy auto-allows. These
+20 cases are now seen; any prompt/policy change based on them must be validated on
+the fresh calibration/holdout. Report:
+eval/results/human-review-v2-first20/CURRENT-CODE.zh-CN.md.
