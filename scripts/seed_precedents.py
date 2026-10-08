@@ -6,10 +6,12 @@ edit them before running; that's what makes them human precedents.
 
 Run:  .venv\\Scripts\\python scripts/seed_precedents.py
 """
+import argparse
 from dotenv import load_dotenv
 
 from arbiter.api.db import SessionLocal, init_db
 from arbiter.precedents import PrecedentStore
+from arbiter.moderation_policy import validate_action_severity
 
 SEEDS = [
     ("I'd literally kill for tickets to that show", "allow", 0,
@@ -39,6 +41,16 @@ SEEDS = [
 ]
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--confirm-human-review", action="store_true",
+                        help="Confirm you independently reviewed and edited every draft ruling")
+    args = parser.parse_args()
+    if not args.confirm_human_review:
+        raise SystemExit("Drafts are not human precedents. Review/edit every row before using --confirm-human-review.")
+    for comment, action, severity, note in SEEDS:
+        validate_action_severity(action, severity)
+        if action not in {"allow", "remove"}:
+            raise SystemExit("A precedent requires a resolved allow/remove human decision.")
     load_dotenv()
     init_db()
     store = PrecedentStore(SessionLocal)

@@ -26,7 +26,7 @@ def default_embed_fn(texts: list[str]) -> list[list[float]]:
     (import OpenAI lazily inside the function so importing this module never
     requires a key -- tests inject a fake and must stay zero-network).
     """
-    openai = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    openai = OpenAI(api_key=os.environ["OPENAI_API_KEY"], timeout=20, max_retries=0)
     resp = openai.embeddings.create(model=EMBED_MODEL, input=texts)
     return [d.embedding for d in resp.data]
 
@@ -72,7 +72,9 @@ class PrecedentStore:
         """TODO(author): embed comment_text (self._embed([comment_text])[0]),
         insert a Precedent row with all fields, commit. Session via
         self._sessions() (close it -- with-block or try/finally)."""
-        embedding = self._embed([comment_text])[0]
+        if source != "human":
+            raise ValueError("Only human-confirmed rulings may become precedents")
+        embedding = self.embed_for_index(comment_text)
         precedent = Precedent(comment_text=comment_text, embedding=embedding, action=action, overall_severity=overall_severity, note=note, source=source)
         session = self._sessions()
         try:
@@ -80,6 +82,12 @@ class PrecedentStore:
             session.commit()
         finally:
             session.close()
+
+    def embed_for_index(self, comment_text: str) -> list[float]:
+        embedding = self._embed([comment_text])[0]
+        if not embedding or any(not isinstance(v, (int, float)) or not math.isfinite(v) for v in embedding):
+            raise ValueError("Invalid embedding vector")
+        return embedding
 
     def search(self, query_text: str, k: int = 3) -> list[dict]:
         """TODO(author): embed the query, load all Precedent rows, rank by
@@ -89,8 +97,10 @@ class PrecedentStore:
         into the "precedent search unavailable" string."""
         session = self._sessions()
         try:
+            precedents = session.query(Precedent).filter_by(source="human").all()
+            if not precedents:
+                return []
             embedding = self._embed([query_text])[0]
-            precedents = session.query(Precedent).all() # type: ignore
             precedents_with_similarity = [(precedent, _cosine(embedding, precedent.embedding)) for precedent in precedents]
         finally:
             session.close()

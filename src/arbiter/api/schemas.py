@@ -34,6 +34,7 @@ class ModerateResponse(BaseModel):
     # serializes exactly as before, plus escalated:false.
     escalated: bool = False
     adjudication: dict | None = None
+    audit: dict = Field(default_factory=dict)
     # HITL (spec 2026-06-09 §7): default-safe -- old clients see status:"final".
     status: Literal["final"] = "final"
     case_id: str | None = None
@@ -52,6 +53,8 @@ class ReviewCaseOut(BaseModel):
     comment: str
     recommendation: dict
     created_at: datetime
+    status: Literal["pending", "resolving"] = "pending"
+    decision: dict | None = None
 
 
 class ReviewDecision(BaseModel):
@@ -70,4 +73,5 @@ def to_response(state: dict, case_id: str | None = None) -> ModerateResponse:
                             context_flags=state["context_flags"],
                             escalated=state.get("escalated", False),
                             adjudication=state.get("adjudication"),
+                            audit=state.get("audit", {}),
                             case_id=case_id)

@@ -13,7 +13,8 @@ from arbiter.classify.schema import ClassifyResult, Severity
 from arbiter.product.context import ContextFlags
 from arbiter.product.graph import build_graph
 from arbiter.api.main import app, get_graph, get_db, get_store
-from arbiter.api.db import Base, ReviewCase, Verdict, make_engine, make_session_factory
+from arbiter.api.db import Base, ReviewCase, Verdict, PrecedentOutbox, Precedent, make_engine, make_session_factory
+from arbiter.api.outbox import drain_outbox
 
 TABLE = {c: {"model": "deepseek-chat", "threshold": 1} for c in ALL_6}
 
@@ -49,6 +50,9 @@ class RecordingStore:
 
     def search(self, query, k=3):
         return []
+
+    def embed_for_index(self, comment_text):
+        return [1.0, 0.0]
 
 
 def _client(confidence=0.3):
@@ -121,9 +125,13 @@ def test_resolve_finalizes_persists_and_writes_precedent():
     db = TestSession()
     assert db.query(Verdict).count() == 1
     assert db.query(ReviewCase).filter_by(status="resolved").count() == 1
-    assert store.added == [{"comment_text": "you idiot", "action": "remove",
-                            "overall_severity": 3, "note": "clear attack",
-                            "source": "human"}]
+    assert store.added == []  # no provider I/O in the review request
+    assert db.query(Precedent).count() == 0
+    assert db.query(PrecedentOutbox).one().payload == {
+        "comment_text": "you idiot", "action": "remove", "overall_severity": 3,
+        "note": "clear attack", "source": "human"}
+    assert drain_outbox(TestSession, store) == {"completed": 1, "failed": 0}
+    assert db.query(Precedent).one().review_case_id == case_id
 
 
 def test_resolve_unknown_case_is_404():
